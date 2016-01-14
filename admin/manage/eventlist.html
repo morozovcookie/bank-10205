@@ -1,0 +1,114 @@
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-10">
+			<h3>Список событий</h3>
+		</div>
+		<div class="col-md-2">
+			<a class="btn btn-success" href="#" style="margin-top:16px;" data-toggle="modal" data-target="#new-event-dlg">
+				<span class="glyphicon glyphicon-plus"></span> Новое событие
+			</a>
+		</div>
+	</div>
+	<div class="row" style="margin-top:20px;">
+		<div class="col-md-12">
+			<table class="table" id="event-table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Название</th>
+						<th>Дата</th>
+						<th>Сумма</th>
+						<th>Владелец</th>
+					</tr>
+				</thead>
+				<tbody widget="eventtable"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="new-event-dlg" tabindex="-1">
+	<div class="modal-dialog" ng-controller="createEventDlgController">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+				<h4 class="modal-title">Новое событие</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-2"></div>
+					<div class="col-md-8">
+						<form class="form-horizontal" name="main-event-info" method="post" novalidate>
+							<fieldset>
+								<div class="row">
+									<div class="col-md-1"></div>
+									<label class="col-md-3" for="event-template" form="main-event-info">Шаблон</label>
+									<div class="col-md-8">
+										<div class="btn-group">
+											<button type="button" class="btn btn-default" id="template-title-btn">{{template}}</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												<span class="caret"></span>
+												<span class="sr-only">Toggle Dropdown</span>
+											</button>
+											<ul class="dropdown-menu">
+												<li>
+													<a href="javascript:void(0)" ng-click="selectTemplate($event)">Без шаблона</a>
+												</li>
+												<li class="divider"></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-1"></div>
+									<label class="col-md-3" for="event-template" form="main-event-info">Тип</label>
+									<div class="col-md-8">
+										<div class="btn-group">
+											<button type="button" class="btn btn-default" id="template-title-btn">{{type}}</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												<span class="caret"></span>
+												<span class="sr-only">Toggle Dropdown</span>
+											</button>
+											<ul class="dropdown-menu">
+												<li>
+													<a href="javascript:void(0)" ng-click="selectType($event)">Перевод</a>
+												</li>
+												<li>
+													<a href="javascript:void(0)" ng-click="selectType($event)">Пополнение</a>
+												</li>
+												<li>
+													<a href="javascript:void(0)" ng-click="selectType($event)">Списание</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="input-group">
+									<span class="input-group-addon" id="event-title-label">Название</span>
+									<input type="text" class="form-control" id="event-title-input" form="main-event-info" aria-describedby="event-title-label" ng-model="event.title" />
+								</div>
+								<div class="input-group">
+									<span class="input-group-addon" id="event-date-label">Дата</span>
+									<input type="date" class="form-control" id="event-date-input" form="main-event-info" aria-describedby="event-date-label" ng-model="event.date"/>
+								</div>
+								<div class="input-group">
+									<span class="input-group-addon" id="event-sum-label">Сумма</span>
+									<input type="text" class="form-control" id="event-sum-input" form="main-event-info" aria-describedby="event-sum-label" ng-model="event.sum"/>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					<div class="col-md-2"></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="col-md-9"></div>
+				<div class="col-md-3">
+					<a href="#" class="btn btn-success" id="next-step-button" data-dismiss="modal" aria-hidden="true" ng-click="createEvent(event)">
+						<span class="glyphicon glyphicon-ok"></span> Создать
+					</a> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,69 @@
+form[name="new-template-form"] .input-group{
+	margin:10px;
+}
+
+form[name="new-template-form"] label{
+	margin-top:10px;
+}
+
+form[name="new-template-form"] .row{
+	margin-top:10px;
+}
+
+.dropdown-menu{
+	width:200px;
+}
+
+#access-event{
+	list-style-type: none;
+}
+
+.event-icon{
+	font-size:20px;
+	margin-top:10px;
+}
+
+form[name="new-template-form"] input[type="checkbox"]{
+	margin-top:10px;
+}
+
+form[name="new-template-form"] input[type="file"]{
+	display: none;
+}
+
+#event-date-input{
+	width:200px;
+}
+
+#event-sum-input{
+	width:200px;
+}
+
+#attach-file-button{
+	float:right;
+	margin:5px;
+}
+
+#save-template-button{
+	float: right;
+	margin:5px;
+}
+
+#cancel-template-button{
+	float: right;
+	margin:5px;
+}
+
+#files-list{
+	list-style-type: none;
+}
+
+#files-list li{
+	float:left;
+	margin:5px;
+}
+
+.mini-img{
+	width:50px;
+	height:50px;
+}
