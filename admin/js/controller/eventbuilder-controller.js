@@ -47,14 +47,17 @@ admin.controller('eventbuilderController', function($scope, $rootScope, $http, $
 				$scope.Files.push(files[i]);
 			var miniFiles = '';
 			$scope.Files.forEach(function(file){
-				miniFiles = miniFiles + '<li>\
-				<img class="mini-img" src="' + URL.createObjectURL(file) + '" />\
-				</li>';
+				/*
+					ДОЛЖЕН БЫТЬ НЕ BLOB, А ПУТЬ ДО *png|*.gif|*.jpg
+				*/
+				miniFiles = miniFiles + '\
+				<a class="fancybox" rel="gallery" href="http://192.168.182.130:90/user/morozov.png">\
+					<img class="mini-img" src="http://192.168.182.130:90/user/morozov.png" />\
+				</a>';
 			}, this);
 			$('#files-list').empty();
 			$('#files-list').append(miniFiles);
 			$('form[name="new-event-form"] input[type="file"]').val('');
-			console.log($scope.Files);
 		}
 	}
 

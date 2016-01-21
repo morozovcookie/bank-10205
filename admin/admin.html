@@ -6,6 +6,7 @@
 		<title>{{$route.current.title || 'Bank::Admin'}}</title>
 		<link rel="shortcut icon" href="favicon.ico">
 		<link rel="stylesheet" href="lib/bootstrap-3.3.5-dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="lib/fancybox/source/jquery.fancybox.css" />
 		<link rel="stylesheet" href="css/admin.css" />
 		<link rel="stylesheet" href="css/adduser.css" />
 		<link rel="stylesheet" href="css/userlist.css" />
@@ -16,6 +17,7 @@
 		<script type="text/javascript" src="lib/jquery-2.1.4.min.js"></script>
 		<script type="text/javascript" src="lib/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="lib/angular-1.4.8/angular.min.js"></script>
+		<script type="text/javascript" src="lib/fancybox/source/jquery.fancybox.pack.js"></script>
 		<script type="text/javascript" src="lib/angular-1.4.8/angular-route.min.js"></script>
 		<script type="text/javascript" src="lib/angular-1.4.8/angular-cookies.min.js"></script>
 		<base href="http://192.168.182.130:90/admin/index.html" />
@@ -33,6 +35,11 @@
 		<script type="text/javascript" src="js/controller/eventbuilder-controller.js"></script>
 		<script type="text/javascript" src="js/controller/createeventdlg-controller.js"></script>
 		<script type="text/javascript" src="js/controller/updateuser-controller.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('.fancybox').fancybox();
+			});
+		</script>
 	</head>
 	<body>
 		<div class="container-fluid">

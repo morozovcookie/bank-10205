@@ -2,6 +2,7 @@ admin.controller('createEventDlgController', function($scope, $window, $location
 	$scope.template = 'Без шаблона';
 	$scope.type = 'Выберите тип. . .';
 	$scope.event = {
+		title: 'Без названия',
 		date: new Date(),
 		sum: 0,
 		type: $scope.type
