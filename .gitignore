@@ -1,0 +1,6 @@
+db.sqlite3
+staticfiles/
+manage.py
+**/migrations/
+**/__pycache__/
+**/.ropeproject/
