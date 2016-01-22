@@ -1,0 +1,73 @@
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-10">
+			<h3>Шаблоны событий</h3>
+		</div>
+		<div class="col-md-2">
+			<a class="btn btn-success" href="#" style="margin-top:16px;"  data-toggle="modal" data-target="#new-template-dlg">
+				<span class="glyphicon glyphicon-plus"></span> Новый шаблон события
+			</a>
+		</div>
+	</div>
+	<div class="row" style="margin-top:20px;">
+		<div class="col-md-12">
+			<table class="table" id="template-table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Название</th>
+					</tr>
+				</thead>
+				<tbody widget="templatetable"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="new-template-dlg" tabindex="-1">
+	<div class="modal-dialog" ng-controller="createTemplateDlgController">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+				<h4 class="modal-title">Новый шаблон события</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-2"></div>
+					<div class="col-md-8">
+						<form class="form-horizontal" name="main-template-info" method="post" enctype="multipart/form-data" novalidate>
+							<fieldset>
+								<div class="input-group">
+									<span class="input-group-addon" id="title-template-label">Название</span>
+									<input type="text" class="form-control" id="title-template-input" form="main-template-info" aria-describedby="title-template-label" ng-model="template.title" />
+								</div>
+								<div class="row">
+									<div class="col-md-1"></div>
+									<label class="col-md-3" for="icon-template-input" form="main-template-info">Иконка</label>
+									<div class="col-md-4">
+										<input type="file" class="form-control" id="icon-template-input" form="main-template-info" onchange="angular.element(this).scope().getIcon(this.files)"/>
+										<a type="button" class="btn btn-primary" id="icon-search-btn" form="main-template-info" ng-click="selectIcon()">
+											<span class="glyphicon glyphicon-search"></span> Обзор...
+										</a>
+									</div>
+									<div class="col-md-4">
+										<img id="template-icon"/>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					<div class="col-md-2"></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="col-md-9"></div>
+				<div class="col-md-3">
+					<a href="#" class="btn btn-success" id="next-step-button" data-dismiss="modal" aria-hidden="true" ng-click="createTemplate(template)">
+						<span class="glyphicon glyphicon-ok"></span> Создать
+					</a> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

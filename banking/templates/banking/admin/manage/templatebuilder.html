@@ -1,0 +1,112 @@
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-10">
+			<h3>Новый шаблон</h3>
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+	<div class="row" style="margin-top:20px;">
+		<div class="col-md-1"></div>
+		<div class="col-md-5">
+			<form class="form-horizontal" name="new-template-form" novalidate ng-controller="templatebuilderController">
+				<fieldset>
+					<div class="input-group">
+						<span class="input-group-addon" id="event-title-label">Название</span>
+						<input type="text" class="form-control" id="event-title-input" form="new-template-form" aria-describedby="event-title-label" ng-model="event.title" />
+					</div>
+					<div class="row">
+						<div class="col-md-1"></div>
+						<label class="col-md-3" for="event-template" form="new-template-form">Тип</label>
+						<div class="col-md-8">
+							<div class="btn-group">
+								<button type="button" class="btn btn-default" id="template-title-btn" form="new-template-form">{$ type $}</button>
+								<button type="button" class="btn btn-default dropdown-toggle" form="new-template-form" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="caret"></span>
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="javascript:void(0)" ng-click="selectType($event)">Тип 1</a>
+									</li>
+									<li>
+										<a href="javascript:void(0)" ng-click="selectType($event)">Тип 2</a>
+									</li>
+									<li>
+										<a href="javascript:void(0)" ng-click="selectType($event)">Тип 3</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="event-date-label">Дата</span>
+						<input type="date" class="form-control" id="event-date-input" form="new-template-form" aria-describedby="event-date-label" ng-model="event.date"/>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="event-sum-label">Сумма</span>
+						<input type="text" class="form-control" id="event-sum-input" form="new-template-form" aria-describedby="event-sum-label" ng-model="event.sum"/>
+					</div>
+					<div class="row">
+						<div class="col-md-1"></div>
+						<label class="col-md-3" form="new-template-form">Создатель</label>
+						<div class="col-md-8">
+
+						</div>
+					</div>
+					<div class="row">
+						<ul id="access-event">
+							<li class="col-md-12">
+								<div class="col-md-1">
+									<input type="checkbox" ng-click="public()" ng-model="event.public" />
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-book event-icon"></span>
+								</div>
+								<div class="col-md-10">
+									<h4>Public</h4>
+									<p>Данное событие будет видно всем</p>
+								</div>
+							</li>
+							<li class="col-md-12">
+								<div class="col-md-1">
+									<input type="checkbox" ng-click="private()" ng-model="event.private" />
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-lock event-icon"></span>
+								</div>
+								<div class="col-md-10">
+									<h4>Private</h4>
+									<p>Данное событие будет видно только создателю и участникам</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="event-participants-label">Участники</span>
+						<input type="text" class="form-control" id="event-participants-input" form="new-template-form" aria-describedby="event-participants-label"/>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<ul id="files-list"></ul>
+						</div>
+					</div>
+					<div class="button-group row" style="padding-right:20px;">
+						<input type="file" class="form-control" id="file-attach-input" form="new-template-form" onchange="angular.element(this).scope().getFile(this.files)"/>
+						<a href="#" class="btn btn-primary" id="attach-file-button" ng-click="selectFile()">
+							<span class="glyphicon glyphicon-paperclip"></span> Прикрепить файл
+						</a>
+					</div>
+					<div class="button-group row" style="padding-right:20px;">
+						<a href="#" class="btn btn-danger" id="cancel-template-button" ng-click="cancel()">
+							<span class="glyphicon glyphicon-thumbs-down"></span> Отменить
+						</a>
+						<a href="#" class="btn btn-success" id="save-template-button" ng-click="save()">
+							<span class="glyphicon glyphicon-thumbs-up"></span> Сохранить
+						</a>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="col-md-6"></div>
+	</div>
+</div>

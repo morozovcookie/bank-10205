@@ -1,0 +1,38 @@
+#summary .row{
+	margin:15px;
+	font-size:14px;
+}
+
+#avatar-input{
+	display:none;
+}
+
+form[name="change-password"] .input-group{
+	margin:20px 40px;
+}
+
+#logo{
+	width:100px;
+	height:100px;
+	border-top-left-radius: 50px;
+	border-top-right-radius: 50px;
+	border-bottom-left-radius: 50px;
+	border-bottom-right-radius: 50px;
+}
+
+#non-logo{
+	width:100px;
+	height:100px;
+	background-color:#337ab7;
+	border-top-left-radius: 50px;
+	border-top-right-radius: 50px;
+	border-bottom-left-radius: 50px;
+	border-bottom-right-radius: 50px;
+	text-align: center;
+}
+
+#non-logo span{
+	color:#fff;
+	font-size: 60px;
+	margin-top: 20px;
+}

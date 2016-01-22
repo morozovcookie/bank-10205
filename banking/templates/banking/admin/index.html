@@ -1,0 +1,17 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="ru" ng-app="main">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Bank</title>
+		<link rel="shortcut icon" href="favicon.ico">
+        <script type="text/javascript" src="{% static 'lib/jquery-2.1.4.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'lib/angular-1.4.8/angular.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'lib/angular-1.4.8/angular-cookies.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'admin/js/app.js' %}"></script>
+        <script type="text/javascript" src="{% static 'admin/js/directives.js' %}"></script>
+        <script type="text/javascript" src="{% static 'admin/js/controller/main-controller.js' %}"></script>
+	</head>
+	<body ng-controller="mainController"></body>
+</html>

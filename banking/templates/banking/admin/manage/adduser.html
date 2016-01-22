@@ -1,0 +1,37 @@
+<div class="col-md-5">
+	<form class="form-horizontal" novalidate ng-controller="addemployeeController" name="create-employee-form">
+		<fieldset>
+			<legend>
+				<h3>Новый сотрудник</h3>
+			</legend>
+			<div class="input-group">
+				<span class="input-group-addon" id="username-label">Логин</span>
+				<input type="text" class="form-control" id="username-input" form="create-employee-form"
+				 aria-describedby="username-label" ng-model="employee.username" />
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon" id="temp-password-label">Временный пароль</span>
+				<input type="password" class="form-control" id="temp-password-input" form="create-employee-form"
+				 aria-describedby="temp-password-label" ng-model="employee.password" />
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon" id="user-firstname-label">Имя</span>
+				<input type="text" class="form-control" id="user-firstname-input" form="create-employee-form"
+				 aria-describedby="user-firstname-label" ng-model="employee.secondname" />
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon" id="user-secondname-label">Фамилия</span>
+				<input type="text" class="form-control" id="user-secondname-input" form="create-employee-form"
+				 aria-describedby="user-secondname-label" ng-model="employee.firstname" />
+			</div>
+			<div class="row">
+				<div class="col-md-9"></div>
+				<div class="col-md-3">
+					<button type="button" class="btn btn-success" id="add-employee-button" form="create-employee-form"
+				ng-click="add_employee(employee)">Добавить</button>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+<div class="col-md-7"></div>
