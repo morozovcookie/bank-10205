@@ -1,8 +1,8 @@
 admin.controller('eventlistController', function($scope, $http){
 	var elist = '';
-	$http.get(serv_addr + 'server/admin.elist').success(function(response){
+  $http.get(serv_addr + '/server/admin.elist').success(function(response){
 		response.forEach(function(i){
-			elist = elist + 
+			elist = elist +
 			'<tr>\
 				<td>' + i.event.id + '</td>\
 				<td>' + i.event.title + '</td>\
@@ -11,6 +11,6 @@ admin.controller('eventlistController', function($scope, $http){
 				<td>' + i.event.owner + '</td>\
 			</tr>';
 		}, this);
-		$scope.eventtable = elist;		
+		$scope.eventtable = elist;
 	});
 });

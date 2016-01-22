@@ -16,8 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 # from django.contrib import admin
 from banking import urls as banking_urls
+from api import urls as api_urls
 
 urlpatterns = [
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^', include(banking_urls)),
+    url(r'^server/', include(api_urls)),
 ]

@@ -19,3 +19,11 @@ def client_auth(req):
 
 def client_index(req):
     return render(req, 'banking/client/index.html')
+
+
+def admin(req):
+    return render(req, 'banking/admin/admin.html')
+
+
+def elist(req):
+    return render(req, 'banking/admin/manage/eventlist.html')

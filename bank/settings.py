@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'banking',
     'djangular',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -103,3 +104,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles'
+
+REST_FRAMEWORK = {
+    'DEAFULT_PERMISSION_CLASSES': [
+        'rst_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

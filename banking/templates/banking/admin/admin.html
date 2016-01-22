@@ -40,6 +40,7 @@
 		<script type="text/javascript" src="{% static 'admin/js/controller/eventbuilder-controller.js' %}"></script>
 		<script type="text/javascript" src="{% static 'admin/js/controller/createeventdlg-controller.js' %}"></script>
 		<script type="text/javascript" src="{% static 'admin/js/controller/updateuser-controller.js' %}"></script>
+    <script src="{% static 'djangular/js/django-angular.js' %}"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$('.fancybox').fancybox();
@@ -80,22 +81,22 @@
 							<div class="col-md-12">
 								<ul class="nav nav-pills nav-stacked" id="nav-menu" ng-controller="navigationController">
 									<li ng-click="selectItem($event)" class="active">
-										<a href="admin/admin.html">
+										<a href="/admin/admin.html">
 											<span class="glyphicon glyphicon-home"></span> Главная
 										</a>
 									</li>
 									<li ng-click="selectItem($event)">
-										<a href="userlist/">
+										<a href="/admin/userlist/">
 											<span class="glyphicon glyphicon-user"></span> Сотрудники
 										</a>
 									</li>
 									<li ng-click="selectItem($event)">
-										<a href="eventlist/">
+										<a href="/admin/eventlist/">
 											<span class="glyphicon glyphicon-list-alt"></span> События
 										</a>
 									</li>
 									<li ng-click="selectItem($event)">
-										<a href="templatelist/">
+										<a href="/admin/templatelist/">
 											<span class="glyphicon glyphicon-duplicate"></span> Шаблоны событий
 										</a>
 									</li>
