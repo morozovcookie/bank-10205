@@ -2,16 +2,15 @@ from django.db import models
 from django.contrib.auth import models as a_models
 
 
-class User(models.Model):
+class User(a_models.User):
     rate = models.FloatField(default=1)
     balance = models.FloatField(default=0)
-    user = models.OneToOneField(a_models.User)
 
     def participate(self, event):
         event.participants.append(self)
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
 
 class Event(models.Model):
