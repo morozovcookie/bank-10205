@@ -4,3 +4,4 @@ manage.py
 **/migrations/
 **/__pycache__/
 **/.ropeproject/
+*.pyc
