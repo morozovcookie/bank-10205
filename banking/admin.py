@@ -5,6 +5,7 @@ from .models import *
 
 class ParticipantInline(admin.StackedInline):
     model = Participation
+    extra = 0
 
 
 @admin.register(User)
@@ -21,6 +22,11 @@ class EventAdmin(admin.ModelAdmin):
     exclude = ('participants',)
     inlines = [ParticipantInline]
 
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    fields = ['user', 'event', 'credit', 'debit']
+    list_display = ('user', 'event', 'credit', 'debit',)
+
+
 admin.site.register(EventTemplate)
-admin.site.register(Transactions)
 admin.site.register(Participation)

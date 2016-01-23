@@ -18,7 +18,6 @@ class Event(models.Model):
     name = models.CharField(max_length=100)
     price = models.FloatField()
     author = models.ForeignKey(User)
-
     private = models.BooleanField()
 
     def from_template(self, t):
@@ -38,6 +37,7 @@ class Event(models.Model):
 class Participation(models.Model):
     user = models.ForeignKey(User)
     event = models.ForeignKey(Event)
+    rate = models.FloatField(default=1)
 
     class Meta:
         unique_together = ('user', 'event',)
@@ -55,8 +55,16 @@ class EventTemplate(models.Model):
     private = models.BooleanField()
 
 
-class Transactions(models.Model):
-    user = User
-    event = Event
-    credit = models.FloatField()
-    debit = models.FloatField()
+class Transaction(models.Model):
+    user = models.ForeignKey(User)
+    event = models.ForeignKey(Event)
+    credit = models.FloatField(verbose_name="User pay", default=0)
+    debit = models.FloatField(verbose_name="User get from event", default=0)
+
+    def __str__(self):
+        if self.credit == 0:
+            return str(self.user) + "←" + str(self.event)\
+                + ":%.1f" % self.debit
+        else:
+            return str(self.user) + "→" + str(self.event) \
+                + ":%.1f" % self.credit
