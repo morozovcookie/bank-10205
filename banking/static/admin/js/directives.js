@@ -1,1 +1,0 @@
-var serv_addr = "";
