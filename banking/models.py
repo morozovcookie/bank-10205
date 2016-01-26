@@ -1,13 +1,43 @@
 from django.db import models
+from django.db.models import F, Sum
+
 from django.contrib.auth import models as a_models
+
+from functools import reduce
+from . import domain
 
 
 class User(a_models.User):
     rate = models.FloatField(default=1)
-    balance = models.FloatField(default=0)
 
-    def participate(self, event):
-        event.participants.append(self)
+    def balance(self):
+        res = Transaction.objects.filter(user=self)\
+            .aggregate(balance=Sum(F('debit') - F('credit')))['balance']
+        return res
+
+    def push_money(self, count):
+        """User push money to bank. Distribute count on debted events (older
+        event filled firstly."""
+        t = Transfer(user=self, direction="IN", count=count)
+        t.save()
+        # get events with positive balance. Substract debit from credit, 'couze
+        # we need event balance. Event 'health' is credit(user fill this with
+        # participation). Debit - is damage(user pay to event).
+        events = [t.event for t in Transaction.objects.filter(user=self)\
+                  .annotate(unpayed=F('credit') - F('debit'))\
+                  .filter(unpayed__gt=0)\
+                  .values('event')\
+                  .order_by('event__date')\
+                  .distinct()]
+
+        sawn(count, events)
+
+    def out_money(self, count):
+        """User call to get money from the bank. Make every effort that he did
+        not do this(joke)."""
+        if balance() > count:
+            t = Transfer(user=self, direction="OUT", count=count)
+            t.save()
 
     def __str__(self):
         return self.username
@@ -15,6 +45,7 @@ class User(a_models.User):
 
 class Event(models.Model):
     name = models.CharField(max_length=100)
+    date = models.DateField(auto_now_add=True, blank=False)
     price = models.FloatField()
     author = models.ForeignKey(User)
     private = models.BooleanField()
@@ -26,23 +57,23 @@ class Event(models.Model):
         self.participants = t.participants
         self.private = t.private
 
-    def add_participant(self, newbie):
-        self.participants.add(newbie)
+    def get_participants(self):
+        return [t.user for t in
+                Transaction.objects.filter(event=self).distinct()]
+
+    def add_participant(self, newbie, part):
+        participants = self.get_participants()
+        # event_parts = reduce(participants)
+
+        self.save()
+
+    def rest(self):
+        """ Return rest moneys, that not payed yet."""
+        return self.price - Transaction.objects.filter(event=self)\
+            .aggregate(balance=Sum(F('credit')-F('debit')))['balance']
 
     def __str__(self):
         return self.name
-
-
-class Participation(models.Model):
-    user = models.ForeignKey(User)
-    event = models.ForeignKey(Event)
-    rate = models.FloatField(default=1)
-
-    class Meta:
-        unique_together = ('user', 'event',)
-
-    def __str__(self):
-        return self.user.user.username + "->" + self.event.name
 
 
 # How to DRY?
@@ -56,7 +87,9 @@ class EventTemplate(models.Model):
 
 class Transaction(models.Model):
     user = models.ForeignKey(User)
+    rate = models.FloatField(default=1.0)
     event = models.ForeignKey(Event)
+    date = models.DateTimeField(auto_now_add=True, blank=False)
     credit = models.FloatField(verbose_name="User pay", default=0)
     debit = models.FloatField(verbose_name="User get from event", default=0)
 
@@ -67,3 +100,10 @@ class Transaction(models.Model):
         else:
             return str(self.user) + "→" + str(self.event) \
                 + ":%.1f" % self.credit
+
+
+class Transfer(models.Model):
+    user = models.ForeignKey(User)
+    date = models.DateTimeField(auto_now_add=True, blank=False)
+    debit = models.FloatField()
+    credit = models.FloatField()
