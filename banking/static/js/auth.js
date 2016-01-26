@@ -16,10 +16,22 @@ var AuthForm = React.createClass({
         });  
     },
     handleAuth: function(){
-        $.post('/api/auth', this.state)
+        $.post('/api/test/', this.state)
         .success(function(response){
-            console.log('auth');
-            console.log(response);
+            var token = response.token;
+            console.log(token);
+            $.ajax({
+                type: 'get',
+                url: '/api/auth/',
+                data: this.state,
+                headers: {
+                    'Authorization': 'Token ' + token
+                },
+                dataType: 'json',
+                success: function(r){
+                    console.log(r);
+                }
+            });
         });
     },
     render: function(){
@@ -29,8 +41,8 @@ var AuthForm = React.createClass({
                     <legend>
                         <h3>Аутентификация</h3>
                     </legend>
-                    <Edit label="Username" change={this.handleUsernameChange}/>
-                    <Edit label="Password" change={this.handlePasswordChange} />
+                    <Edit label="Username" type="text" change={this.handleUsernameChange}/>
+                    <Edit label="Password" type="password" change={this.handlePasswordChange} />
                     <Button caption="Войти" click={this.handleAuth}/>
                 </fieldset>
             </form>
@@ -43,7 +55,7 @@ var Edit = React.createClass({
         return (
             <div className="input-group">
                 <span className="input-group-addon" id="username-label">{this.props.label}</span>
-                <input type="text" className="form-control" id="username-input" 
+                <input type={this.props.type} className="form-control" id="username-input" 
                 form="auth-form" aria-describedby="username-label" 
                 onChange={this.props.change}/>
             </div>

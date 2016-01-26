@@ -39,9 +39,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'banking',
     'rest_framework',
     'rest_framework.authtoken',
+    'banking',
 )
 
 MIDDLEWARE_CLASSES = (
