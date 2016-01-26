@@ -7,6 +7,8 @@ from rest_framework import status
 
 from django.contrib.auth.models import User
 
+from banking.serializers import user as serializer
+
 class TestView(APIView):
     def get(self, request, format=None):
         return Response({
@@ -15,7 +17,7 @@ class TestView(APIView):
         
     def post(self, request, format=None):
         try:
-            data = request.DATA
+            data = request.data
         except ParseError as error:
             return Response(
                 'Invalid JSON - {0}'.format(error.detail),
@@ -27,6 +29,7 @@ class TestView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
         user = User.objects.get(username=data['username'])
+        user_dict = serializer.UserSerializer(user)
         if not user or not user.check_password(data['password']):
             return Response(
                 'No default user, please create one',
@@ -35,7 +38,8 @@ class TestView(APIView):
         token = Token.objects.get_or_create(user=user)
         return Response({
             'detail': 'POST answer',
-            'token': token[0].key
+            'token': token[0].key,
+            'user': user_dict.data
         })
         
 from rest_framework.authentication import TokenAuthentication
