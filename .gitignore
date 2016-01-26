@@ -5,3 +5,4 @@ manage.py
 **/.ropeproject/
 *.pyc
 nginx.log/
+*.backup
