@@ -11,8 +11,10 @@ class User(a_models.User):
     rate = models.FloatField(default=1)
 
     def balance(self):
-        res = Transaction.objects.filter(user=self)\
-            .aggregate(balance=Sum(F('debit') - F('credit')))['balance']
+        res = float(Transaction.objects.filter(user=self)\
+            .aggregate(balance=Sum(F('debit') - F('credit')))['balance'] or 0)
+        res += float(Transfer.objects.filter(user=self)\
+            .aggregate(balance=Sum(F('debit') - F('credit')))['balance'] or 0)
         return res
 
     def push_money(self, count):
