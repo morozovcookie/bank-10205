@@ -3,7 +3,6 @@ from django.db.models import F, Sum
 
 from django.contrib.auth import models as a_models
 
-from functools import reduce
 from . import domain
 
 
@@ -11,10 +10,11 @@ class User(a_models.User):
     rate = models.FloatField(default=1)
 
     def balance(self):
-        res = float(Transaction.objects.filter(user=self)\
-            .aggregate(balance=Sum(F('debit') - F('credit')))['balance'] or 0)
-        res += float(Transfer.objects.filter(user=self)\
-            .aggregate(balance=Sum(F('debit') - F('credit')))['balance'] or 0)
+        res = float(Transaction.objects.filter(user=self).aggregate(
+            balance=Sum(F('debit') - F('credit')))['balance'] or 0)
+        res += float(Transfer.objects.filter(user=self).aggregate(
+            balance=Sum(F('debit') - F('credit')))['balance'] or 0)
+
         return res
 
     def push_money(self, count):
@@ -25,19 +25,19 @@ class User(a_models.User):
         # get events with positive balance. Substract debit from credit, 'couze
         # we need event balance. Event 'health' is credit(user fill this with
         # participation). Debit - is damage(user pay to event).
-        events = [t.event for t in Transaction.objects.filter(user=self)\
-                  .annotate(unpayed=F('credit') - F('debit'))\
-                  .filter(unpayed__gt=0)\
-                  .values('event')\
-                  .order_by('event__date')\
-                  .distinct()]
+        events = [tt.event for tt in
+                  Transaction.objects.filter(user=self)
+                  .annotate(unpayed=F('credit') - F('debit'))
+                  .filter(unpayed__gt=0)
+                  .values('event')
+                  .order_by('event__date').distinct()]
 
-        sawn(count, events)
+        domain.sawn(count, events)
 
     def out_money(self, count):
         """User call to get money from the bank. Make every effort that he did
         not do this(joke)."""
-        if balance() > count:
+        if self.balance() > count:
             t = Transfer(user=self, direction="OUT", count=count)
             t.save()
 
@@ -64,10 +64,7 @@ class Event(models.Model):
                 Transaction.objects.filter(event=self).distinct()]
 
     def add_participant(self, newbie, part=1):
-        participants = self.get_participants()
-        # event_parts = reduce(participants)
-
-        self.save()
+        pass
 
     def rest(self):
         """ Return rest moneys, that not payed yet."""
