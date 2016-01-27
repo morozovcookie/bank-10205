@@ -63,7 +63,7 @@ class Event(models.Model):
         return [t.user for t in
                 Transaction.objects.filter(event=self).distinct()]
 
-    def add_participant(self, newbie, part):
+    def add_participant(self, newbie, part=1):
         participants = self.get_participants()
         # event_parts = reduce(participants)
 
