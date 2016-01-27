@@ -50,7 +50,7 @@ class Event(models.Model):
     date = models.DateField(auto_now_add=True, blank=False)
     price = models.FloatField()
     author = models.ForeignKey(User)
-    private = models.BooleanField()
+    private = models.BooleanField(default=False)
 
     def from_template(self, t):
         self.name = t.name
