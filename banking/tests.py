@@ -51,7 +51,7 @@ class EventParticipationTest(TestCase):
         """ When user participate in event(1part), his balance should
         decreace."""
         e = Event.objects.get(name="Target")
-        u = User.objects.get(name="P1")
+        u = User.objects.get(username="P1")
         #########################################
         e.add_participant(u)
         #########################################
@@ -66,7 +66,7 @@ class EventParticipationTest(TestCase):
         raise NotImplementedError
 
         e = Event.objects.get(name="Target")
-        users = User.objects.filter(name__iregex=r'^P\d$')
+        users = User.objects.filter(username__iregex=r'^P\d$')
         #########################################
         for u in users:
             e.add_participant(u, 1)
