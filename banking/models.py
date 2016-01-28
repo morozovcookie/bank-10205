@@ -66,6 +66,11 @@ class Event(models.Model):
     def add_participant(self, newbie, part=1):
         pass
 
+    def add_participants(self, newbies):
+        """Add participants in event. Takes dict, where key - is user model and
+        value is participation part(int)."""
+        pass
+
     def rest(self):
         """ Return rest moneys, that not payed yet."""
         return self.price - Transaction.objects.filter(event=self)\
