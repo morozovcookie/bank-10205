@@ -19,7 +19,7 @@ class auth(APIView):
     def post(self, request, format=None):
         print 'debug'
         try:
-            data = request.DATA
+            data = request.data
         except ParseError as error:
             return Response(
                 'Invalid JSON - {0}'.format(error.detail),
