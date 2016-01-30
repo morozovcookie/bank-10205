@@ -63,18 +63,28 @@ class Event(models.Model):
         return [t.user for t in
                 Transaction.objects.filter(event=self).distinct()]
 
-    def add_participant(self, newbie, part=1):
-        pass
-
     def add_participants(self, newbies):
-        """Add participants in event. Takes dict, where key - is user model and
-        value is participation part(int)."""
-        pass
+        """Add participants in event. Takes dict, where keys - is user models
+        and values is participation part(int)."""
+        rated_parts = 0
+
+        for user, part in newbies.items():
+            rated_parts += (part * user.rate)
+
+        print("parts count:", rated_parts)
+
+        party_pay = self.price / rated_parts
+
+        for user, part in newbies.items():
+            t = Transaction(user=user, event=self)
+            t.credit = user.rate * party_pay * part
+            t.save()
 
     def rest(self):
         """ Return rest moneys, that not payed yet."""
-        return self.price - Transaction.objects.filter(event=self)\
+        payed = Transaction.objects.filter(event=self)\
             .aggregate(balance=Sum(F('credit')-F('debit')))['balance']
+        return self.price - (0 if payed is None else payed)
 
     def __str__(self):
         return self.name
