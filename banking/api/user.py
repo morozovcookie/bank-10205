@@ -18,7 +18,7 @@ from django.http import JsonResponse, HttpResponse
 
 class auth(APIView):
     def post(self, request, format=None):
-        print 'debug'
+        print('debug')
         try:
             data = request.DATA
         except ParseError as error:
@@ -71,7 +71,7 @@ class user(APIView):
     )
 
     def get(self, request, format=None):
-        print 'get'
+        print('get')
         key = request.META.get('HTTP_AUTHORIZATION')
         if key is None:
             return Response(
