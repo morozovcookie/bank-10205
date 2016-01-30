@@ -15,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import JsonResponse, HttpResponse
 
+
 class auth(APIView):
     def post(self, request, format=None):
         print 'debug'
@@ -40,7 +41,7 @@ class auth(APIView):
         return Response({
             'token': token[0].key
         })
-        
+
     def delete(self, request, format=None):
         try:
             key = request.META.get('HTTP_AUTHORIZATION').split()[1]
@@ -59,7 +60,8 @@ class auth(APIView):
         return Response({
             'detail': 'Token has been deleted'
         })
-        
+
+
 class user(APIView):
     authentication_classes = (
         TokenAuthentication,
@@ -67,11 +69,11 @@ class user(APIView):
     permission_classes = (
         IsAuthenticated,
     )
-    
+
     def get(self, request, format=None):
         print 'get'
-        key = request.META.get('HTTP_AUTHORIZATION')   
-        if key is None: 
+        key = request.META.get('HTTP_AUTHORIZATION')
+        if key is None:
             return Response(
                 'Invalid HTTP request - {0}',
                 status=status.HTTP_400_BAD_REQUEST
@@ -82,10 +84,11 @@ class user(APIView):
         return Response({
             'user': user.data
         })
-        
+
     def post(self, request, format=None):
         pass
-        
+
+
 class user_list(APIView):
     authentication_classes = (
         TokenAuthentication,
@@ -93,7 +96,7 @@ class user_list(APIView):
     permission_classes = (
         IsAuthenticated,
     )
-    
+
     def get(self, request, format=None):
         try:
             if not has_permisions(request):
@@ -109,5 +112,5 @@ class user_list(APIView):
         users = User.objects.all()
         users = UserSerializer(users, many=True)
         return JsonResponse({
-            'users' : users.data
+            'users': users.data
         })
