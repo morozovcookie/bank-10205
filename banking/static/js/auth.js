@@ -16,27 +16,35 @@ var AuthForm = React.createClass({
         });  
     },
     handleAuth: function(){
-        $.post('/api/test/', this.state)
+        $.post('/api/auth/', this.state)
         .success(function(response){
             var token = response.token;
-            console.log(token);
+            window.localStorage.setItem('token', token);
             $.ajax({
                 type: 'get',
-                url: '/api/auth/',
-                data: this.state,
+                url: '/api/user/',
                 headers: {
-                    'Authorization': 'Token ' + token
+                    Authorization: 'Token ' + token
                 },
                 dataType: 'json',
-                success: function(r){
-                    console.log(r);
+                success: function(response){
+                    if (response.user.is_superuser)
+                    {
+                        document.location.href = '/admin/';
+                        window.localStorage.setItem('is_superuser', 'true');
+                    }
+                    else
+                    {
+                        document.location.href = '/client/';   
+                        window.localStorage.setItem('is_superuser', 'false');
+                    }
                 }
             });
         });
     },
     render: function(){
         return (
-            <form className="form-horizontal" name="auth-form" method="get">
+            <form className="form-horizontal" name="auth-form" method="post">
                 <fieldset>
                     <legend>
                         <h3>Аутентификация</h3>
