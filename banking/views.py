@@ -1,29 +1,51 @@
 from django.shortcuts import render
 
+from rest_framework.exceptions import ParseError
 
-def index(req):
-    return render(req, 'banking/index.html')
+from django.contrib.auth.models import User
 
-
-def admin_auth(req):
-    return render(req, 'banking/admin/authentication.html')
+from banking.serializers.user import UserSerializer
 
 
-def admin_index(req):
-    return render(req, 'banking/admin/index.html')
+def default(request):
+    content = render(request, 'banking/redirect.html').content
+    return render(request, 'banking/index.html', dict(body=content))
 
 
-def client_auth(req):
-    return render(req, 'banking/client/authentication.html')
+def auth(request):
+    content = render(request, 'banking/auth.html').content
+    title = 'Bank::Authentication'
+    return render(request, 'banking/index.html', dict(body=content,
+                                                      title=title))
 
 
-def client_index(req):
-    return render(req, 'banking/client/index.html')
+def client(request):
+    content = render(request, 'banking/client/index.html').content
+    title = 'Bank::Client Application'
+    return render(request, 'banking/index.html', dict(body=content,
+                                                      title=title))
 
 
-def admin(req):
-    return render(req, 'banking/admin/admin.html')
+def admin(request):
+    content = render(request, 'banking/admin/index.html').content
+    title = 'Bank::Admin'
+    return render(request, 'banking/index.html', dict(body=content,
+                                                      title=title))
 
 
-def elist(req):
-    return render(req, 'banking/admin/manage/eventlist.html')
+def error(request):
+    content = render(request, 'banking/error.html').content
+    title = 'Bank::Error'
+    return render(request, 'banking/index.html', dict(body=content,
+                                                      title=title))
+
+
+def has_permisions(request):
+    key = request.META.get('HTTP_AUTHORIZATION')
+    if key is None:
+        raise ParseError
+    key = key.split()[1]
+    user = User.objects.get(auth_token=key)
+    if UserSerializer(user).data['is_superuser']:
+        return True
+    return False

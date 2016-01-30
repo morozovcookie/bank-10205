@@ -2,11 +2,23 @@ Bank
 ---
 Project for banking moneys and logging pays.
 
+Python Django Framework, ReactJS, PostgreSQL
+
+# Requirements
+-   Python 2.7
+-   Nginx
+-   Django Framework
+-   Django REST Framework
+-   PostgreSQL
+
+On debian, install packages:
+`sudo apt-get install python2.7 python-django python-djangorestframework python-psycopg2 libpq-dev python-dev postgresql postgresql-contrib -y`
+
 # Installation
 before all, need this:
 - python 3.5
 - pip
-- virtualenv (optional)
+- virtualenv (optional, but recommended)
 
 Then, just run `pip install -r requirements.txt`. This install all needed
 python packages for this project.
@@ -16,8 +28,7 @@ Needs create migrations, migrate. After this you have ready DB.
 
 `./manage.py makemigrations`
 
-In my case, migrations cerated for django internal parts, but not for banking
-app. So do it manyally:
+Create migration for app:
 
 `./manage.py makemigrations banking`
 
@@ -31,3 +42,17 @@ And last, create superuser to login in admin page:
 
 # Running
 Next you can just run server `./manage.py runserver`.
+
+#API Guide
+-   `/api/auth/  -   авторизация пользователя
+    params: username, password
+    return: token`
+-   `/api/user/  -   получить данные о пользователе
+    params: none
+    return: json (username, e-mail, first_name, second_name, is_superuser)`
+-   `/api/user/{id}  -   получить данные о пользователе (only for admin)
+    params: none
+    return: json (username, e-mail, first_name, second_name, is_superuser)`
+-   `/api/users/ -   получить список пользователей
+    params: none
+    return: array of users`
