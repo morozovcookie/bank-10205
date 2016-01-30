@@ -1,5 +1,4 @@
 staticfiles/
-manage.py
 **/migrations/
 **/__pycache__/
 **/.ropeproject/
