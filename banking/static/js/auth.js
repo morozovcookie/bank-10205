@@ -8,12 +8,12 @@ var AuthForm = React.createClass({
     handleUsernameChange: function(event){
         this.setState({
             username: event.target.value
-        });  
+        });
     },
     handlePasswordChange: function(event){
         this.setState({
             password: event.target.value
-        });  
+        });
     },
     handleAuth: function(){
         $.post('/api/auth/', this.state)
@@ -35,7 +35,7 @@ var AuthForm = React.createClass({
                     }
                     else
                     {
-                        document.location.href = '/client/';   
+                        document.location.href = '/client/';
                         window.localStorage.setItem('is_superuser', 'false');
                     }
                 }
@@ -63,8 +63,8 @@ var Edit = React.createClass({
         return (
             <div className="input-group">
                 <span className="input-group-addon" id="username-label">{this.props.label}</span>
-                <input type={this.props.type} className="form-control" id="username-input" 
-                form="auth-form" aria-describedby="username-label" 
+                <input type={this.props.type} className="form-control" id="username-input"
+                form="auth-form" aria-describedby="username-label"
                 onChange={this.props.change}/>
             </div>
         );
@@ -75,7 +75,7 @@ var Button = React.createClass({
     render: function(){
         return (
             <div className="btn-group col-md-12">
-                <button type="button" className="btn btn-success col-md-12" 
+                <button type="button" className="btn btn-success col-md-12"
                 id="sigin-button" form="auth-form" onClick={this.props.click}>
                     {this.props.caption}
                 </button>
