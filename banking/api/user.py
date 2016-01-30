@@ -7,7 +7,6 @@ from rest_framework import status
 
 from django.contrib.auth.models import User
 
-<<<<<<< HEAD
 from banking.views import has_permisions
 from banking.serializers.user import UserSerializer
 
@@ -17,20 +16,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse, HttpResponse
 
 class auth(APIView):
-=======
-from banking.serializers import user as serializer
-
-class TestView(APIView):
-    def get(self, request, format=None):
-        return Response({
-            'detail': "GET Response"
-        })
-        
->>>>>>> 9369f4918d4c663e733a5dd1da2574c500ffb079
     def post(self, request, format=None):
         print 'debug'
         try:
-            data = request.data
+            data = request.DATA
         except ParseError as error:
             return Response(
                 'Invalid JSON - {0}'.format(error.detail),
@@ -42,7 +31,6 @@ class TestView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
         user = User.objects.get(username=data['username'])
-        user_dict = serializer.UserSerializer(user)
         if not user or not user.check_password(data['password']):
             return Response(
                 'No default user, please create one',
@@ -50,13 +38,7 @@ class TestView(APIView):
             )
         token = Token.objects.get_or_create(user=user)
         return Response({
-<<<<<<< HEAD
             'token': token[0].key
-=======
-            'detail': 'POST answer',
-            'token': token[0].key,
-            'user': user_dict.data
->>>>>>> 9369f4918d4c663e733a5dd1da2574c500ffb079
         })
         
     def delete(self, request, format=None):
