@@ -1,8 +1,38 @@
+function getCookie(name) {
+	var cookieValue = null;
+	if (document.cookie && document.cookie != '') {
+		var cookies = document.cookie.split(';');
+		for (var i = 0; i < cookies.length; i++) {
+			var cookie = jQuery.trim(cookies[i]);
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) == (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
+}
+function csrfSafeMethod(method) {
+	// these HTTP methods do not require CSRF protection
+	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+function postSCRF(settings){
+	var csrftoken = getCookie('csrftoken');
+	settings.beforeSend = function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		}
+	};
+	settings.method = "POST";
+	return $.ajax(settings);
+}
 var AuthForm = React.createClass({
     getInitialState: function(){
         return {
             username: '',
-            password: ''
+            password: '',
+            csrf: ''
         }
     },
     handleUsernameChange: function(event){
@@ -16,7 +46,13 @@ var AuthForm = React.createClass({
         });
     },
     handleAuth: function(){
-        $.post('/api/auth/', this.state)
+        var data = this.state;
+
+
+		postSCRF({
+			method:'POST',
+			url:'/api/auth/',
+			data:this.state})
         .success(function(response){
             var token = response.token;
             window.localStorage.setItem('token', token);
