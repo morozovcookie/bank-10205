@@ -17,7 +17,6 @@ from django.http import JsonResponse, HttpResponse
 
 class auth(APIView):
     def post(self, request, format=None):
-        print 'debug'
         try:
             data = request.data
         except ParseError as error:
@@ -30,7 +29,7 @@ class auth(APIView):
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        user = User.objects.get(username=data['username'])
+        user = User.objects.get(username=data['username'])    
         if not user or not user.check_password(data['password']):
             return Response(
                 'No default user, please create one',
@@ -84,7 +83,27 @@ class user(APIView):
         })
         
     def post(self, request, format=None):
-        pass
+        try:
+            data = request.data
+        except ParseError as error:
+            return Response(
+                'Invalid JSON - {0}'.format(error.detail),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if 'username' not in data or 'password' not in data or 'first_name' not in data or 'last_name' not in data:
+            return Response(
+                'Wrong credentials',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        user = User.objects.create_user(
+            username=data['username'], 
+            password=data['password']
+        )
+        user.first_name = data['first_name']
+        user.last_name = data['last_name']
+        return Response(
+            status=status.HTTP_200_OK
+        ) 
         
 class user_list(APIView):
     authentication_classes = (
