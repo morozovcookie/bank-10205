@@ -17,5 +17,5 @@ urlpatterns = [
     #api calls
     url(r'^api/auth/', api_user.auth.as_view(), name='auth'),
     url(r'^api/user/', api_user.user.as_view(), name='user'),
-    url(r'^api/users/', api_user.user_list, name='user-list'),
+    url(r'^api/users/', api_user.user_list.as_view(), name='user-list'),
 ]

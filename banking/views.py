@@ -50,6 +50,6 @@ def has_permisions(request):
         raise ParseError
     key = key.split()[1]
     user = User.objects.get(auth_token=key)
-    if UserSerializer(user).data['is_superuser']:
+    if user and UserSerializer(user).data['is_superuser']:
         return True
     return False
