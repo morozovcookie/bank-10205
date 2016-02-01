@@ -1,3 +1,104 @@
+var UserTable = React.createClass({
+    render: function(){
+        var idx = 0;
+        var users = this.props.users.map(function(user){
+            idx = idx + 1;
+            return <UserRow key={idx} data={user}/>;
+        });
+        return (
+            <table className="table" id="user-table">
+                <thead>
+                    <tr>
+                        <th style={{width:'100px'}}></th>
+                        <th>Логин</th>
+                        <th>Фамилия</th>
+                        <th>Имя</th>
+                        <th>Статус</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users}
+                </tbody>
+            </table>
+        );
+    }
+});
+
+var UserRow = React.createClass({
+    handleDeleteUser: function(event){
+        var token = window.localStorage.getItem('token');
+        var username = $($($($(event.currentTarget).parent()).parent()).children()[1]).text();
+        $.ajax({
+            type: 'delete',
+            url: '/api/user/',
+            headers: {
+                Authorization: 'Token ' + token
+            },
+            data: {
+                username: username
+            },
+            success: function(response){
+                ReactDOM.render(
+                    <UserTable users={response.users} />,
+                    document.getElementById('usertable')
+                );
+            }
+        });
+    },
+    render: function(){
+        if (this.props.data.is_superuser)
+        {
+            return (
+                <tr>
+                    <td></td>
+                    <td>{this.props.data.username}</td>
+                    <td>{this.props.data.last_name}</td>
+                    <td>{this.props.data.first_name}</td>
+                    <td>Администратор</td>
+                    <td>
+                        <UserModalAction ButtonClass="btn btn-warning" Icon="glyphicon glyphicon-edit" Target="#update-user-dlg"/>
+                    </td>
+                </tr>
+            );
+        }
+        return (
+            <tr>
+                <td></td>
+                <td>{this.props.data.username}</td>
+                <td>{this.props.data.last_name}</td>
+                <td>{this.props.data.first_name}</td>
+                <td>Пользователь</td>
+                <td>
+                    <UserModalAction ButtonClass="btn btn-warning" Icon="glyphicon glyphicon-edit" Target="#update-user-dlg"/>
+                    <UserAction ButtonClass="btn btn-danger" Icon="glyphicon glyphicon-trash" Click={this.handleDeleteUser} />
+                </td>
+            </tr>
+        );
+    }
+});
+
+var UserModalAction = React.createClass({
+    render: function(){
+        return (
+            <a href="#" className={this.props.ButtonClass} data-toggle="modal" data-target={this.props.Target} onClick={(this.props.hasOwnProperty('Click') ? this.props.Click : '')}>
+                <span className={this.props.Icon}></span>
+            </a>
+        );
+    }
+});
+
+var UserAction = React.createClass({
+    render: function(){
+        return (
+            <a href="#" className={this.props.ButtonClass} onClick={(this.props.hasOwnProperty('Click') ? this.props.Click : '')}>
+                <span className={this.props.Icon}></span>
+            </a>
+        );
+    }
+});
+
 var NewUserDlg = React.createClass({
     getInitialState: function(){
         return {
@@ -36,8 +137,17 @@ var NewUserDlg = React.createClass({
                 Authorization: 'Token ' + token
             },
             data: this.state,
-            success: function(){
-                this.state = null;
+            success: function(response){
+                this.state = {
+                    username: '',
+                    password: '',
+                    first_name: '',
+                    last_name: ''
+                };
+                ReactDOM.render(
+                    <UserTable users={response.users} />,
+                    document.getElementById('usertable')
+                );
             }
         });
     },
@@ -70,6 +180,57 @@ var NewUserDlg = React.createClass({
 });
 
 var UpdateUserDlg = React.createClass({
+    getInitialState: function(){
+        return {
+            username: '',
+            password: '',
+            first_name: '',
+            last_name: ''
+        }
+    },
+    handleUsernameChange: function(event){
+        this.setState({
+            username: event.target.value
+        });
+    },
+    handlePasswordChange: function(event){
+        this.setState({
+            password: event.target.value
+        });
+    },
+    handleFirstnameChange: function(event){
+        this.setState({
+            first_name: event.target.value
+        });
+    },
+    handleLastnameChange: function(event){
+        this.setState({
+            last_name: event.target.value
+        });
+    },
+    handleUpdateUser: function(){
+        var token = window.localStorage.getItem('token');
+        $.ajax({
+            type: 'put',
+            url: '/api/user/',
+            headers: {
+                Authorization: 'Token ' + token
+            },
+            data: this.state,
+            success: function(response){
+                this.state = {
+                    username: '',
+                    password: '',
+                    first_name: '',
+                    last_name: ''
+                };
+                ReactDOM.render(
+                    <UserTable users={response.users} />,
+                    document.getElementById('usertable')
+                );
+            }
+        });
+    },
     render: function(){
         return (
             <div className="modal-content">
@@ -90,7 +251,7 @@ var UpdateUserDlg = React.createClass({
                 <div className="modal-footer">
                     <div className="col-md-8"></div>
                     <div className="col-md-4">
-                        <OKButton Link="#" Class="btn btn-success" Id="update-user-button" Caption="Сохранить" />
+                        <OKButton Link="#" Class="btn btn-success" Id="update-user-button" Caption="Сохранить" Click={this.handleUpdateUser}/>
                     </div>
                 </div>
             </div>            
@@ -124,3 +285,22 @@ ReactDOM.render(
   <NewUserDlg />,
   document.getElementById('new-user')
 );
+
+ReactDOM.render(
+  <UpdateUserDlg />,
+  document.getElementById('update-user')
+);
+
+$.ajax({
+    type: 'get',
+    url: '/api/users/',
+    headers: {
+        Authorization: 'Token ' + window.localStorage.getItem('token')
+    },
+    success: function(response){
+        ReactDOM.render(
+            <UserTable users={response.users} />,
+            document.getElementById('usertable')
+        );
+    }
+});

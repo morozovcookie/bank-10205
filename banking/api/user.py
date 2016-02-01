@@ -95,15 +95,64 @@ class user(APIView):
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
             )
+        try:
+            if not has_permisions(request):
+                return HttpResponse(
+                    'You do not have permission',
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        except ParseError:
+            return HttpResponse(
+                'Invalid HTTP request - {0}',
+                status=status.HTTP_400_BAD_REQUEST
+            )
         user = User.objects.create_user(
             username=data['username'], 
             password=data['password']
         )
         user.first_name = data['first_name']
         user.last_name = data['last_name']
-        return Response(
-            status=status.HTTP_200_OK
-        ) 
+        user.save()
+        users = User.objects.all()
+        users = UserSerializer(users, many=True)
+        return JsonResponse({
+            'users' : users.data
+        })
+        
+    def put(self, request, format=None):
+        pass
+    
+    def delete(self, request, format=None):
+        try:
+            data = request.data
+        except ParseError as error:
+            return Response(
+                'Invalid JSON - {0}'.format(error.detail),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if 'username' not in data:
+            return Response(
+                'Wrong credentials',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        try:
+            if not has_permisions(request):
+                return HttpResponse(
+                    'You do not have permission',
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        except ParseError:
+            return HttpResponse(
+                'Invalid HTTP request - {0}',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user = User.objects.get(username=data['username'])
+        user.delete();
+        users = User.objects.all()
+        users = UserSerializer(users, many=True)
+        return JsonResponse({
+            'users' : users.data
+        })
         
 class user_list(APIView):
     authentication_classes = (
