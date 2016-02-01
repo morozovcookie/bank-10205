@@ -27,6 +27,18 @@ def admin(request):
     title = 'Bank::Admin'
     return render(request, 'banking/index.html', dict(body=content, title=title))
     
+def events(request):
+    content = render(request, 'banking/events.html').content
+    body = render(request, 'banking/admin/index.html', dict(content=content)).content
+    title = 'Bank::Events'
+    return render(request, 'banking/index.html', dict(body=body, title=title))
+    
+def users(request):
+    content = render(request, 'banking/users.html').content
+    body = render(request, 'banking/admin/index.html', dict(content=content)).content
+    title = 'Bank::Users'
+    return render(request, 'banking/index.html', dict(body=body, title=title))
+    
 def error(request):
     content = render(request, 'banking/error.html').content
     title = 'Bank::Error'
