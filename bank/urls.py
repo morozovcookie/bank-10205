@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^admin/', views.admin),
     url(r'^error/', views.error),
     
+    url(r'^users/', views.users),
+    url(r'^events/', views.events),
+    
     #api calls
     url(r'^api/auth/', api_user.auth.as_view(), name='auth'),
     url(r'^api/user/', api_user.user.as_view(), name='user'),
