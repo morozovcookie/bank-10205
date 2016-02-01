@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 from banking import views
 from banking.api import user as api_user
+from banking.api import event as api_event
 
 urlpatterns = [
     #paged routing
@@ -18,4 +19,7 @@ urlpatterns = [
     url(r'^api/auth/', api_user.auth.as_view(), name='auth'),
     url(r'^api/user/', api_user.user.as_view(), name='user'),
     url(r'^api/users/', api_user.user_list.as_view(), name='user-list'),
+    
+    url(r'^api/event/', api_event.event.as_view(), name='event'),
+    url(r'^api/events/', api_event.event_list.as_view(), name='event-list'),
 ]
