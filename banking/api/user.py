@@ -15,6 +15,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import JsonResponse, HttpResponse
 
+import urllib
+
 class auth(APIView):
     def post(self, request, format=None):
         try:
@@ -67,8 +69,7 @@ class user(APIView):
         IsAuthenticated,
     )
     
-    def get(self, request, format=None):
-        print 'get'
+    def get(self, request, pk, pattern, format=None):
         key = request.META.get('HTTP_AUTHORIZATION')   
         if key is None: 
             return Response(
@@ -76,7 +77,20 @@ class user(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         key = key.split()[1]
-        user = User.objects.get(auth_token=key)
+        user = None
+        if pk:
+            user = User.objects.get(pk=pk)
+        elif pattern:
+            pattern = urllib.unquote(pattern)
+            user = User.objects.filter(username__startswith=pattern).distinct()
+            user = user | User.objects.filter(first_name__startswith=pattern).distinct()
+            user = user | User.objects.filter(last_name__startswith=pattern).distinct()
+            user = UserSerializer(user, many=True)
+            return Response({
+                'users': user.data
+            })
+        else:    
+            user = User.objects.get(auth_token=key)
         user = UserSerializer(user)
         return Response({
             'user': user.data
@@ -163,17 +177,6 @@ class user_list(APIView):
     )
     
     def get(self, request, format=None):
-        try:
-            if not has_permisions(request):
-                return HttpResponse(
-                    'You do not have permission',
-                    status=status.HTTP_403_FORBIDDEN
-                )
-        except ParseError:
-            return HttpResponse(
-                'Invalid HTTP request - {0}',
-                status=status.HTTP_400_BAD_REQUEST
-            )
         users = User.objects.all()
         users = UserSerializer(users, many=True)
         return JsonResponse({
