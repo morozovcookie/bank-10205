@@ -1,0 +1,36 @@
+form[name="main-event-info"] .input-group{
+	margin:10px;
+    width:99%;
+}
+
+form[name="main-event-info"] label{
+	margin-top:10px;
+}
+
+form[name="main-event-info"] .input-group span{
+	width:30%;
+}
+
+form[name="main-event-info"] .row{
+	margin-top:10px;
+}
+
+#next-step-button{
+	margin-left:30px;
+}
+
+#template-title-btn{
+	width:200px;
+}
+
+#event-type-title-btn{
+    width:200px;
+}
+
+.dropdown-menu{
+	width:200px;
+}
+
+#event-table tbody tr{
+	cursor: pointer;
+}
