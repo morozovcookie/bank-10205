@@ -82,6 +82,10 @@ class user(APIView):
             user = User.objects.get(pk=pk)
         elif pattern:
             pattern = urllib.unquote(pattern)
+            
+            '''
+                need to optimize to use one filter() by username, firstname and lastname
+            '''
             user = User.objects.filter(username__startswith=pattern).distinct()
             user = user | User.objects.filter(first_name__startswith=pattern).distinct()
             user = user | User.objects.filter(last_name__startswith=pattern).distinct()
