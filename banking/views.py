@@ -29,9 +29,19 @@ def client(request):
 def admin(request):
     content = render(request, 'banking/admin/index.html').content
     title = 'Bank::Admin'
-    return render(request, 'banking/index.html', dict(body=content,
-                                                      title=title))
+    return render(request, 'banking/index.html', dict(body=content, title=title))
 
+def events(request):
+    content = render(request, 'banking/events.html').content
+    body = render(request, 'banking/admin/index.html', dict(content=content)).content
+    title = 'Bank::Events'
+    return render(request, 'banking/index.html', dict(body=body, title=title))
+
+def users(request):
+    content = render(request, 'banking/users.html').content
+    body = render(request, 'banking/admin/index.html', dict(content=content)).content
+    title = 'Bank::Users'
+    return render(request, 'banking/index.html', dict(body=body, title=title))
 
 def error(request):
     content = render(request, 'banking/error.html').content
@@ -46,6 +56,6 @@ def has_permisions(request):
         raise ParseError
     key = key.split()[1]
     user = User.objects.get(auth_token=key)
-    if UserSerializer(user).data['is_superuser']:
+    if user and UserSerializer(user).data['is_superuser']:
         return True
     return False
