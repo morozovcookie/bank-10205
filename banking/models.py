@@ -6,7 +6,8 @@ from django.contrib.auth import models as a_models
 from . import domain
 
 
-class User(a_models.User):
+class User(models.Model):
+    user = models.OneToOneField(a_models.User)
     rate = models.FloatField(default=1)
 
     def balance(self):

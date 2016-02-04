@@ -9,11 +9,12 @@ from .models import *
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'rate', 'balance')
+    pass
+    # list_display = ('username', 'rate', 'balance')
     # inlines = [ParticipantInline]
-    fields = ('password', 'username', 'first_name', 'last_name', 'email',
-              'user_permissions', 'rate', )
-    filter_horizontal = ('user_permissions',)
+    # fields = ('password', 'username', 'first_name', 'last_name', 'email',
+    #           'user_permissions', 'rate', )
+    # filter_horizontal = ('user_permissions',)
 
 
 @admin.register(Event)

@@ -6,7 +6,6 @@ from rest_framework.exceptions import ParseError
 from rest_framework import status
 
 from django.contrib.auth.models import User
-
 from banking.views import has_permisions
 from banking.serializers.user import UserSerializer
 
@@ -18,7 +17,6 @@ from django.http import JsonResponse, HttpResponse
 
 class auth(APIView):
     def post(self, request, format=None):
-        print('debug')
         try:
             data = request.data
         except ParseError as error:
@@ -26,17 +24,25 @@ class auth(APIView):
                 'Invalid JSON - {0}'.format(error.detail),
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        print('auth::post ', data['username'], data['password'])
         if 'username' not in data or 'password' not in data:
             return Response(
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        user = User.objects.get(username=data['username'])
+
+        try:
+            user = User.objects.get(username=data['username'])
+        except User.DoesNotExist:
+            user = None
+
         if not user or not user.check_password(data['password']):
             return Response(
                 'No default user, please create one',
                 status=status.HTTP_404_NOT_FOUND
             )
+
         token = Token.objects.get_or_create(user=user)
         return Response({
             'token': token[0].key
