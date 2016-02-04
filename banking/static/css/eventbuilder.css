@@ -85,13 +85,13 @@ form[name="new-event-form"] input[type="file"]{
 	top:1;
 	bottom:1;
 	z-index:1;
+    display:none;
 }
 
 #userautolist{
 	background-color: white;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 	padding:0;
-    display: none;
 }
 
 #userautolist .row{
