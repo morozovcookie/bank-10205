@@ -86,12 +86,13 @@ class user(APIView):
             '''
                 need to optimize to use one filter() by username, firstname and lastname
             '''
-            user = User.objects.filter(username__startswith=pattern).distinct()
-            user = user | User.objects.filter(first_name__startswith=pattern).distinct()
-            user = user | User.objects.filter(last_name__startswith=pattern).distinct()
-            user = UserSerializer(user, many=True)
+            users = User.objects.filter(username__startswith=pattern).distinct()
+            users = users | User.objects.filter(first_name__startswith=pattern).distinct()
+            users = users | User.objects.filter(last_name__startswith=pattern).distinct()
+            users = UserSerializer(users, many=True)
+            
             return Response({
-                'users': user.data
+                'users': users.data
             })
         else:    
             user = User.objects.get(auth_token=key)
