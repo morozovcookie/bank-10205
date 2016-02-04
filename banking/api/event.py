@@ -13,6 +13,8 @@ from banking.serializers.event import EventSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from django.http import JsonResponse, HttpResponse
+
 class event(APIView):
     authentication_classes = (
         TokenAuthentication,
