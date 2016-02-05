@@ -31,7 +31,12 @@ class auth(APIView):
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        user = User.objects.get(username=data['username'])
+        try:
+            user = User.objects.get(username=data['username'])
+        except User.DoesNotExist:
+            return Response("User not exists",
+                            status=status.HTTP_404_NOT_FOUND)
+
         if not user or not user.check_password(data['password']):
             return Response(
                 'No default user, please create one',

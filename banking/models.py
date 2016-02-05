@@ -1,13 +1,13 @@
 from django.db import models
 from django.db.models import F, Sum
 
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth import models as a_models
 
 from . import domain
 
 
-class User(models.Model):
-    user = models.OneToOneField(a_models.User)
+class User(AbstractBaseUser):
     rate = models.FloatField(default=1)
 
     def balance(self):

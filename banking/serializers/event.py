@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from banking.entities.event import Event
+from banking.models import Event
+
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:

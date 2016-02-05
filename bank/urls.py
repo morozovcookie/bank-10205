@@ -15,6 +15,7 @@ urlpatterns = [
 
     url(r'^users/', views.users),
     url(r'^events/', views.events),
+    url(r'^backdoor/', include(admin.site.urls)),
 
     #api calls
     url(r'^api/auth/', api_user.auth.as_view(), name='auth'),

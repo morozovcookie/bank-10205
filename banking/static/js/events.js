@@ -117,7 +117,7 @@ var CreateEventDlg = React.createClass({
                 <div className="modal-footer">
                     <div className="col-md-9"></div>
                     <div className="col-md-3">
-                        <CloseDlgButton Link="#" Class="btn btn-success" Id="next-step-button" Caption="Создать" Click={this.handleGoToEventBuilder}/> 
+                        <CloseDlgButton Link="#" Class="btn btn-success" Id="next-step-button" Caption="Создать" Click={this.handleGoToEventBuilder}/>
                     </div>
                 </div>
             </div>
@@ -167,7 +167,7 @@ var EventBuilder = React.createClass({
             fullname: $($(event.currentTarget).children()[2]).html()
         });
         $('#event-participants-input').val('');
-        $('#userauto').hide();	
+        $('#userauto').hide();
     },
     handleParticipantsChange: function(event){
         var pattern = event.target.value;
@@ -204,12 +204,12 @@ var EventBuilder = React.createClass({
                         <HintUserList Users={users} Click={eventBuilder.handleSelectParticipant} />,
                         document.getElementById('userautolist')
                     );
-                    $('#userauto').show();	
+                    $('#userauto').show();
                 }
             });
         }
         else
-			$('#userauto').hide();	
+			$('#userauto').hide();
     },
     handleHideUsersHint: function(){
         if (!$('#userautolist:hover').length)
@@ -247,42 +247,42 @@ var EventBuilder = React.createClass({
                                 <Dropdown Id="event-type-btn" Value={this.state.type} Change={this.handleTypeChange} Caption="Тип" FormName="new-event-form" DropdownList={events}/>
                                 <Edit Label="Дата" Type="date" Value={this.state.date} LabelId="event-date-label" EditId="event-date-input" FormName="new-event-form" Change={this.handleDateChange} />
                                 <Edit Label="Сумма" Type="text" Value={this.state.sum} LabelId="event-sum-label" EditId="event-sum-input" FormName="new-event-form" Change={this.handleSumChange} />
-                                
+
                                 <div className="row">
                                     <div className="col-md-1"></div>
                                     <label className="col-md-3" form="new-event-form">Создатель</label>
                                     <div className="col-md-1"></div>
                                     <div className="col-md-7" style={{padding:'10px'}}>{owner}</div>
                                 </div>
-                                
+
                                 <div className="row">
                                     <ul id="access-event">
                                         <AccessCheckbox IconClass="glyphicon glyphicon-book event-icon" Header="Public" Caption="Данное событие будет видно всем" />
                                         <AccessCheckbox IconClass="glyphicon glyphicon-lock event-icon" Header="Private" Caption="Данное событие будет видно только создателю и участникам"/>
                                     </ul>
                                 </div>
-                                
+
                                 <Edit Label="Участники" Type="text" LabelId="event-participants-label" EditId="event-participants-input" FormName="new-event-form" Change={this.handleParticipantsChange} Blur={this.handleHideUsersHint} Focus={this.handleParticipantsChange} />
-                                
+
                                 <div className="row" id="userauto">
                                     <div className="col-md-3"></div>
                                     <div className="col-md-8" id="userautolist"></div>
                                     <div className="col-md-1"></div>
                                 </div>
-                                
+
                                 <ParticipantsTable Participants={this.state.participants}/>
-                                
+
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div id="files-list"></div>
                                     </div>
                                 </div>
-                                
+
                                 <div className="button-group row" style={{paddingRight:'20px'}}>
                                     <Edit Type="file" LabelId="file-attach-label" Id="file-attach-input" FormName="new-event-form" Change={this.handleChangeFile}/>
                                     <Button Link="#" Class="btn btn-default" Id="attach-file-button" Icon="glyphicon glyphicon-paperclip" Caption="Прикрепить файл" Click={this.handleAttachFileClick}/>
                                 </div>
-                                
+
                                 <div className="button-group row" style={{paddingRight:'20px'}}>
                                     <Button Link="#" Class="btn btn-danger" Id="cancel-event-button" Icon="glyphicon glyphicon-thumbs-down" Caption="Отменить" Click={this.hadnleCancelClick}/>
                                     <Button Link="#" Class="btn btn-success" Id="save-event-button" Icon="glyphicon glyphicon-thumbs-up" Caption="Создать" Click={this.hadnleCreateClick}/>
@@ -338,7 +338,7 @@ var HintUserRow = React.createClass({
                 <div className="col-md-4">
                     <b>
                         {this.props.data.username}
-                    </b> 
+                    </b>
                 </div>
                 <div className="col-md-6">
                     {fullname}
@@ -373,7 +373,7 @@ var ParticipantsTable = React.createClass({
                 </tbody>
             </table>
         );
-    }    
+    }
 });
 
 var ParticipantRow = React.createClass({
@@ -479,7 +479,7 @@ var Edit = React.createClass({
             <div className="input-group">
                 <span className="input-group-addon" id={this.props.LabelId}>{this.props.Label}</span>
                 <input type={this.props.Type} className="form-control" id={this.props.EditId} value={this.props.Value}
-                form={this.props.FormName} aria-describedby={this.props.LabelId} onChange={this.props.Change} 
+                form={this.props.FormName} aria-describedby={this.props.LabelId} onChange={this.props.Change}
                 onFocus={this.props.Focus} onBlur={this.props.Blur} />
             </div>
         );
@@ -491,9 +491,9 @@ var Button = React.createClass({
        return (
            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} onClick={this.props.Click}>
                 <span className={this.props.Icon}></span> {this.props.Caption}
-            </a> 
+            </a>
        );
-   } 
+   }
 });
 
 var CloseDlgButton = React.createClass({
@@ -501,9 +501,9 @@ var CloseDlgButton = React.createClass({
        return (
            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} onClick={this.props.Click} data-dismiss="modal" aria-hidden="true">
                 <span className="glyphicon glyphicon-ok"></span> {this.props.Caption}
-            </a> 
+            </a>
        );
-   } 
+   }
 });
 
 ReactDOM.render(
