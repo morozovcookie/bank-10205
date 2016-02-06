@@ -142,12 +142,13 @@ class user(APIView):
         user.first_name = data['first_name']
         user.last_name = data['last_name']
 
-        acc = Account.objects.create(user=user, rate=rate)
+        acc = Account(user=user)  # by default rate field get '1.0' value
         if 'rate' in data:
             acc.rate = data['rate']
 
         user.save()
         acc.save()
+
         users = User.objects.all()
         users = UserSerializer(users, many=True)
         return JsonResponse({
