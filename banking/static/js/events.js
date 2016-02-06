@@ -487,23 +487,23 @@ var Edit = React.createClass({
 });
 
 var Button = React.createClass({
-   render: function(){
-       return (
-           <a href={this.props.Link} className={this.props.Class} id={this.props.Id} onClick={this.props.Click}>
+    render: function(){
+        return (
+            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} onClick={this.props.Click}>
                 <span className={this.props.Icon}></span> {this.props.Caption}
             </a>
-       );
-   }
+        );
+    }
 });
 
 var CloseDlgButton = React.createClass({
-   render: function(){
-       return (
-           <a href={this.props.Link} className={this.props.Class} id={this.props.Id} onClick={this.props.Click} data-dismiss="modal" aria-hidden="true">
+    render: function(){
+        return (
+            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} onClick={this.props.Click} data-dismiss="modal" aria-hidden="true">
                 <span className="glyphicon glyphicon-ok"></span> {this.props.Caption}
             </a>
-       );
-   }
+        );
+    }
 });
 
 ReactDOM.render(
