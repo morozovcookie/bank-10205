@@ -1,6 +1,5 @@
 var EventTable = React.createClass({
     render: function(){
-        console.log(this.props.events);
         var events = this.props.events.map(function(event){
             return (
                     <EventRow key={event.id} data={event}/>
