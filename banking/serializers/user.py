@@ -11,9 +11,9 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    acc = AccountSerializer(many=False)
+    account = AccountSerializer(many=False)
 
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'is_superuser',
-                  'acc')
+                  'account')

@@ -107,7 +107,7 @@ class user(APIView):
             user = User.objects.get(auth_token=key)
         user = UserSerializer(user)
         return Response({
-            'user': user.__str__()
+            'user': user.data
         })
 
     def post(self, request, format=None):
