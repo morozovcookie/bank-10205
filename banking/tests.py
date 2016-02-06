@@ -1,33 +1,36 @@
 from django.test import TestCase
 
 from .models import Event, Account, Transaction, Transfer
+from django.contrib.auth.models import User
 
 
 class AccountBalanceTest(TestCase):
     def setUp(self):
-        Account.objects.create(username="P1", rate=1)
-        a = Account.objects.create(username="Author", rate=0)
+        p1 = User.objects.create(username="P1")
+        author = User.objects.create(username="Author")
+        Account.objects.create(user=p1, rate=1)
+        a = Account.objects.create(user=author, rate=0)
         Event.objects.create(name="test", price=1000, author=a)
 
     def test_transfer_sould_up_balance(self):
-        p1 = Account.objects.get(username="P1")
+        p1 = Account.objects.get(user__username="P1")
 
-        Transfer.objects.create(user=p1, debit=100)
-        Transfer.objects.create(user=p1, debit=300)
-        Transfer.objects.create(user=p1, debit=400)
+        Transfer.objects.create(account=p1, debit=100)
+        Transfer.objects.create(account=p1, debit=300)
+        Transfer.objects.create(account=p1, debit=400)
 
         self.assertEqual(p1.balance(), 800)
 
     def test_transactions_change_balance(self):
         """ When user have transfers and transactions."""
-        p1 = Account.objects.get(username="P1")
+        p1 = Account.objects.get(user__username="P1")
         e = Event.objects.get(name="test")
         #########################################
-        Transfer.objects.create(user=p1, debit=100)
-        Transfer.objects.create(user=p1, debit=300)
-        Transfer.objects.create(user=p1, debit=400)
-        Transaction.objects.create(user=p1, event=e, credit=200)
-        Transaction.objects.create(user=p1, event=e, debit=300)
+        Transfer.objects.create(account=p1, debit=100)
+        Transfer.objects.create(account=p1, debit=300)
+        Transfer.objects.create(account=p1, debit=400)
+        Transaction.objects.create(account=p1, event=e, credit=200)
+        Transaction.objects.create(account=p1, event=e, debit=300)
         #########################################
         self.assertEqual(p1.balance(), 900)
 
@@ -49,24 +52,34 @@ class EventParticipationTest(TestCase):
     u6_p = 1.5
 
     def setUp(self):
-        a = Account.objects.create(username="Author")
-        Event.objects.create(name="Target", price=self.eprice, author=a)
 
-        p1 = Account.objects.create(username="P1", rate=self.u1_r)
-        p2 = Account.objects.create(username="P2", rate=self.u2_r)
-        p3 = Account.objects.create(username="P3", rate=self.u3_r)
-        p4 = Account.objects.create(username="P4", rate=self.u4_r)
-        p5 = Account.objects.create(username="P5", rate=self.u5_r)
-        p6 = Account.objects.create(username="P6", rate=self.u6_r)
+        a = User.objects.create(username="Author")
+        author = Account.objects.create(user=a, rate=0.0)
+
+        Event.objects.create(name="Target", price=self.eprice, author=author)
+
+        u1 = User.objects.create(username="P1")
+        u2 = User.objects.create(username="P2")
+        u3 = User.objects.create(username="P3")
+        u4 = User.objects.create(username="P4")
+        u5 = User.objects.create(username="P5")
+        u6 = User.objects.create(username="P6")
+        p1 = Account.objects.create(user=u1, rate=self.u1_r)
+        p2 = Account.objects.create(user=u2, rate=self.u2_r)
+        p3 = Account.objects.create(user=u3, rate=self.u3_r)
+        p4 = Account.objects.create(user=u4, rate=self.u4_r)
+        p5 = Account.objects.create(user=u5, rate=self.u5_r)
+        p6 = Account.objects.create(user=u6, rate=self.u6_r)
+
         users = [p1, p2, p3, p4, p5, p6]
 
         for u in users:
-            Transfer.objects.create(user=u, debit=self.ubalance)
+            Transfer.objects.create(account=u, debit=self.ubalance)
 
     def test_single_participation(self):
         """ When user participate in event(1part)."""
         e = Event.objects.get(name="Target")
-        u = Account.objects.get(username="P1")
+        u = Account.objects.get(user__username="P1")
 
         print("Run test_single_participation")
         #########################################
@@ -83,7 +96,7 @@ class EventParticipationTest(TestCase):
         participation. Should increace balance of already participated user."""
 
         e = Event.objects.get(name="Target")
-        users = Account.objects.filter(username__iregex=r'^P\d$')
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
         #########################################
         e.add_participants({
             users[0]: 1,
@@ -93,10 +106,10 @@ class EventParticipationTest(TestCase):
         })
 
         #########################################
-        self.assertEqual(len(Transaction.objects.filter(user=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[3])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
 
         party_pay = self.eprice / (len(users) - 2)
 
@@ -112,7 +125,7 @@ class EventParticipationTest(TestCase):
     def test_multiple_participation_with_different_parts(self):
         """ When calculating debt with participation-parts value."""
         e = Event.objects.get(name="Target")
-        users = Account.objects.filter(username__iregex=r'^P\d$')
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
         participation = {
             users[0]: self.u1_p,
             users[1]: self.u2_p,
@@ -125,10 +138,10 @@ class EventParticipationTest(TestCase):
         e.add_participants(participation)
         #########################################
 
-        self.assertEqual(len(Transaction.objects.filter(user=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[3])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
 
         print(Transaction.objects.all())
         party_pay =\
@@ -150,7 +163,7 @@ class EventParticipationTest(TestCase):
     def test_diff_parts_rates(self):
         """ Different parts counts, and user rates."""
         e = Event.objects.get(name="Target")
-        users = Account.objects.filter(username__iregex=r'^P\d$')
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
         participation = {
             users[0]: self.u1_p,
             users[1]: self.u2_p,
@@ -163,10 +176,10 @@ class EventParticipationTest(TestCase):
         e.add_participants(participation)
         #########################################
 
-        self.assertEqual(len(Transaction.objects.filter(user=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[4])), 1)
-        self.assertEqual(len(Transaction.objects.filter(user=users[5])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[4])), 1)
+        self.assertEqual(len(Transaction.objects.filter(account=users[5])), 1)
 
         print(Transaction.objects.all())
         party_pay =\
