@@ -7,7 +7,7 @@ from .models import *
 #     extra = 0
 
 
-@admin.register(User)
+@admin.register(Account)
 class UserAdmin(admin.ModelAdmin):
     pass
     # list_display = ('username', 'rate', 'balance')
@@ -24,7 +24,7 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'event', 'date', 'credit', 'debit')
+    list_display = ('account', 'event', 'date', 'credit', 'debit')
 
 
 admin.site.register(EventTemplate)
