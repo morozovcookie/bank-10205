@@ -3,6 +3,8 @@ from banking.models import Event
 
 
 class EventSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(many=False)
+
     class Meta:
         model = Event
-        field = ('name', 'date', 'price')
+        field = ('id', 'name', 'date', 'price', 'author')

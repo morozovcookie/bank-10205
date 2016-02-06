@@ -1,9 +1,10 @@
 var EventTable = React.createClass({
     render: function(){
-        var idx = 0;
+        console.log(this.props.events);
         var events = this.props.events.map(function(event){
-            idx = idx + 1;
-            return <EventRow key={idx} data={event}/>;
+            return (
+                    <EventRow key={event.id} data={event}/>
+            );
         });
         return (
             <div className="col-md-12">
@@ -42,7 +43,15 @@ var EventTable = React.createClass({
 
 var EventRow = React.createClass({
     render: function(){
-        return null;
+        return (
+            <tr>
+                <td style={{width:'100px'}}></td>
+                <td>{this.props.data.name}</td>
+                <td>{this.props.data.date}</td>
+                <td>{this.props.data.price}</td>
+                <td>{this.props.data.author}</td>
+            </tr>
+        );
     }
 });
 
@@ -473,6 +482,17 @@ var DropdownItem = React.createClass({
     }
 });
 
+
+/** Component for Edit something.
+    * @param {String} Type of input, that represent edit value
+    * @param {Integer} EditId is html id.
+    * @param {...} Value - initial of input
+    * @param {String} FormName that for input will be attached
+    * @param {Integer} LabelId i don't know what is it for
+    * @param {Function} Change callback, on changing.
+    * @param {Function} Focus callback, on focus.
+    * @param {Function} Blur callback, on blur. (?)
+    */
 var Edit = React.createClass({
     render: function(){
         return (
@@ -532,8 +552,9 @@ $.ajax({
     },
     dataType: 'json',
     success: function(response){
+        console.log(response);
         ReactDOM.render(
-            <EventTable events={response.events} />,
+            <EventTable events={response} />,
             document.getElementById('event-content')
         );
     }
