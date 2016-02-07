@@ -1,13 +1,183 @@
-var EventTable = React.createClass({
-    render: function(){
-        var events = this.props.events.map(function(event){
+/**
+ * @param {string} url - path for get request
+ * @param {func} succ - success handler. function(response)
+ * @returns {undefined}
+ */
+function _get(url, succ) {
+    return $.ajax({
+        type: 'get',
+        url: url,
+        headers: {
+            Authorization: 'Token ' + window.localStorage.getItem('token')
+        },
+        dataType: 'json',
+		success: succ
+    });
+}
+
+/** Editable element have many fields that can be edited.
+* @param {Array} values - list of elements, that can be edited
+*/
+var EditableElement = React.createClass({
+    getInitialState: function() {
+        return {
+            value: 0
+        };
+    },
+    render: function() {
+        return (
+            <div>
+                {content}
+                <div>
+                    <button className="btn btn-yellow"></button>
+                    <button className="btn"></button>
+                </div>
+            </div>
+
+        );
+    }
+});
+
+/** Show list of components, with additional actions - edit, delete, add.
+ * Useful for display EditableElement
+ * Element should have propsValidations: it's used for creating new element
+ * checking.
+*/
+var EditableParticipantsList = React.createClass({
+    propTypes: {
+        // updater: React.PropTypes.func.isRequired
+        /** URL of element, on which we call update.
+        */
+        url: React.PropTypes.string.isRequired
+    },
+    getInitialState: function() {
+        return {
+            items: []
+        };
+    },
+    componentDidMount: function() {
+        _get( this.props.url,
+             function(response){
+                 this.setState({ items: response })
+             }.bind(this)
+        );
+    },
+    addItem: function(item) {
+        // this.setState({ items: this.state.items + item });
+    },
+    removeItem: function(item) {
+        // this.state.items.removeOne(item);
+        // remove item from list
+    },
+    render: function() {
+        var content = this.state.items.map(function(i){
             return (
-                    <EventRow key={event.id} data={event}/>
+                <li className="list-group-item" key={i.user.id}>
+                    <span>ID: {i.user.id}</span>
+                    <span>Rate: {i.rate}</span>
+                    <span>Username: {i.user.username}</span>
+                </li>
             );
         });
         return (
-            <div className="col-md-12">
-                <div className="row">
+            <ul className="list-group">
+                {content}
+            </ul>
+        );
+    }
+});
+
+/** Display single element. On click, this dropdown it's hidden content.
+* @param {Object} event - Event, that was displayed
+*/
+var EventSection = React.createClass({
+    propTypes: {
+        /** Expect, that given only 2 childrens: header and content for
+         * dropdown. */
+        children: function(props, propName, componentName){
+            if (React.Children.count(props[propName]) < 2) {
+                return new Error("EventSection takes 2 childrens: "
+                                 +"header, and dropdown content");
+            }
+        },
+    },
+    getInitialState: function(){
+        return {
+            open: false,
+            class: "section",
+        }
+    },
+	render: function() {
+        var content;
+        if (this.state.open) {
+            content = this.props.children[1]
+        }
+        return (
+			<div className={this.state.class}>
+				<div className="sectionhead" onClick={this.handleClick}>
+                    {this.props.children[0]}
+				</div>
+				<div className="articlewrap">
+					<div className="article">
+                        {content}
+					</div>
+				</div>
+			</div>
+		);
+	},
+	handleClick: function(){
+        if(this.state.open) {
+            this.setState({ open: false, class: "section" });
+        }
+        else{
+            this.setState({ open: true,  class: "section open" });
+        }
+	},
+});
+
+/** Show elements with it's hiden dropdown content. On click expand or collapse
+ * dropdown content.
+ * Work together with Section.
+ * @param {String} title - title of accordion
+ */
+var EventAccordion = React.createClass({
+	render: function() {
+        var sections = this.props.items.map(function(item) {
+            return (
+                <EventSection key={item.id} >
+                    <EventRow data={item}/>
+                    <EditableParticipantsList url={'/api/events/'+item.id+'/participants'}/>
+                </EventSection>
+            );
+        });
+        return (
+            <div className="main">
+                {sections}
+            </div>
+        );
+    }
+});
+
+var EventTable = React.createClass({
+    getInitialState: function() { return { events: [] }; },
+
+    componentDidMount: function() {
+        $.ajax({
+            type: 'get',
+            url: '/api/events/',
+            headers: {
+                Authorization: 'Token ' + window.localStorage.getItem('token')
+            },
+            dataType: 'json',
+            success: function(response){
+                this.setState({ events: response })
+            }.bind(this)
+        });
+    },
+    render: function(){
+        return (
+            <main className="col-md-12">
+                <header className="row">
                     <div className="col-md-10">
                         <h3>Список событий</h3>
                     </div>
@@ -16,26 +186,13 @@ var EventTable = React.createClass({
                             <span className="glyphicon glyphicon-plus"></span> Новое событие
                         </a>
                     </div>
-                </div>
+                </header>
                 <div className="row" style={{marginTop:'20px'}}>
                     <div className="col-md-12">
-                        <table className="table" id="event-table">
-                            <thead>
-                                <tr>
-                                    <th style={{width:'100px'}}></th>
-                                    <th>Название</th>
-                                    <th>Дата</th>
-                                    <th>Сумма</th>
-                                    <th>Владелец</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {events}
-                            </tbody>
-                        </table>
+                        <EventAccordion items={this.state.events}/>
                     </div>
                 </div>
-            </div>
+            </main>
         );
     }
 });
@@ -43,13 +200,13 @@ var EventTable = React.createClass({
 var EventRow = React.createClass({
     render: function(){
         return (
-            <tr>
-                <td style={{width:'100px'}}></td>
-                <td>{this.props.data.name}</td>
-                <td>{this.props.data.date}</td>
-                <td>{this.props.data.price}</td>
-                <td>{this.props.data.author}</td>
-            </tr>
+                <div>
+                    <span style={{width:'100px'}}></span>
+                    <span>{this.props.data.name}</span>
+                    <span>{this.props.data.date}</span>
+                    <span>{this.props.data.price}</span>
+                    <span>{this.props.data.author}</span>
+                </div>
         );
     }
 });
@@ -142,10 +299,7 @@ var EventBuilder = React.createClass({
             type: this.props.BaseInformation.type,
             template: this.props.BaseInformation.template,
             private: false,
-            participants: [{
-                username: user.username,
-                fullname: user.last_name + ' ' + user.first_name
-            }]
+            participants: [ ]
         }
     },
     handleTitleChange: function(event){
@@ -224,7 +378,6 @@ var EventBuilder = React.createClass({
 			$('#userauto').hide();
     },
     handleChangeFile: function(event){
-        console.log(event.target.files);
     },
     handleAttachFileClick: function(){
         $('form[name="new-event-form"] input[type="file"]').trigger('click');
@@ -237,7 +390,7 @@ var EventBuilder = React.createClass({
     },
     render: function(){
         var events = ['Перевод', 'Пополнение', 'Списание'];
-        var owner = user.last_name + ' ' + user.first_name;
+        var user = JSON.parse(window.localStorage.getItem('user'));
         return (
             <div className="col-md-12">
                 <div className="row">
@@ -260,7 +413,7 @@ var EventBuilder = React.createClass({
                                     <div className="col-md-1"></div>
                                     <label className="col-md-3" form="new-event-form">Создатель</label>
                                     <div className="col-md-1"></div>
-                                    <div className="col-md-7" style={{padding:'10px'}}>{owner}</div>
+                                    <div className="col-md-7" style={{padding:'10px'}}>{user.username}</div>
                                 </div>
 
                                 <div className="row">
@@ -270,7 +423,11 @@ var EventBuilder = React.createClass({
                                     </ul>
                                 </div>
 
-                                <Edit Label="Участники" Type="text" LabelId="event-participants-label" EditId="event-participants-input" FormName="new-event-form" Change={this.handleParticipantsChange} Blur={this.handleHideUsersHint} Focus={this.handleParticipantsChange} />
+                                <Edit Label="Участники" Type="text" LabelId="event-participants-label"
+                                    EditId="event-participants-input" FormName="new-event-form"
+                                    Change={this.handleParticipantsChange}
+                                    Blur={this.handleHideUsersHint}
+                                    Focus={this.handleParticipantsChange} />
 
                                 <div className="row" id="userauto">
                                     <div className="col-md-3"></div>
@@ -358,11 +515,9 @@ var HintUserRow = React.createClass({
 
 var ParticipantsTable = React.createClass({
     render: function(){
-        var idx = 0;
-        var participants = this.props.Participants.map(function(participant){
-            idx = idx + 1;
+        var participants = this.props.Participants.map(function(p){
             return (
-                <ParticipantRow key={idx} data={participant}/>
+                <ParticipantRow key={p.id} data={p}/>
             );
         });
         return (
@@ -386,7 +541,9 @@ var ParticipantsTable = React.createClass({
 
 var ParticipantRow = React.createClass({
     render: function(){
-        return null;
+        return (
+            <div>{this.props.data.user.username}</div>
+        );
     }
 });
 
@@ -483,15 +640,15 @@ var DropdownItem = React.createClass({
 
 
 /** Component for Edit something.
-    * @param {String} Type of input, that represent edit value
-    * @param {Integer} EditId is html id.
-    * @param {...} Value - initial of input
-    * @param {String} FormName that for input will be attached
-    * @param {Integer} LabelId i don't know what is it for
-    * @param {Function} Change callback, on changing.
-    * @param {Function} Focus callback, on focus.
-    * @param {Function} Blur callback, on blur. (?)
-    */
+ * @param {String} Type of input, that represent edit value
+ * @param {Integer} EditId is html id.
+ * @param {...} Value - initial of input
+ * @param {String} FormName that for input will be attached
+ * @param {Integer} LabelId i don't know what is it for
+ * @param {Function} Change callback, on changing.
+ * @param {Function} Focus callback, on focus.
+ * @param {Function} Blur callback, on blur. (?)
+ */
 var Edit = React.createClass({
     render: function(){
         return (
@@ -530,31 +687,7 @@ ReactDOM.render(
     document.getElementById('create-event')
 );
 
-var user = null;
-$.ajax({
-    type: 'get',
-    url: '/api/user',
-    headers: {
-        Authorization: 'Token ' + window.localStorage.getItem('token')
-    },
-    datatype: 'json',
-    success: function(response){
-        user = response.user;
-    }
-});
-
-$.ajax({
-    type: 'get',
-    url: '/api/events/',
-    headers: {
-        Authorization: 'Token ' + window.localStorage.getItem('token')
-    },
-    dataType: 'json',
-    success: function(response){
-        console.log(response);
-        ReactDOM.render(
-            <EventTable events={response} />,
-            document.getElementById('event-content')
-        );
-    }
-});
+ReactDOM.render(
+    <EventTable/>,
+        document.getElementById('event-content')
+);
