@@ -9,39 +9,26 @@ from banking.models import Event
 
 # from banking.views import has_permisions
 from banking.serializers.event import EventSerializer
+from banking.serializers.user import AccountSerializer
 
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, \
+    IsAuthenticatedOrReadOnly
 
+from rest_framework import viewsets
+
+from rest_framework.decorators import detail_route
+from rest_framework import renderers
 # from django.http import JsonResponse, HttpResponse
 
 
-class event(APIView):
-    authentication_classes = (
-        TokenAuthentication,
-    )
-    permission_classes = (
-        IsAuthenticated,
-    )
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get(self, request, format=None):
-        pass
-
-    def post(self, request, format=None):
-        pass
-
-
-class event_list(APIView):
-    authentication_classes = (
-        TokenAuthentication,
-    )
-    permission_classes = (
-        IsAuthenticated,
-    )
-
-    def get(self, request, format=None):
-        events = Event.objects.all()
-        serializer = EventSerializer(events, many=True)
-        return Response(
-            serializer.data
-        )
+    @detail_route(renderer_classes=[renderers.JSONRenderer])
+    def participants(self, req, *args, **kwargs):
+        e = self.get_object()
+        ser = AccountSerializer(e.get_participants(), many=True)
+        return Response(ser.data)
