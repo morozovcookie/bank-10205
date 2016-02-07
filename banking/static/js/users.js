@@ -240,7 +240,7 @@ var UpdateUserDlg = React.createClass({
                 </div>
                 <div className="modal-body">
                     <form className="form-horizontal" name="update-user-form">
-                        <fieldset>			
+                        <fieldset>
                             <Edit Label="Логин" Type="text" LabelId="username-label" EditId="username-input" FormName="update-user-form" />
                             <Edit Label="Временный пароль" Type="password" LabelId="temp-password-label" EditId="temp-password-input" FormName="update-user-form" />
                             <Edit Label="Имя" Type="text" LabelId="user-firstname-label" EditId="user-firstname-input" FormName="update-user-form" />
@@ -254,7 +254,7 @@ var UpdateUserDlg = React.createClass({
                         <OKButton Link="#" Class="btn btn-success" Id="update-user-button" Caption="Сохранить" Click={this.handleUpdateUser}/>
                     </div>
                 </div>
-            </div>            
+            </div>
         );
     }
 });
@@ -264,7 +264,7 @@ var Edit = React.createClass({
         return (
             <div className="input-group">
                 <span className="input-group-addon" id={this.props.LabelId}>{this.props.Label}</span>
-                <input type={this.props.Type} className="form-control" id={this.props.EditId} 
+                <input type={this.props.Type} className="form-control" id={this.props.EditId}
                 form={this.props.FormName} aria-describedby={this.props.LabelId} onChange={this.props.Change} />
             </div>
         );
@@ -276,9 +276,9 @@ var OKButton = React.createClass({
        return (
            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} data-dismiss="modal" aria-hidden="true" onClick={this.props.Click}>
                 <span className="glyphicon glyphicon-ok"></span> {this.props.Caption}
-            </a> 
+            </a>
        );
-   } 
+   }
 });
 
 ReactDOM.render(
