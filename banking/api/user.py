@@ -46,9 +46,11 @@ class auth(APIView):
                 'No default user, please create one',
                 status=status.HTTP_404_NOT_FOUND
             )
+
         token = Token.objects.get_or_create(user=user)
         return Response({
-            'token': token[0].key
+            'token': token[0].key,
+            'user': UserSerializer(user).data
         })
 
     def delete(self, request, format=None):

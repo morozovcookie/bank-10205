@@ -56,26 +56,15 @@ var AuthForm = React.createClass({
         .success(function(response){
             var token = response.token;
             window.localStorage.setItem('token', token);
-            $.ajax({
-                type: 'get',
-                url: '/api/user/',
-                headers: {
-                    Authorization: 'Token ' + token
-                },
-                dataType: 'json',
-                success: function(response){
-                    if (response.user.is_superuser)
-                    {
-                        document.location.href = '/admin/';
-                        window.localStorage.setItem('is_superuser', 'true');
-                    }
-                    else
-                    {
-                        document.location.href = '/client/';
-                        window.localStorage.setItem('is_superuser', 'false');
-                    }
-                }
-            });
+            window.localStorage.setItem('user', JSON.stringify(response.user));
+            if (response.user.is_superuser) {
+                document.location.href = '/admin/';
+                window.localStorage.setItem('is_superuser', 'true');
+            }
+            else {
+                document.location.href = '/client/';
+                window.localStorage.setItem('is_superuser', 'false');
+            }
         });
     },
     render: function(){
