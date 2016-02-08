@@ -237,9 +237,9 @@ var UpdateUserDlg = React.createClass({
             },
             success: function(response){
                 dlg.setState({
-                    username: response.user.username,
-                    first_name: response.user.first_name,
-                    last_name: response.user.last_name
+                    username: response.username,
+                    first_name: response.first_name,
+                    last_name: response.last_name
                 });
             }
         });

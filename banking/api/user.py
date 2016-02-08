@@ -91,9 +91,7 @@ class user(APIView):
         else:    
             user = User.objects.get(auth_token=key)
         user = UserSerializer(user)
-        return Response({
-            'user': user.data
-        })
+        return Response(user.data)
         
     def post(self, request, pk, pattern, format=None):
         try:
