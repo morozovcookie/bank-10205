@@ -69,6 +69,17 @@ class Event(models.Model):
         and values is participation part(int)."""
         rated_parts = 0
 
+        # get already participated users.
+        # select account - for distinct, and next three for data
+        old_trs = Transaction.objects.filter(event=self)\
+            .values('account', 'account__rate', 'credit', 'rate')\
+            .distinct()
+
+        # calc old rated-parts
+        if old_trs.count() != 0:
+            for t in old_trs:
+                rated_parts += t['account__rate'] * t['rate']
+
         for account, part in newbies.items():
             rated_parts += (part * account.rate)
 
@@ -76,6 +87,21 @@ class Event(models.Model):
 
         party_pay = self.price / rated_parts
 
+        # create for oldiers diff transactions
+        if old_trs.count() != 0:
+            for t in old_trs:
+                acc = Account.objects.get(id=t['account'])
+                diff = t['credit'] - (acc.rate * party_pay * t['rate'])
+                assert(diff != 0, "Incomer should change oldiers debt.")
+                if diff < 0:
+                    t = Transaction(event=self, credit=diff)
+                else:
+                    t = Transaction(event=self, debit=diff)
+
+                t.account = acc
+                t.save()
+
+        # create participation transactions
         for account, part in newbies.items():
             t = Transaction(account=account, event=self)
             t.credit = account.rate * party_pay * part
