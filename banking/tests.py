@@ -261,6 +261,61 @@ class EventParticipationTest(TestCase):
                          self.ubalance - party_pay * self.u6_p * self.u6_r)
         print("END test_recalc_debt")
 
+    def test_recalc_debt_outcomers(self):
+        """When some participation leave event, other split his debt."""
+        print("RUN test_recalc_debt_outcomers")
+        e = Event.objects.get(name="Target")
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
+
+        participation = {
+            users[0]: self.u1_p,
+            users[1]: self.u2_p,
+            users[2]: self.u3_p,
+            users[3]: self.u4_p,
+            users[4]: self.u5_p,
+            users[5]: self.u6_p,
+        }
+        e.add_participants(participation)
+
+        print(Transaction.objects.all())
+
+        outcomers = {
+            users[4]: self.u5_p,
+            users[5]: self.u6_p,
+        }
+        u1_old_balance = users[0].balance()
+        u2_old_balance = users[1].balance()
+
+        #########################################
+        e.remove_participants(outcomers)
+        #########################################
+
+        print(Transaction.objects.all())
+
+        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 2)
+        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 2)
+        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 2)
+        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 2)
+
+        # event should be closed
+        self.assertEqual(e.rest(), 0)
+        self.assertGreater(u1_old_balance, users[0].balance())
+        self.assertGreater(u2_old_balance, users[1].balance())
+
+        party_pay =\
+            self.eprice / (self.u1_p * self.u1_r + self.u2_p * self.u2_r
+                           + self.u3_p * self.u3_r + self.u4_p * self.u4_r)
+        # get from each participant summary only his party-pay
+        self.assertEqual(users[0].balance(),
+                         self.ubalance - party_pay * self.u1_p * self.u1_r)
+        self.assertEqual(users[1].balance(),
+                         self.ubalance - party_pay * self.u2_p * self.u2_r)
+        self.assertEqual(users[2].balance(),
+                         self.ubalance - party_pay * self.u3_p * self.u3_r)
+        self.assertEqual(users[3].balance(),
+                         self.ubalance - party_pay * self.u4_p * self.u4_r)
+        print("END test_recalc_debt_outcomers")
+
     def test_prevent_self_recalcs(self):
         """When add 'part' payment, should not create diff."""
         pass
