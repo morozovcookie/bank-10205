@@ -103,13 +103,15 @@ class Event(models.Model):
                 else:
                     newt = Transaction(event=self, debit=diff)
 
+                newt.rate = t['rate']
                 newt.account = acc
                 newt.save()
 
         # create participation transactions
         for account, part in newbies.items():
             t = Transaction(account=account, event=self)
-            t.credit = account.rate * party_pay * part
+            t.rate = part
+            t.credit = account.rate * party_pay * t.rate
             t.save()
 
     def rest(self):
