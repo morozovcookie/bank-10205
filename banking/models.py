@@ -43,7 +43,7 @@ class Account(models.Model):
             t.save()
 
     def __str__(self):
-        return self.user.__str__()
+        return self.user.__str__() + "(" + str(self.rate) + ")"
 
 
 class Event(models.Model):
@@ -68,7 +68,6 @@ class Event(models.Model):
         """Add participants in event. Takes dict, where keys - is account models
         and values is participation part(int)."""
         rated_parts = 0
-
         # get already participated users.
         # select account - for distinct, and next three for data
         old_trs = Transaction.objects.filter(event=self)\
@@ -91,15 +90,21 @@ class Event(models.Model):
         if old_trs.count() != 0:
             for t in old_trs:
                 acc = Account.objects.get(id=t['account'])
-                diff = t['credit'] - (acc.rate * party_pay * t['rate'])
+                new_price = acc.rate * party_pay * t['rate']
+                diff = t['credit'] - new_price
                 assert(diff != 0, "Incomer should change oldiers debt.")
+                # old price > new price(diff > 0), when we have newbies.
+                # old price < new price(diff < 0), when we have leavers.
+                # If we have newbies, than oldiers get little part back;
+                # else(when some leave event) rest participants split leaver
+                # debt by between themselves.
                 if diff < 0:
-                    t = Transaction(event=self, credit=diff)
+                    newt = Transaction(event=self, credit=diff)
                 else:
-                    t = Transaction(event=self, debit=diff)
+                    newt = Transaction(event=self, debit=diff)
 
-                t.account = acc
-                t.save()
+                newt.account = acc
+                newt.save()
 
         # create participation transactions
         for account, part in newbies.items():
@@ -136,10 +141,10 @@ class Transaction(models.Model):
 
     def __str__(self):
         if self.credit == 0:
-            return str(self.account) + "←" + str(self.event)\
+            return str(self.account) + "←(" + str(self.rate) + ")" + str(self.event)\
                 + ":%.1f" % self.debit
         else:
-            return str(self.account) + "→" + str(self.event) \
+            return str(self.account) + "→(" + str(self.rate) + ")" + str(self.event) \
                 + ":%.1f" % self.credit
 
 

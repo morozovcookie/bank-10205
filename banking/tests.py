@@ -218,6 +218,8 @@ class EventParticipationTest(TestCase):
             users[2]: self.u3_p,
             users[3]: self.u4_p,
         }
+        u1_old_balance = users[0].balance()
+        u2_old_balance = users[1].balance()
 
         #########################################
         e.add_participants(newbies)
@@ -242,7 +244,8 @@ class EventParticipationTest(TestCase):
 
         # event should be closed
         self.assertEqual(e.rest(), 0)
-
+        self.assertLess(u1_old_balance, users[0].balance())
+        self.assertLess(u2_old_balance, users[1].balance())
         # get from each participant summary only his party-pay
         self.assertEqual(users[0].balance(),
                          self.ubalance - party_pay * self.u1_p * self.u1_r)
@@ -257,3 +260,7 @@ class EventParticipationTest(TestCase):
         self.assertEqual(users[5].balance(),
                          self.ubalance - party_pay * self.u6_p * self.u6_r)
         print("END test_recalc_debt")
+
+    def test_prevent_self_recalcs(self):
+        """When add 'part' payment, should not create diff."""
+        pass
