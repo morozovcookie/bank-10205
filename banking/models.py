@@ -92,17 +92,10 @@ class Event(models.Model):
                 acc = Account.objects.get(id=t['account'])
                 new_price = acc.rate * party_pay * t['rate']
                 diff = t['credit'] - new_price
-                assert(diff != 0, "Incomer should change oldiers debt.")
+                assert(diff > 0, "Incomer should change oldiers debt.")
                 # old price > new price(diff > 0), when we have newbies.
-                # old price < new price(diff < 0), when we have leavers.
-                # If we have newbies, than oldiers get little part back;
-                # else(when some leave event) rest participants split leaver
-                # debt by between themselves.
-                if diff < 0:
-                    newt = Transaction(event=self, credit=diff)
-                else:
-                    newt = Transaction(event=self, debit=diff)
-
+                # Oldiers get little part back.
+                newt = Transaction(event=self, debit=diff)
                 newt.rate = t['rate']
                 newt.account = acc
                 newt.save()
@@ -113,6 +106,41 @@ class Event(models.Model):
             t.rate = part
             t.credit = account.rate * party_pay * t.rate
             t.save()
+
+
+    def remove_participants(self, leavers):
+        # get transacts with accs exclude leavers
+        # calc party_pay
+        # create diffs for selected
+        # remove all transactions on leavers
+        rest_trs = Transaction.objects.filter(event=self)\
+            .exclude(account__in=list(leavers))\
+            .values('account', 'account__rate', 'credit', 'rate')\
+            .distinct()
+
+        rated_parts = 0
+        if rest_trs.count() != 0:
+            for t in rest_trs:
+                rated_parts += t['account__rate'] * t['rate']
+
+        party_pay = self.price / rated_parts
+
+        # create for oldiers diff transactions
+        if rest_trs.count() != 0:
+            for t in rest_trs:
+                acc = Account.objects.get(id=t['account'])
+                new_price = acc.rate * party_pay * t['rate']
+                diff = t['credit'] - new_price
+                assert(diff < 0, "Leavers should change oldiers debt.")
+                # old price < new price(diff < 0), when we have leavers.
+                # Rest participants split leaver debt by between themselves.
+                newt = Transaction(event=self, credit=abs(diff))
+                newt.rate = t['rate']
+                newt.account = acc
+                newt.save()
+
+        rm_trs = Transaction.objects.filter(event=self, account__in=leavers)
+        rm_trs.delete()
 
     def rest(self):
         """ Return rest moneys, that not payed yet."""
