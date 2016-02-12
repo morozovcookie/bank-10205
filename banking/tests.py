@@ -314,6 +314,8 @@ class EventParticipationTest(TestCase):
                          self.ubalance - party_pay * self.u3_p * self.u3_r)
         self.assertEqual(users[3].balance(),
                          self.ubalance - party_pay * self.u4_p * self.u4_r)
+        self.assertEqual(Transaction.objects.filter(account=users[4]).count(), 0)
+        self.assertEqual(Transaction.objects.filter(account=users[5]).count(), 0)
         print("END test_recalc_debt_outcomers")
 
     def test_prevent_self_recalcs(self):
