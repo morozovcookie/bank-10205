@@ -319,7 +319,3 @@ class EventParticipationTest(TestCase):
         self.assertEqual(Transaction.objects.filter(account=users[5]).count(),
                          0)
         print("END test_recalc_debt_outcomers")
-
-    def test_prevent_self_recalcs(self):
-        """When add 'part' payment, should not create diff."""
-        pass
