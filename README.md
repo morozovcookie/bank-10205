@@ -5,9 +5,9 @@ Python Django Framework, ReactJS, PostgreSQL
 # Requirements
 -   Python 2.7
 -   Nginx
--   Django Framework
--   Django REST Framework
--   PostgreSQL
+-   Django Framework 3.3.2
+-   Django REST Framework 1.9.1
+-   PostgreSQL 9.3.10
 
 For install this soft run `sudo apt-get install python2.7 python-django python-djangorestframework python-psycopg2 libpq-dev python-dev postgresql postgresql-contrib -y`
 
