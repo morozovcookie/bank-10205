@@ -81,7 +81,7 @@ class user(APIView):
         IsAuthenticated,
     )
 
-    def get(self, request, pk, pattern, format=None):
+    def get(self, request, pk=None, pattern=None, format=None):
         key = request.META.get('HTTP_AUTHORIZATION')
         if key is None:
             return Response(

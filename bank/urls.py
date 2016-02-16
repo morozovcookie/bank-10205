@@ -22,8 +22,8 @@ urlpatterns = [
     url(r'^api/events/(?P<pk>[0-9]+)/$', EventDetail.as_view()),
     url(r'^api/auth/$', api_user.auth.as_view(), name='auth'),
     url(r'^api/user/$', api_user.user.as_view(), name='user'),
-    url(r'^api/users/', api_user.user_list.as_view(), name='user-list'),
-
+    url(r'^api/users/$', api_user.user_list.as_view(), name='user-list'),
+	url(r'^api/users/(?P<pk>[0-9]+)/$', api_user.user.as_view(), name='user-detail'),
     # API docs. Uncomment 'django-rest-swagger' in apps, and install package.
     # By the way, it's need more work, to become nice.
     # url(r'^docs/', include('rest_framework_swagger.urls')),
