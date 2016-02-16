@@ -1,34 +1,51 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.http import Http404
 
-# from rest_framework.authtoken.models import Token
-# from rest_framework.exceptions import ParseError
-# from rest_framework import status
+from rest_framework import views
+from rest_framework.response import Response
+from rest_framework import status
 
 from banking.models import Event
-
-# from banking.views import has_permisions
-from banking.serializers.event import EventSerializer
-from banking.serializers.user import AccountSerializer
-
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, \
-    IsAuthenticatedOrReadOnly
-
-from rest_framework import viewsets
-
-from rest_framework.decorators import detail_route
-from rest_framework import renderers
-# from django.http import JsonResponse, HttpResponse
+from banking.serializers.event import EventSerializer, EventFullSerializer
+# from banking.serializers.user import AccountSerializer
 
 
-class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class EventView(views.APIView):
 
-    @detail_route(renderer_classes=[renderers.JSONRenderer])
-    def participants(self, req, *args, **kwargs):
-        e = self.get_object()
-        ser = AccountSerializer(e.get_participants(), many=True)
+    def get(self, req, format=None):
+        events = Event.objects.all()
+        ser = EventSerializer(events, many=True)
         return Response(ser.data)
+
+    def post(self, req, format=None):
+        ser = EventSerializer(data=req.data)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data, status=status.HTTP_201_CREATED)
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EventDetail(views.APIView):
+
+    def get_object(self, pk):
+        try:
+            return Event.objects.get(pk=pk)
+        except Event.DoesNotExist:
+            raise Http404
+
+    def get(self, req, pk, format=None):
+        e = self.get_object(pk)
+        ser = EventFullSerializer(e)
+        return Response(ser.data)
+
+    def put(self, req, pk, format):
+        e = self.get_object(pk)
+        ser = EventSerializer(e, data=req.data)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data)
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, req, pk, format=None):
+        e = self.get_object(pk)
+        e.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

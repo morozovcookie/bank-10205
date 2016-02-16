@@ -10,8 +10,12 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
+        fields = ('id', 'name', 'date', 'price', 'author', 'private')
+
 
 class EventFullSerializer(EventSerializer):
-    # append list of participants, getted from `get_participants()` method of
-    # event.
+    """ Extended with participants list."""
     participants = AccountSerializer(many=True, source='get_participants')
+
+    class Meta(EventSerializer.Meta):
+        fields = ('name', 'date', 'price', 'author', 'private', 'participants')
