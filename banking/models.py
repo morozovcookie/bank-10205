@@ -61,8 +61,11 @@ class Event(models.Model):
         self.private = t.private
 
     def get_participants(self):
-        return [t.account for t in
-                Transaction.objects.filter(event=self).distinct()]
+        accs_rates = Transaction.objects.filter(event=self)\
+            .values('account', 'rate').distinct()
+        for p in accs_rates:
+            p.update({'account': Account.objects.get(id=p['account'])})
+        return accs_rates
 
     def add_participants(self, newbies):
         """Add participants in event. Takes dict, where keys - is account models
