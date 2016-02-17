@@ -21,13 +21,16 @@ class EventSerializer(serializers.ModelSerializer):
 class ParticipationSerializer(serializers.Serializer):
     rate = serializers.IntegerField()
     account = serializers.HyperlinkedRelatedField(
-        many=False, view_name='user-detail', queryset=Account.objects.all())
+        read_only=True, many=False, view_name='user-detail')
 
 
-class EventFullSerializer(EventSerializer):
+class EventFullSerializer(serializers.ModelSerializer):
     """ Extended with participants list."""
     participants = ParticipationSerializer(many=True,
                                            source='get_participants')
+    author = serializers.StringRelatedField()
 
-    class Meta(EventSerializer.Meta):
-        fields = ('name', 'date', 'price', 'author', 'private', 'participants')
+    class Meta:
+        model = Event
+        fields = ('id', 'name', 'date', 'price', 'author', 'private',
+                  'participants')
