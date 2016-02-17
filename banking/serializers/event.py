@@ -1,13 +1,17 @@
 from rest_framework import serializers
 from banking.models import Event, Account
-from banking.serializers.user import AccountSerializer
 
 
 class EventSerializer(serializers.ModelSerializer):
-    #  fix author field. Show its str representation(__str__ in account)
-    #  instead pk.
-    author = serializers.HyperlinkedRelatedField(
-        many=False, view_name='user-detail', queryset=Account.objects.all())
+    """ Used for display event in POST, and PUT requests """
+    author = serializers.PrimaryKeyRelatedField(required=True, many=False,
+                                                queryset=Account.objects.all())
+
+    def create(self, validated_data):
+        """Create event from income data"""
+        e = Event(**validated_data)
+        e.save()
+        return e
 
     class Meta:
         model = Event

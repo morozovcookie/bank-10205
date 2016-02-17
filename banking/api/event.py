@@ -1,8 +1,7 @@
 from django.http import Http404
 
-from rest_framework import views
+from rest_framework import views, status, generics
 from rest_framework.response import Response
-from rest_framework import status
 
 from banking.models import Event
 from banking.serializers.event import\
@@ -10,18 +9,14 @@ from banking.serializers.event import\
 # from banking.serializers.user import AccountSerializer
 
 
-class EventView(views.APIView):
-    def get(self, req, format=None):
-        events = Event.objects.all()
-        ser = EventSerializer(events, many=True, context={'request': req})
-        return Response(ser.data)
+class EventListView(generics.ListCreateAPIView):
+    model = Event
+    serializer_class = EventFullSerializer
+    queryset = Event.objects.all()
 
-    def post(self, req, format=None):
-        ser = EventSerializer(data=req.data)
-        if ser.is_valid():
-            ser.save()
-            return Response(ser.data, status=status.HTTP_201_CREATED)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        self.serializer_class = EventSerializer
+        return super(EventListView, self).post(request)
 
 
 class EventDetail(views.APIView):
