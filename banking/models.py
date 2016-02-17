@@ -79,6 +79,10 @@ class Event(models.Model):
             .values('account', 'account__rate', 'credit', 'rate')\
             .distinct()
 
+        # Don't add participant, when he is already participated
+        if old_trs.filter(account__in=list(newbies)).count() != 0:
+            return
+
         # calc old rated-parts
         if old_trs.count() != 0:
             for t in old_trs:

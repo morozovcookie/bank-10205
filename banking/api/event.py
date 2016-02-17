@@ -5,7 +5,6 @@ from rest_framework.response import Response
 
 from banking.models import Event
 from banking.serializers.event import *
-# from banking.serializers.user import AccountSerializer
 
 
 class EventListView(generics.ListCreateAPIView):
@@ -47,9 +46,18 @@ class ParticipantListView(views.APIView):
         return Response(ps.data)
 
     def post(self, req, event_pk, format=None):
-        print(req.data)
+        """
+        Expect array, like: [{"rate": 1, "account": 1}, ...]. Account contains
+        pk.
+        """
         ser = ParticipationPostSerializer(data=req.data,
-                                          context={'request': req})
+                                          context={'request': req}, many=True)
         if ser.is_valid():
-            return Response(ser.data)
+            newbies = {}
+            for p in ser.validated_data:
+                newbies.update({p['account']: p['rate']})
+            print(newbies)
+            e = self.get_event(event_pk)
+            e.add_participants(newbies)
+            return Response(ParticipationSerializer(e.get_participants()).data)
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
