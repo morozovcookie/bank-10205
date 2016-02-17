@@ -319,3 +319,20 @@ class EventParticipationTest(TestCase):
         self.assertEqual(Transaction.objects.filter(account=users[5]).count(),
                          0)
         print("END test_recalc_debt_outcomers")
+
+    def test_remove_unparticipated(self):
+        """ Should return ok.  """
+        e = Event.objects.get(name="Target")
+        users = Account.objects.filter(user__username__iregex=r'^P\d$')
+
+        participation = {
+            users[0]: self.u1_p,
+        }
+        e.add_participants(participation)
+
+        #########################################
+        # expect no raise
+        e.remove_participants([users[1]])
+        #########################################
+        self.assertEqual(e.get_participants().count(), 1)
+        self.assertEqual(e.get_participants()[0]['account'], users[0])
