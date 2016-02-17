@@ -92,3 +92,9 @@ class ParticipantDetail(views.APIView):
         return Response(
             ParticipationSerializer(p, context={'request': req}).data
         )
+
+    def delete(self, req, event_pk, pk):
+        e = get_event(event_pk)
+        p = get_participation(e, pk)
+        e.remove_participants([p['account']])
+        return Response(status=status.HTTP_204_NO_CONTENT)
