@@ -5,14 +5,15 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from banking.models import Event
-from banking.serializers.event import EventSerializer, EventFullSerializer, ParticipationSerializer
+from banking.serializers.event import\
+    EventSerializer, EventFullSerializer, ParticipationSerializer
 # from banking.serializers.user import AccountSerializer
 
 
 class EventView(views.APIView):
     def get(self, req, format=None):
         events = Event.objects.all()
-        ser = EventSerializer(events, many=True, context={'request':req})
+        ser = EventSerializer(events, many=True, context={'request': req})
         return Response(ser.data)
 
     def post(self, req, format=None):
@@ -32,13 +33,13 @@ class EventDetail(views.APIView):
 
     def get(self, req, pk, format=None):
         e = self.get_object(pk)
-        ser = EventFullSerializer(e, context={'request':req})
+        ser = EventFullSerializer(e, context={'request': req})
         return Response(ser.data)
 
     def put(self, req, pk, format=None):
         e = self.get_object(pk)
-        #TODO: FIX expecting name & price, when put only author
-        ser = EventSerializer(e, data=req.data, context={'request':req})
+        # TODO: FIX expecting name & price, when put only author
+        ser = EventSerializer(e, data=req.data, context={'request': req})
         if ser.is_valid():
             ser.save()
             return Response(ser.data)
