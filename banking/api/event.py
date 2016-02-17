@@ -4,8 +4,7 @@ from rest_framework import views, status, generics
 from rest_framework.response import Response
 
 from banking.models import Event
-from banking.serializers.event import\
-    EventSerializer, EventFullSerializer, ParticipationSerializer
+from banking.serializers.event import *
 # from banking.serializers.user import AccountSerializer
 
 
@@ -15,7 +14,7 @@ class EventListView(generics.ListCreateAPIView):
     queryset = Event.objects.all()
 
     def post(self, request):
-        self.serializer_class = EventSerializer
+        self.serializer_class = EventPostSerializer
         return super(EventListView, self).post(request)
 
 
@@ -25,15 +24,15 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
 
     def put(self, request, pk):
-        self.serializer_class = EventSerializer
+        self.serializer_class = EventPostSerializer
         return super(EventDetail, self).put(request, pk)
 
     def patch(self, request, pk):
-        self.serializer_class = EventSerializer
+        self.serializer_class = EventPostSerializer
         return super(EventDetail, self).patch(request, pk)
 
 
-class ParticipantsView(views.APIView):
+class ParticipantListView(views.APIView):
     def get_event(self, pk):
         try:
             e = Event.objects.get(pk=pk)
@@ -49,7 +48,8 @@ class ParticipantsView(views.APIView):
 
     def post(self, req, event_pk, format=None):
         print(req.data)
-        ser = ParticipationSerializer(data=req.data, context={'request': req})
+        ser = ParticipationPostSerializer(data=req.data,
+                                          context={'request': req})
         if ser.is_valid():
             return Response(ser.data)
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
