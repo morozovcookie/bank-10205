@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     # 'rest_framework_swagger',  # pip install django-rest-swagger
     'banking',
+    'django_nose'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -126,3 +127,5 @@ REST_FRAMEWORK = {
 MIGRATION_MODULES = {
     'banking': 'banking.migrations'
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
