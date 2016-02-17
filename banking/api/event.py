@@ -1,10 +1,38 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 
 from rest_framework import views, status, generics
 from rest_framework.response import Response
 
 from banking.models import Event
 from banking.serializers.event import *
+
+
+def get_event(pk):
+    try:
+        e = Event.objects.get(pk=pk)
+        return e
+    except Event.DoesNotExist:
+        raise Http404
+
+
+def get_participation(e, pk):
+    """Return participation dict.
+    keys:
+        account -- account object
+        rate -- participation parts
+    """
+    acc = get_object_or_404(Account, pk=pk)
+    tmp = e.get_participants()
+    participation = None
+    for p in tmp:
+        if p['account'] == acc:
+            participation = p
+            break
+    # getting 404
+    if not participation:
+        raise Http404
+    return participation
 
 
 class EventListView(generics.ListCreateAPIView):
@@ -32,15 +60,8 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ParticipantListView(views.APIView):
-    def get_event(self, pk):
-        try:
-            e = Event.objects.get(pk=pk)
-            return e
-        except Event.DoesNotExist:
-            raise Http404
-
     def get(self, req, event_pk, format=None):
-        e = self.get_event(event_pk)
+        e = get_event(event_pk)
         ps = ParticipationSerializer(e.get_participants(), many=True,
                                      context={'request': req})
         return Response(ps.data)
@@ -57,7 +78,17 @@ class ParticipantListView(views.APIView):
             for p in ser.validated_data:
                 newbies.update({p['account']: p['rate']})
             print(newbies)
-            e = self.get_event(event_pk)
+            e = get_event(event_pk)
             e.add_participants(newbies)
             return Response(ParticipationSerializer(e.get_participants()).data)
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ParticipantDetail(views.APIView):
+    def get(self, req, event_pk, pk):
+        e = get_event(event_pk)
+        p = get_participation(e, pk)
+
+        return Response(
+            ParticipationSerializer(p, context={'request': req}).data
+        )
