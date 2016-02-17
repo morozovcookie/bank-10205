@@ -279,10 +279,10 @@ class EventParticipationTest(TestCase):
 
         print(Transaction.objects.all())
 
-        outcomers = {
-            users[4]: self.u5_p,
-            users[5]: self.u6_p,
-        }
+        outcomers = [
+            users[4],
+            users[5]
+        ]
         u1_old_balance = users[0].balance()
         u2_old_balance = users[1].balance()
 

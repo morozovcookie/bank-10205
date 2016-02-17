@@ -123,7 +123,7 @@ class Event(models.Model):
         # create diffs for selected
         # remove all transactions on leavers
         rest_trs = Transaction.objects.filter(event=self)\
-            .exclude(account__in=list(leavers))\
+            .exclude(account__in=leavers)\
             .values('account', 'account__rate', 'credit', 'rate')\
             .distinct()
 
