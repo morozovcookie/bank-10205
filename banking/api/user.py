@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from banking.models import Account
 from banking.views import has_permisions
-from banking.serializers.user import UserSerializer
+from banking.serializers.user import UserSerializer, AccountSerializer
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -199,8 +199,6 @@ class user_list(APIView):
     )
 
     def get(self, request, format=None):
-        users = User.objects.all()
-        users = UserSerializer(users, many=True)
-        return JsonResponse({
-            'users': users.data
-        })
+        users = Account.objects.all()
+        users = AccountSerializer(users, many=True, context={'request': request})
+        return Response(users.data)
