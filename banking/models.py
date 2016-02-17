@@ -49,7 +49,7 @@ class Account(models.Model):
 
 
 class Event(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique_for_date='date')
     date = models.DateField(auto_now_add=True, blank=False)
     price = models.FloatField()
     author = models.ForeignKey(Account)
