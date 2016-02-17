@@ -27,7 +27,8 @@ class ParticipationSerializer(serializers.Serializer):
 class EventFullSerializer(serializers.ModelSerializer):
     """ Extended with participants list."""
     participants = ParticipationSerializer(many=True,
-                                           source='get_participants')
+                                           source='get_participants',
+                                           read_only=True)
     author = serializers.StringRelatedField()
 
     class Meta:

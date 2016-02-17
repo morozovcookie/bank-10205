@@ -19,31 +19,18 @@ class EventListView(generics.ListCreateAPIView):
         return super(EventListView, self).post(request)
 
 
-class EventDetail(views.APIView):
-    def get_object(self, pk):
-        try:
-            return Event.objects.get(pk=pk)
-        except Event.DoesNotExist:
-            raise Http404
+class EventDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Event
+    serializer_class = EventFullSerializer
+    queryset = Event.objects.all()
 
-    def get(self, req, pk, format=None):
-        e = self.get_object(pk)
-        ser = EventFullSerializer(e, context={'request': req})
-        return Response(ser.data)
+    def put(self, request, pk):
+        self.serializer_class = EventSerializer
+        return super(EventDetail, self).put(request, pk)
 
-    def put(self, req, pk, format=None):
-        e = self.get_object(pk)
-        # TODO: FIX expecting name & price, when put only author
-        ser = EventSerializer(e, data=req.data, context={'request': req})
-        if ser.is_valid():
-            ser.save()
-            return Response(ser.data)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, req, pk, format=None):
-        e = self.get_object(pk)
-        e.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def patch(self, request, pk):
+        self.serializer_class = EventSerializer
+        return super(EventDetail, self).patch(request, pk)
 
 
 class ParticipantsView(views.APIView):
