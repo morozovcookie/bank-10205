@@ -10,7 +10,7 @@ from .models import *
 @admin.register(Account)
 class UserAdmin(admin.ModelAdmin):
     pass
-    # list_display = ('username', 'rate', 'balance')
+    list_display = ('user', 'rate', 'balance')
     # inlines = [ParticipantInline]
     # fields = ('password', 'username', 'first_name', 'last_name', 'email',
     #           'user_permissions', 'rate', )
@@ -19,6 +19,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
+    list_display = ('name', 'date', 'price', 'rest')
     pass
 
 
