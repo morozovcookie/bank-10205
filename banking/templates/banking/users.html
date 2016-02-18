@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-10">
+			<h3>Список сотрудников</h3>
+		</div>
+		<div class="col-md-2">
+			<a class="btn btn-success" href="#" style="margin-top:16px;" data-toggle="modal" data-target="#create-user-dlg">
+				<span class="glyphicon glyphicon-plus"></span> Новый сотрудник
+			</a>
+		</div>
+	</div>
+	<div class="row" style="margin-top:20px;">
+		<div class="col-md-12" id="usertable">...</div>
+	</div>
+</div>
+
+<div class="modal fade" id="create-user-dlg" tabindex="-1">
+	<div class="modal-dialog" id="new-user">...</div>
+</div>
+
+<div class="modal fade" id="update-user-dlg" tabindex="-1">
+	<div class="modal-dialog" id="update-user">...</div>
+</div>
+
+<link rel="stylesheet" href="{% static 'css/users.css' %}" />
+<script type="text/babel" src="{% static 'js/users.js' %}"></script>

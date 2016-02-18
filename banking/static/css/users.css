@@ -1,0 +1,48 @@
+form[name="create-user-form"] .input-group{
+	margin:10px;
+    width:99%;
+}
+
+form[name="create-user-form"] .input-group span{
+	width:30%;
+}
+
+#add-user-button{
+	margin-left:70px;
+}
+
+#user-table tbody tr{
+	cursor: pointer;
+}
+
+#user-table .btn{
+	padding: 3px 6px;	
+    margin:2px;
+}
+
+form[name="update-user-form"] .input-group{
+	margin:20px 40px;
+}
+
+#logo{
+	width:42px;
+	height:42px;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+	border-bottom-left-radius:5px;
+	border-bottom-right-radius:5px;
+}
+
+#non-logo{
+	width:25px;
+	height:25px;
+}
+
+form[name="update-user-form"] .input-group{
+	margin:10px;
+    width:99%;
+}
+
+form[name="update-user-form"] .input-group span{
+	width:30%;
+}

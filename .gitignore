@@ -1,0 +1,7 @@
+staticfiles/
+**/migrations/
+**/__pycache__/
+**/.ropeproject/
+*.pyc
+nginx.log/
+*.backup
