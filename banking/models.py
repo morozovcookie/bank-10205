@@ -63,6 +63,11 @@ class Event(models.Model):
         self.private = t.private
 
     def get_participants(self):
+        """Get participants of Event
+        @return:  participants List of dicts, where keys: 'account', 'rate'.
+        'rate' - is participation rate(parts).
+        @rtype :  List
+        """
         accs_rates = Transaction.objects.filter(event=self)\
             .values('account', 'rate').distinct()
         for p in accs_rates:
@@ -115,7 +120,6 @@ class Event(models.Model):
             t.rate = part
             t.credit = account.rate * party_pay * t.rate
             t.save()
-
 
     def remove_participants(self, leavers):
         # get transacts with accs exclude leavers
