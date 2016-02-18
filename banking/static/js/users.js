@@ -253,7 +253,7 @@ var UpdateUserDlg = React.createClass({
                 </div>
                 <div className="modal-body">
                     <form className="form-horizontal" name="update-user-form">
-                        <fieldset>	
+                        <fieldset>
                             <Edit Label="Логин" Value={this.state.username} Type="text" LabelId="username-label" EditId="username-input" FormName="update-user-form" Change={this.handleUsernameChange} />
                             <Edit Label="Временный пароль" Value="" Type="password" LabelId="temp-password-label" EditId="temp-password-input" FormName="update-user-form" Change={this.handlePasswordChange} />
                             <Edit Label="Имя" Type="text" Value={this.state.first_name} LabelId="user-firstname-label" EditId="user-firstname-input" FormName="update-user-form" Change={this.handleFirstnameChange} />
@@ -267,7 +267,7 @@ var UpdateUserDlg = React.createClass({
                         <OKButton Link="#" Class="btn btn-warning" Id="update-user-button" Caption="Сохранить" Click={this.handleUpdateUser} />
                     </div>
                 </div>
-            </div>            
+            </div>
         );
     }
 });
@@ -287,12 +287,12 @@ var Edit = React.createClass({
 var OKButton = React.createClass({
    render: function(){
        return (
-            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} data-dismiss="modal" 
+            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} data-dismiss="modal"
             aria-hidden="true" onClick={this.props.Click}>
                 <span className="glyphicon glyphicon-ok"></span> {this.props.Caption}
-            </a> 
+            </a>
        );
-   } 
+   }
 });
 
 ReactDOM.render(

@@ -7,8 +7,9 @@ from rest_framework import status
 
 from django.contrib.auth.models import User
 
+from banking.models import Account
 from banking.views import has_permisions
-from banking.serializers.user import UserSerializer
+from banking.serializers.user import UserSerializer, AccountSerializer
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -18,6 +19,7 @@ from django.http import JsonResponse, HttpResponse
 import urllib
 
 from django.db.models import Q
+
 
 class auth(APIView):
     def post(self, request, format=None):
@@ -33,15 +35,22 @@ class auth(APIView):
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        user = User.objects.get(username=data['username'])    
+        try:
+            user = User.objects.get(username=data['username'])
+        except User.DoesNotExist:
+            return Response("User not exists",
+                            status=status.HTTP_404_NOT_FOUND)
+
         if not user or not user.check_password(data['password']):
             return Response(
                 'No default user, please create one',
                 status=status.HTTP_404_NOT_FOUND
             )
+
         token = Token.objects.get_or_create(user=user)
         return Response({
-            'token': token[0].key
+            'token': token[0].key,
+            'user': UserSerializer(user).data
         })
 
     def delete(self, request, format=None):
@@ -71,10 +80,10 @@ class user(APIView):
     permission_classes = (
         IsAuthenticated,
     )
-    
+
     def get(self, request, pk, pattern, format=None):
-        key = request.META.get('HTTP_AUTHORIZATION')   
-        if key is None: 
+        key = request.META.get('HTTP_AUTHORIZATION')
+        if key is None:
             return Response(
                 'Invalid HTTP request - {0}',
                 status=status.HTTP_400_BAD_REQUEST
@@ -85,16 +94,22 @@ class user(APIView):
             user = User.objects.get(pk=pk)
         elif pattern:
             pattern = urllib.unquote(pattern)
-            query = Q(username__startswith=pattern) | Q(first_name__startswith=pattern) | Q(last_name__startswith=pattern)
+
+            query = Q(username__startswith=pattern) |\
+                Q(first_name__startswith=pattern) |\
+                Q(last_name__startswith=pattern)
+
             users = User.objects.filter(query).distinct()
             users = UserSerializer(users, many=True)
+
             return Response(users.data)
-        else:    
+        else:
             user = User.objects.get(auth_token=key)
+
         user = UserSerializer(user)
         return Response(user.data)
-        
-    def post(self, request, pk, pattern, format=None):
+
+    def post(self, request, format=None):
         try:
             data = request.data
         except ParseError as error:
@@ -102,7 +117,8 @@ class user(APIView):
                 'Invalid JSON - {0}'.format(error.detail),
                 status=status.HTTP_400_BAD_REQUEST
             )
-        if 'username' not in data or 'password' not in data or 'first_name' not in data or 'last_name' not in data:
+        if 'username' not in data or 'password' not in data or \
+           'first_name' not in data or 'last_name' not in data:
             return Response(
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
@@ -119,17 +135,29 @@ class user(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         user = User.objects.create_user(
-            username=data['username'], 
+            username=data['username'],
             password=data['password']
         )
         user.first_name = data['first_name']
         user.last_name = data['last_name']
+
+        acc = Account(user=user)  # by default rate field get '1.0' value
+        if 'rate' in data:
+            acc.rate = data['rate']
+
         user.save()
-        users = User.objects.all().order_by('pk')
+        acc.save()
+
+        users = User.objects.all()
         users = UserSerializer(users, many=True)
-        return Response(users.data)
-        
-    def put(self, request, pk, pattern, format=None):
+        return JsonResponse({
+            'users': users.data
+        })
+
+    def put(self, request, format=None):
+        pass
+
+    def delete(self, request, format=None):
         try:
             data = request.data
         except ParseError as error:
@@ -137,7 +165,7 @@ class user(APIView):
                 'Invalid JSON - {0}'.format(error.detail),
                 status=status.HTTP_400_BAD_REQUEST
             )
-        if 'username' not in data or 'password' not in data or 'first_name' not in data or 'last_name' not in data:
+        if 'username' not in data:
             return Response(
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
@@ -168,7 +196,7 @@ class user(APIView):
         users = User.objects.all().order_by('pk')
         users = UserSerializer(users, many=True)
         return Response(users.data)
-    
+
     def delete(self, request, pk, pattern, format=None):
         try:
             if not has_permisions(request):
@@ -191,7 +219,8 @@ class user(APIView):
         users = User.objects.all().order_by('pk')
         users = UserSerializer(users, many=True)
         return Response(users.data)
-        
+
+
 class user_list(APIView):
     authentication_classes = (
         TokenAuthentication,
@@ -199,8 +228,8 @@ class user_list(APIView):
     permission_classes = (
         IsAuthenticated,
     )
-    
+
     def get(self, request, format=None):
-        users = User.objects.all().order_by('pk')
-        users = UserSerializer(users, many=True)
+        users = Account.objects.all().order_by('pk')
+        users = AccountSerializer(users, many=True, context={'request': request})
         return Response(users.data)

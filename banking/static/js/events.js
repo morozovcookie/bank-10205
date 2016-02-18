@@ -117,7 +117,7 @@ var CreateEventDlg = React.createClass({
                 <div className="modal-footer">
                     <div className="col-md-9"></div>
                     <div className="col-md-3">
-                        <CloseDlgButton Link="#" Class="btn btn-success" Id="next-step-button" Caption="Создать" Click={this.handleGoToEventBuilder}/> 
+                        <CloseDlgButton Link="#" Class="btn btn-success" Id="next-step-button" Caption="Создать" Click={this.handleGoToEventBuilder}/>
                     </div>
                 </div>
             </div>
@@ -203,7 +203,7 @@ var Edit = React.createClass({
             <div className="input-group">
                 <span className="input-group-addon" id={this.props.LabelId}>{this.props.Label}</span>
                 <input type={this.props.Type} className="form-control" id={this.props.EditId} value={this.props.Value}
-                form={this.props.FormName} aria-describedby={this.props.LabelId} onChange={this.props.Change} 
+                form={this.props.FormName} aria-describedby={this.props.LabelId} onChange={this.props.Change}
                 onFocus={this.props.Focus} onBlur={this.props.Blur} />
             </div>
         );
@@ -215,9 +215,9 @@ var CloseDlgButton = React.createClass({
        return (
            <a href={this.props.Link} className={this.props.Class} id={this.props.Id} onClick={this.props.Click} data-dismiss="modal" aria-hidden="true">
                 <span className="glyphicon glyphicon-ok"></span> {this.props.Caption}
-            </a> 
+            </a>
        );
-   } 
+   }
 });
 
 ReactDOM.render(
