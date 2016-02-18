@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load staticfiles %}
 <link rel="stylesheet" href="{% static 'css/admin/index.css' %}" />
 
@@ -27,4 +28,35 @@
         else
             document.location.href = '/auth/';
     });
+=======
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/admin/index.css' %}" />
+
+<div class="container-fluid">
+    <div class="row" id="navbar">. . .</div>
+    <div class="row">
+        <div class="col-md-2" id="nav">. . .</div>
+        <div class="col-md-10">
+            <div class="well col-md-12">
+                {% autoescape off %}
+                    {{ content }}
+                {% endautoescape %}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/babel" src="{% static 'js/admin/index.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var token = window.localStorage.getItem('token');
+        if (token!=undefined)
+        {
+            var is_superuser = window.localStorage.getItem('is_superuser');
+            if (is_superuser !== 'true')
+                document.location.href = '/error/';
+        }
+        else
+            document.location.href = '/auth/';
+    });
+>>>>>>> dev
 </script>

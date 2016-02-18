@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+<<<<<<< HEAD
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -18,6 +19,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'dx_@wzgii_!du+xkbm!s9ma)wy$au@^w@t9np_il08fy947w%4'
+=======
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '8a16=nu((q05jgxwea*q+1-_*96fh!%0(y&x$qwptdt6x85i7m'
+>>>>>>> dev
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,6 +50,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+<<<<<<< HEAD
+=======
+    # 'rest_framework_swagger',  # pip install django-rest-swagger
+>>>>>>> dev
     'banking',
 )
 
@@ -73,6 +89,7 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 
 
 # Database
+<<<<<<< HEAD
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
@@ -86,6 +103,26 @@ DATABASES = {
     }
 }
 
+=======
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'bank',
+#         'USER': 'admin',
+#         'PASSWORD': 'admin',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+#
+>>>>>>> dev
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -101,7 +138,11 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+<<<<<<< HEAD
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+=======
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
+>>>>>>> dev
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles'
@@ -109,7 +150,15 @@ STATIC_ROOT = 'staticfiles'
 REST_FRAMEWORK = {
     'DEAFULT_PERMISSION_CLASSES': [
         'rst_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+<<<<<<< HEAD
     ]
+=======
+    ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+>>>>>>> dev
 }
 
 MIGRATION_MODULES = {

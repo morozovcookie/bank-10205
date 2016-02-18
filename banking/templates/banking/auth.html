@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load staticfiles %}
 <div class="container-fluid">
     <div class="col-md-7"></div>
@@ -23,3 +24,30 @@
         }
     });
 </script>
+=======
+{% load staticfiles %}
+<div class="container-fluid">
+    <div class="col-md-7"></div>
+    <div class="col-md-4">
+        <div class="panel panel-default" id="signin-panel">
+            <div class="panel-body" id="auth-panel">. . .</div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+<link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+<script type="text/babel" src="{% static 'js/auth.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var token = window.localStorage.getItem('token');
+        if (token!=undefined)
+        {
+            var is_superuser = window.localStorage.getItem('is_superuser');
+            if (is_superuser === 'true')
+                document.location.href = '/admin/';
+            else
+                document.location.href = '/client/';
+        }
+    });
+</script>
+>>>>>>> dev

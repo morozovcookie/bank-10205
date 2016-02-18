@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+db.sqlite3
+>>>>>>> dev
 staticfiles/
 **/migrations/
 **/__pycache__/

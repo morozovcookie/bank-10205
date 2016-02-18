@@ -23,4 +23,8 @@ For install this soft run `sudo apt-get install python2.7 python-django python-d
     return: json (username, e-mail, first_name, second_name, is_superuser)`
 -   `/api/users/ -   получить список пользователей
     params: none
+<<<<<<< HEAD
     return: array of users`
+=======
+    return: array of users`
+>>>>>>> dev

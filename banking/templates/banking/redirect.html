@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load staticfiles %}
 <script type="text/javascript">
     $(document).ready(function(){
@@ -13,4 +14,21 @@
         else
             document.location.href = '/auth/';
     });
+=======
+{% load staticfiles %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        var token = window.localStorage.getItem('token');
+        if (token!=undefined)
+        {
+            var is_superuser = window.localStorage.getItem('is_superuser');
+            if (is_superuser === 'true')
+                document.location.href = '/admin/';
+            else
+                document.location.href = '/client/';
+        }
+        else
+            document.location.href = '/auth/';
+    });
+>>>>>>> dev
 </script>
