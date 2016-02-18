@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^api/users/', api_user.user_list.as_view(), name='user-list'),
     
     url(r'^api/event/', api_event.event.as_view(), name='event'),
+    url(r'^api/attachment/$', api_event.event_attachment.as_view(), name='event-attachment'),
     url(r'^api/events/', api_event.event_list.as_view(), name='event-list'),
 ]

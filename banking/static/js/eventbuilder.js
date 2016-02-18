@@ -97,7 +97,17 @@ var EventBuilder = React.createClass({
         var fd = new FormData();
         for (var i = 0; i != Files.length; ++i)
             fd.append('file ' + (i+1), Files[i]);
-        
+        $.ajax({
+            type: 'post',
+            url: '/api/event/attachment/',
+            headers: {
+                Authorization: 'Token ' + window.localStorage.getItem('token')
+            },
+            data: fd,
+            success: function(response){
+                console.log(response);
+            }
+        });
     },
     handleAttachFileClick: function(){
         $('form[name="new-event-form"] input[type="file"]').trigger('click');

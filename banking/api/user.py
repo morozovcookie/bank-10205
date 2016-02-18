@@ -13,7 +13,7 @@ from banking.serializers.user import UserSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 
 import urllib
 

@@ -13,7 +13,7 @@ from banking.serializers.event import EventSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 
 class event(APIView):
     authentication_classes = (
@@ -29,6 +29,21 @@ class event(APIView):
     def post(self, request, format=None):
         pass
         
+class event_attachment(APIView):
+    authentication_classes = (
+        TokenAuthentication,
+    )
+    permission_classes = (
+        IsAuthenticated,
+    )
+    
+    def get(self, request, format=None):
+        pass
+        
+    def post(self, request, format=None):
+        print request
+        return Response({'detail': 'ok' });
+
 class event_list(APIView):
     authentication_classes = (
         TokenAuthentication,
@@ -40,6 +55,4 @@ class event_list(APIView):
     def get(self, request, format=None):
         events = Event.objects.all()
         events = EventSerializer(events, many=True)
-        return JsonResponse({
-            'events' : events.data
-        })
+        return Response(events.data)
