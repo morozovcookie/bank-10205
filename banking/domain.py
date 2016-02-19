@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 
-def sawn(money, events):
+
+def sawn(money, user, events):
     """Split money between events."""
+    from banking.models import Transaction
     raise NotImplementedError("sawn income money between user debted events")
 
     for e in events:
@@ -8,8 +11,9 @@ def sawn(money, events):
             break
 
         rest = e.rest()
-        # t = Transaction(user=user, event=e,
-        #                 debit=money - (money - rest), rate=1)  # if e.rest > 0, fill.
+        # if e.rest > 0, fill
+        t = Transaction(user=user, event=e,
+                        debit=money - (money - rest), rate=1)
         t.save()
         money -= rest
 
