@@ -52,10 +52,10 @@ class Event(models.Model):
         # calc old rated-parts
         if old_trs.count() != 0:
             for t in old_trs:
-                rated_parts += t['account__rate'] * t['rate']
+                rated_parts += t['rate']
 
         for account, part in newbies.items():
-            rated_parts += (part * account.rate)
+            rated_parts += part
 
         party_pay = self.price / rated_parts
 
@@ -63,7 +63,7 @@ class Event(models.Model):
         if old_trs.count() != 0:
             for t in old_trs:
                 acc = Account.objects.get(id=t['account'])
-                new_price = acc.rate * party_pay * t['rate']
+                new_price = party_pay * t['rate']
                 diff = abs(t['credit'] - new_price)
                 # Oldiers get little part back.
                 newt = Transaction(event=self, debit=diff)
@@ -76,7 +76,7 @@ class Event(models.Model):
         for account, part in newbies.items():
             t = Transaction(account=account, event=self)
             t.rate = part
-            t.credit = account.rate * party_pay * t.rate
+            t.credit = party_pay * t.rate
             t.type = t.PARTICIPATE
             t.save()
 
@@ -100,7 +100,7 @@ class Event(models.Model):
         rated_parts = 0
         if rest_trs.count() != 0:
             for t in rest_trs:
-                rated_parts += t['account__rate'] * t['rate']
+                rated_parts += t['rate']
 
         party_pay = self.price / rated_parts
 
@@ -108,7 +108,7 @@ class Event(models.Model):
         if rest_trs.count() != 0:
             for t in rest_trs:
                 acc = Account.objects.get(id=t['account'])
-                new_price = acc.rate * party_pay * t['rate']
+                new_price = party_pay * t['rate']
                 diff = abs(t['credit'] - new_price)
                 # Rest participants split leaver debt by between themselves.
                 newt = Transaction(event=self, credit=abs(diff))

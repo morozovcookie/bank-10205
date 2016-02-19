@@ -149,13 +149,13 @@ class EventParticipationTest(TestCase):
         party_pay = self.eprice / (len(users) - 2)
 
         self.assertEqual(users[0].balance(),
-                         self.ubalance - party_pay * self.u1_r)
+                         self.ubalance - party_pay)
         self.assertEqual(users[1].balance(),
-                         self.ubalance - party_pay * self.u2_r)
+                         self.ubalance - party_pay)
         self.assertEqual(users[2].balance(),
-                         self.ubalance - party_pay * self.u3_r)
+                         self.ubalance - party_pay)
         self.assertEqual(users[3].balance(),
-                         self.ubalance - party_pay * self.u4_r)
+                         self.ubalance - party_pay)
 
     def test_multiple_participation_with_different_parts(self):
         """ When calculating debt with participation-parts value."""
@@ -179,19 +179,19 @@ class EventParticipationTest(TestCase):
 
         print(Transaction.objects.all())
         party_pay =\
-            self.eprice / (self.u1_p * self.u1_r + self.u2_p * self.u2_r
-                           + self.u3_p * self.u3_r + self.u4_p * self.u4_r)
+            self.eprice / (self.u1_p + self.u2_p
+                           + self.u3_p + self.u4_p)
 
         self.assertEqual(e.rest(), 0)
 
         self.assertEqual(users[0].balance(),
-                         self.ubalance - party_pay * self.u1_p * self.u1_r)
+                         self.ubalance - party_pay * self.u1_p)
         self.assertEqual(users[1].balance(),
-                         self.ubalance - party_pay * self.u2_p * self.u2_r)
+                         self.ubalance - party_pay * self.u2_p)
         self.assertEqual(users[2].balance(),
-                         self.ubalance - party_pay * self.u3_p * self.u3_r)
+                         self.ubalance - party_pay * self.u3_p)
         self.assertEqual(users[3].balance(),
-                         self.ubalance - party_pay * self.u4_p * self.u4_r)
+                         self.ubalance - party_pay * self.u4_p)
 
     def test_diff_parts_rates(self):
         """ Different parts counts, and user rates."""
@@ -214,21 +214,21 @@ class EventParticipationTest(TestCase):
         self.assertEqual(len(Transaction.objects.filter(account=users[5])), 1)
 
         party_pay =\
-            self.eprice / (self.u1_p * self.u1_r + self.u2_p * self.u2_r
-                           + self.u5_p * self.u5_r + self.u6_p * self.u6_r)
+            self.eprice / (self.u1_p + self.u2_p
+                           + self.u5_p + self.u6_p)
 
         print_list(Transaction.objects.all())
 
         self.assertEqual(e.rest(), 0)
 
         self.assertEqual(users[0].balance(),
-                         self.ubalance - party_pay * self.u1_p * self.u1_r)
+                         self.ubalance - party_pay * self.u1_p)
         self.assertEqual(users[1].balance(),
-                         self.ubalance - party_pay * self.u2_p * self.u2_r)
+                         self.ubalance - party_pay * self.u2_p)
         self.assertEqual(users[4].balance(),
-                         self.ubalance - party_pay * self.u5_p * self.u5_r)
+                         self.ubalance - party_pay * self.u5_p)
         self.assertEqual(users[5].balance(),
-                         self.ubalance - party_pay * self.u6_p * self.u6_r)
+                         self.ubalance - party_pay * self.u6_p)
 
     def test_recalc_debt(self):
         """ Participation in event, where exists participants."""
@@ -267,9 +267,9 @@ class EventParticipationTest(TestCase):
         self.assertEqual(len(Transaction.objects.filter(account=users[5])), 2)
 
         party_pay =\
-            self.eprice / (self.u1_p * self.u1_r + self.u2_p * self.u2_r
-                           + self.u3_p * self.u3_r + self.u4_p * self.u4_r
-                           + self.u5_p * self.u5_r + self.u6_p * self.u6_r
+            self.eprice / (self.u1_p + self.u2_p
+                           + self.u3_p + self.u4_p
+                           + self.u5_p + self.u6_p
                            )
 
         # event should be closed
@@ -278,17 +278,17 @@ class EventParticipationTest(TestCase):
         self.assertLess(u2_old_balance, users[1].balance())
         # get from each participant summary only his party-pay
         self.assertEqual(users[0].balance(),
-                         self.ubalance - party_pay * self.u1_p * self.u1_r)
+                         self.ubalance - party_pay * self.u1_p)
         self.assertEqual(users[1].balance(),
-                         self.ubalance - party_pay * self.u2_p * self.u2_r)
+                         self.ubalance - party_pay * self.u2_p)
         self.assertEqual(users[2].balance(),
-                         self.ubalance - party_pay * self.u3_p * self.u3_r)
+                         self.ubalance - party_pay * self.u3_p)
         self.assertEqual(users[3].balance(),
-                         self.ubalance - party_pay * self.u4_p * self.u4_r)
+                         self.ubalance - party_pay * self.u4_p)
         self.assertEqual(users[4].balance(),
-                         self.ubalance - party_pay * self.u5_p * self.u5_r)
+                         self.ubalance - party_pay * self.u5_p)
         self.assertEqual(users[5].balance(),
-                         self.ubalance - party_pay * self.u6_p * self.u6_r)
+                         self.ubalance - party_pay * self.u6_p)
 
     def test_recalc_debt_outcomers(self):
         """When some participation leave event, other split his debt."""
@@ -331,17 +331,17 @@ class EventParticipationTest(TestCase):
         self.assertGreater(u2_old_balance, users[1].balance())
 
         party_pay =\
-            self.eprice / (self.u1_p * self.u1_r + self.u2_p * self.u2_r
-                           + self.u3_p * self.u3_r + self.u4_p * self.u4_r)
+            self.eprice / (self.u1_p + self.u2_p
+                           + self.u3_p + self.u4_p)
         # get from each participant summary only his party-pay
         self.assertEqual(users[0].balance(),
-                         self.ubalance - party_pay * self.u1_p * self.u1_r)
+                         self.ubalance - party_pay * self.u1_p)
         self.assertEqual(users[1].balance(),
-                         self.ubalance - party_pay * self.u2_p * self.u2_r)
+                         self.ubalance - party_pay * self.u2_p)
         self.assertEqual(users[2].balance(),
-                         self.ubalance - party_pay * self.u3_p * self.u3_r)
+                         self.ubalance - party_pay * self.u3_p)
         self.assertEqual(users[3].balance(),
-                         self.ubalance - party_pay * self.u4_p * self.u4_r)
+                         self.ubalance - party_pay * self.u4_p)
         self.assertEqual(Transaction.objects.filter(account=users[4]).count(),
                          0)
         self.assertEqual(Transaction.objects.filter(account=users[5]).count(),
@@ -397,8 +397,8 @@ class EventParticipationTest(TestCase):
 
         # users debts only on participation list
         party_pay =\
-            self.eprice / (self.u1_p * self.u1_r + self.u3_p * self.u3_r)
+            self.eprice / (self.u1_p + self.u3_p)
         self.assertEqual(users[0].balance(),
-                         self.ubalance - party_pay * self.u1_p * self.u1_r)
+                         self.ubalance - party_pay * self.u1_p)
         self.assertEqual(users[2].balance(),
-                         self.ubalance - party_pay * self.u3_p * self.u3_r)
+                         self.ubalance - party_pay * self.u3_p)
