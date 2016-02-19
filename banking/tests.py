@@ -4,6 +4,13 @@ from .models import Event, Account, Transaction, Transfer
 from django.contrib.auth.models import User
 
 
+def this_func_name():
+    import inspect
+    # first dimension - stack funcs. 0 - current, 1 - this func caller.
+    # second don't know. 3 - is func name.
+    return inspect.stack()[1][3]
+
+
 def print_fn_bord(fn):
     h = " RUN %s " % fn.__name__
     f = " END %s " % fn.__name__
@@ -346,15 +353,23 @@ class EventParticipationTest(TestCase):
 
         participation = {
             users[0]: self.u1_p,
+            users[4]: self.u5_p,
+            users[3]: self.u4_p,
         }
         e.add_participants(participation)
 
-        print_list(Transaction.objects.all())
+        oldts_count = Transaction.objects.all().count()
+
         #########################################
-        e.remove_participants([users[1]])
+        e.remove_participants([users[1], users[2]])
         #########################################
-        self.assertEqual(e.get_participants().count(), 1)
+
+        print_list(Transaction.objects.all(), this_func_name())
+
+        self.assertEqual(e.get_participants().count(), 3)
         self.assertEqual(e.get_participants()[0]['account'], users[0])
+        # Transactions should be not changed
+        self.assertEqual(oldts_count, Transaction.objects.all().count())
 
     def test_sway_participants(self):
         e = Event.objects.get(name="Target")
@@ -363,8 +378,8 @@ class EventParticipationTest(TestCase):
         # Check that event in balance
         #########################################
         e.add_participants({users[0]: self.u1_p,
-                            users[1]: self.u2_p})
-        e.add_participants({users[2]: self.u3_p})
+                            users[1]: self.u2_p,
+                            users[2]: self.u3_p})
         print_list(Transaction.objects.all(), "ADDED users 1, 2, 3")
         self.assertEqual(e.rest(), 0)
 
