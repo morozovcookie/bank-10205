@@ -108,6 +108,7 @@ class Event(models.Model):
                 newt = Transaction(event=self, debit=diff)
                 newt.rate = t['rate']
                 newt.account = acc
+                newt.type = newt.DIFF
                 newt.save()
 
         # create participation transactions
@@ -115,6 +116,7 @@ class Event(models.Model):
             t = Transaction(account=account, event=self)
             t.rate = part
             t.credit = account.rate * party_pay * t.rate
+            t.type = t.PARTICIPATE
             t.save()
 
     def remove_participants(self, leavers):
@@ -149,6 +151,7 @@ class Event(models.Model):
                 newt = Transaction(event=self, credit=abs(diff))
                 newt.rate = t['rate']
                 newt.account = acc
+                newt.type = newt.DIFF
                 newt.save()
 
         rm_trs = Transaction.objects.filter(event=self, account__in=leavers)
