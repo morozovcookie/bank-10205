@@ -106,7 +106,7 @@ class Event(models.Model):
                 acc = Account.objects.get(id=t['account'])
                 new_price = acc.rate * party_pay * t['rate']
                 diff = t['credit'] - new_price
-                assert(diff > 0, "Incomer should change oldiers debt.")
+                assert diff > 0, "Incomer should change oldiers debt."
                 # old price > new price(diff > 0), when we have newbies.
                 # Oldiers get little part back.
                 newt = Transaction(event=self, debit=diff)
@@ -144,7 +144,7 @@ class Event(models.Model):
                 acc = Account.objects.get(id=t['account'])
                 new_price = acc.rate * party_pay * t['rate']
                 diff = t['credit'] - new_price
-                assert(diff < 0, "Leavers should change oldiers debt.")
+                assert diff < 0, "Leavers should change oldiers debt."
                 # old price < new price(diff < 0), when we have leavers.
                 # Rest participants split leaver debt by between themselves.
                 newt = Transaction(event=self, credit=abs(diff))
