@@ -6,6 +6,11 @@ html, body{
 	margin:0;
 }
 
-#nav-menu{
+.input-group{
 	margin:10px;
+}
+
+#signin-panel{
+	margin-top:35%;	
+	padding:20px;
 }

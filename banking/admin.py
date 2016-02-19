@@ -1,8 +1,4 @@
 from django.contrib import admin
-<<<<<<< HEAD
-
-# Register your models here.
-=======
 from .models import *
 
 
@@ -34,4 +30,3 @@ class TransactionAdmin(admin.ModelAdmin):
 
 admin.site.register(EventTemplate)
 admin.site.register(Transfer)
->>>>>>> dev

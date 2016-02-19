@@ -1,8 +1,3 @@
-from django.test import TestCase
-
-<<<<<<< HEAD
-# Create your tests here.
-=======
 from .models import Event, Account, Transaction, Transfer
 from django.contrib.auth.models import User
 
@@ -397,4 +392,3 @@ class EventParticipationTest(TestCase):
                          self.ubalance - party_pay * self.u2_p * self.u2_r)
         self.assertEqual(users[2].balance(),
                          self.ubalance - party_pay * self.u3_p * self.u3_r)
->>>>>>> dev

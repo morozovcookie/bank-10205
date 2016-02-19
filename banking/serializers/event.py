@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-from rest_framework import serializers
-from banking.entities.event import Event
-
-class EventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-        field = ('name', 'date', 'price')
-=======
 from rest_framework import serializers
 from banking.models import Event, Account
 
@@ -50,4 +41,3 @@ class ParticipationPostSerializer(serializers.Serializer):
     rate = serializers.IntegerField()
     account = serializers.PrimaryKeyRelatedField(required=True, many=False,
                                                  queryset=Account.objects.all())
->>>>>>> dev

@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-from django.db import models
-
-# Create your models here.
-from banking.entities import event, transaction, transfer
-=======
-# -*- coding: utf-8 -*-
-
 from django.db import models
 from django.db.models import F, Sum
 
@@ -206,4 +198,3 @@ class Transfer(models.Model):
         else:
             ret += "OUT %s" % self.credit
         return ret
->>>>>>> dev
