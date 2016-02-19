@@ -118,7 +118,8 @@ class user(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         if 'username' not in data or 'password' not in data or \
-           'first_name' not in data or 'last_name' not in data:
+           'first_name' not in data or 'last_name' not in data or \
+           'is_superuser' not in data:
             return Response(
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
@@ -140,6 +141,7 @@ class user(APIView):
         )
         user.first_name = data['first_name']
         user.last_name = data['last_name']
+        user.is_superuser = data['is_superuser']
 
         acc = Account(user=user)  # by default rate field get '1.0' value
         if 'rate' in data:
@@ -147,12 +149,7 @@ class user(APIView):
 
         user.save()
         acc.save()
-
-        users = User.objects.all()
-        users = UserSerializer(users, many=True)
-        return JsonResponse({
-            'users': users.data
-        })
+        return Response(status=status.HTTP_200_OK)
 
     def put(self, request, format=None):
         pass
@@ -183,11 +180,7 @@ class user(APIView):
             )
         user = User.objects.get(username=data['username'])
         user.delete()
-        users = User.objects.all()
-        users = UserSerializer(users, many=True)
-        return JsonResponse({
-            'users': users.data
-        })
+        return Response(status=status.HTTP_200_OK)
 
 
 class user_list(APIView):
@@ -197,7 +190,7 @@ class user_list(APIView):
     permission_classes = (
         IsAuthenticated,
     )
-
+    
     def get(self, request, format=None):
         users = Account.objects.all()
         users = AccountSerializer(users, many=True, context={'request': request})
