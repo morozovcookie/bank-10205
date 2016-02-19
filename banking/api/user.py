@@ -141,7 +141,8 @@ class user(APIView):
         )
         user.first_name = data['first_name']
         user.last_name = data['last_name']
-        user.is_superuser = data['is_superuser']
+        user.is_superuser =  False if data['is_superuser']=='false' else True
+        user.is_staff = False if data['is_superuser']=='false' else True
 
         acc = Account(user=user)  # by default rate field get '1.0' value
         if 'rate' in data:
@@ -154,19 +155,7 @@ class user(APIView):
     def put(self, request, format=None):
         pass
 
-    def delete(self, request, format=None):
-        try:
-            data = request.data
-        except ParseError as error:
-            return Response(
-                'Invalid JSON - {0}'.format(error.detail),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if 'username' not in data:
-            return Response(
-                'Wrong credentials',
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+    def delete(self, request, pk, format=None):
         try:
             if not has_permisions(request):
                 return HttpResponse(
@@ -178,7 +167,7 @@ class user(APIView):
                 'Invalid HTTP request - {0}',
                 status=status.HTTP_400_BAD_REQUEST
             )
-        user = User.objects.get(username=data['username'])
+        user = User.objects.get(pk=pk)
         user.delete()
         return Response(status=status.HTTP_200_OK)
 
