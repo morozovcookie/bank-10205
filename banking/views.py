@@ -1,4 +1,4 @@
-from django.shortcuts import rende
+from django.shortcuts import render
 from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
 from banking.serializers.user import UserSerializer
