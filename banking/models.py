@@ -96,8 +96,6 @@ class Event(models.Model):
         for account, part in newbies.items():
             rated_parts += (part * account.rate)
 
-        print("parts count:", rated_parts)
-
         party_pay = self.price / rated_parts
 
         # create for oldiers diff transactions
@@ -120,6 +118,11 @@ class Event(models.Model):
             t.save()
 
     def remove_participants(self, leavers):
+        # check, that leaver is participated
+        leavers = self.is_participated(leavers)
+        if not leavers:
+            return
+
         # get transacts with accs exclude leavers
         # calc party_pay
         # create diffs for selected
@@ -156,6 +159,21 @@ class Event(models.Model):
         payed = Transaction.objects.filter(event=self)\
             .aggregate(balance=Sum(F('credit')-F('debit')))['balance']
         return self.price - (0 if payed is None else payed)
+
+    def is_participated(self, accounts):
+        """Check which accounts participated in event.
+
+        @param accounts:  Accounts for checks
+        @type  accounts:  Collection, that can used in Q object as field__in=[]
+
+        @return:  Collection with accounts, that participated
+        @rtype :  @type accounts
+        """
+        out = set()
+        ts = Transaction.objects.filter(account__in=accounts)
+        for t in ts:
+            out.add(t.account)
+        return out
 
     def __str__(self):
         return self.name
