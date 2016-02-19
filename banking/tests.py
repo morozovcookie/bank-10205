@@ -13,20 +13,22 @@ def print_fn_bord(fn):
     return print_borders(fn=wrap, header=h, footer=f)
 
 
-def print_borders(fn, header="=================", footer="================="):
-    def wrap(*args, **kwargs):
-        print("======%s=======" % header)
-        fn(*args, **kwargs)
-        print("======%s=======" % footer)
+def print_borders(char, count):
+    def funcer(fn):
+        def wrap(*args, **kwargs):
+            print(char * count)
+            fn(*args, **kwargs)
+            print(char * count)
+        return wrap
+    return funcer
 
-    return wrap
 
-
-@print_borders
+@print_borders('━', 80)
 def print_list(l, header=None):
     """Show list with header + footer """
     if header:
         print(header)
+        print('~' * len(header))
     for e in l:
         print(e)
 
@@ -339,7 +341,6 @@ class EventParticipationTest(TestCase):
                          0)
 
     def test_remove_unparticipated(self):
-        """ Should return ok.  """
         e = Event.objects.get(name="Target")
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
 
@@ -348,8 +349,8 @@ class EventParticipationTest(TestCase):
         }
         e.add_participants(participation)
 
+        print_list(Transaction.objects.all())
         #########################################
-        # expect no raise
         e.remove_participants([users[1]])
         #########################################
         self.assertEqual(e.get_participants().count(), 1)
@@ -377,12 +378,12 @@ class EventParticipationTest(TestCase):
         #########################################
 
         # unparticipated, not lose money
-        self.assertEqual(users[0].balance(), self.ubalance)
+        self.assertEqual(users[1].balance(), self.ubalance)
 
         # users debts only on participation list
         party_pay =\
-            self.eprice / (self.u2_p * self.u2_r + self.u3_p * self.u3_r)
-        self.assertEqual(users[1].balance(),
-                         self.ubalance - party_pay * self.u2_p * self.u2_r)
+            self.eprice / (self.u1_p * self.u1_r + self.u3_p * self.u3_r)
+        self.assertEqual(users[0].balance(),
+                         self.ubalance - party_pay * self.u1_p * self.u1_r)
         self.assertEqual(users[2].balance(),
                          self.ubalance - party_pay * self.u3_p * self.u3_r)
