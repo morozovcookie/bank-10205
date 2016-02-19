@@ -178,10 +178,10 @@ class Transaction(models.Model):
 
     def __str__(self):
         if self.credit == 0:
-            return str(self.account) + "←(" + str(self.rate) + ")" + str(self.event)\
+            return str(self.account) + "<-(" + str(self.rate) + ")" + str(self.event)\
                 + ":%.1f" % self.debit
         else:
-            return str(self.account) + "→(" + str(self.rate) + ")" + str(self.event) \
+            return str(self.account) + "->(" + str(self.rate) + ")" + str(self.event) \
                 + ":%.1f" % self.credit
 
 
