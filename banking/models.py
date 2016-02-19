@@ -105,9 +105,7 @@ class Event(models.Model):
             for t in old_trs:
                 acc = Account.objects.get(id=t['account'])
                 new_price = acc.rate * party_pay * t['rate']
-                diff = t['credit'] - new_price
-                assert diff > 0, "Incomer should change oldiers debt."
-                # old price > new price(diff > 0), when we have newbies.
+                diff = abs(t['credit'] - new_price)
                 # Oldiers get little part back.
                 newt = Transaction(event=self, debit=diff)
                 newt.rate = t['rate']
@@ -143,9 +141,7 @@ class Event(models.Model):
             for t in rest_trs:
                 acc = Account.objects.get(id=t['account'])
                 new_price = acc.rate * party_pay * t['rate']
-                diff = t['credit'] - new_price
-                assert diff < 0, "Leavers should change oldiers debt."
-                # old price < new price(diff < 0), when we have leavers.
+                diff = abs(t['credit'] - new_price)
                 # Rest participants split leaver debt by between themselves.
                 newt = Transaction(event=self, credit=abs(diff))
                 newt.rate = t['rate']
