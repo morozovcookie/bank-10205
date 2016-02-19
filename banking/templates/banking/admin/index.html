@@ -20,8 +20,8 @@
         var token = window.localStorage.getItem('token');
         if (token!=undefined)
         {
-            var is_superuser = window.localStorage.getItem('is_superuser');
-            if (is_superuser !== 'true')
+            var user = window.localStorage.getItem('user');
+            if (!JSON.parse(user).is_superuser)
                 document.location.href = '/error/';
         }
         else

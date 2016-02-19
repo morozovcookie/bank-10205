@@ -1,11 +1,7 @@
 from django.shortcuts import render
-
 from rest_framework.exceptions import ParseError
-
 from django.contrib.auth.models import User
-
 from banking.serializers.user import UserSerializer
-
 
 def default(request):
     content = render(request, 'banking/redirect.html').content
@@ -24,7 +20,6 @@ def client(request):
     title = 'Bank::Client Application'
     return render(request, 'banking/index.html', dict(body=content,
                                                       title=title))
-
 
 def admin(request):
     content = render(request, 'banking/admin/index.html').content
@@ -48,7 +43,6 @@ def error(request):
     title = 'Bank::Error'
     return render(request, 'banking/index.html', dict(body=content,
                                                       title=title))
-
 
 def has_permisions(request):
     key = request.META.get('HTTP_AUTHORIZATION')

@@ -1,9 +1,9 @@
 var UserTable = React.createClass({
     render: function(){
         var idx = 0;
-        var users = this.props.users.map(function(user){
+        var users = this.props.Accounts.map(function(account){
             idx = idx + 1;
-            return <UserRow key={idx} data={user}/>;
+            return <UserRow key={idx} data={account.user}/>;
         });
         return (
             <table className="table" id="user-table">
@@ -52,7 +52,7 @@ var UserRow = React.createClass({
         );
     },
     render: function(){
-        if (this.props.data.is_superuser)
+        if (this.props.data.is_superuser && this.props.data.username === JSON.parse(window.localStorage.getItem('user')).username)
         {
             return (
                 <tr>
@@ -109,7 +109,8 @@ var NewUserDlg = React.createClass({
             username: '',
             password: '',
             first_name: '',
-            last_name: ''
+            last_name: '',
+            is_superuser: false
         }
     },
     handleUsernameChange: function(event){
@@ -132,6 +133,11 @@ var NewUserDlg = React.createClass({
             last_name: event.target.value
         });
     },
+    handleChangeUserStatus: function(){
+        this.setState({
+            is_superuser: !this.state.is_superuser
+        });
+    },
     handleAddUser: function(){
         var token = window.localStorage.getItem('token');
         var dlg = this;
@@ -144,10 +150,19 @@ var NewUserDlg = React.createClass({
             data: this.state,
             success: function(response){
                 dlg.replaceState(dlg.getInitialState());
-                ReactDOM.render(
-                    <UserTable users={response} />,
-                    document.getElementById('usertable')
-                );
+                $.ajax({
+                    type: 'get',
+                    url: '/api/users/',
+                    headers: {
+                        Authorization: 'Token ' + window.localStorage.getItem('token')
+                    },
+                    success: function(response){
+                        ReactDOM.render(
+                            <UserTable Accounts={response} />,
+                            document.getElementById('usertable')
+                        );
+                    }
+                });
             }
         });
     },
@@ -165,6 +180,7 @@ var NewUserDlg = React.createClass({
                             <Edit Label="Временный пароль" Value={this.state.password} Type="password" LabelId="temp-password-label" EditId="temp-password-input" FormName="create-user-form" Change={this.handlePasswordChange} />
                             <Edit Label="Имя" Type="text" Value={this.state.first_name} LabelId="user-firstname-label" EditId="user-firstname-input" FormName="create-user-form" Change={this.handleFirstnameChange} />
                             <Edit Label="Фамилия" Type="text" Value={this.state.last_name} LabelId="user-secondname-label" EditId="user-secondname-input" FormName="create-user-form" Change={this.handleLastnameChange} />
+                            <Checkbox Id="is-superuser-checkbox" Change={this.handleChangeUserStatus} IconClass="glyphicon glyphicon-briefcase" Caption="Суперпользователь" />
                         </fieldset>
                     </form>
                 </div>
@@ -179,13 +195,32 @@ var NewUserDlg = React.createClass({
     }
 });
 
+var Checkbox = React.createClass({
+    render: function(){
+        return (
+            <div className="col-md-12">
+                <div className="col-md-1">
+                    <input type="checkbox" id={this.props.Id} onChange={this.props.Change}/>
+                </div>
+                <div className="col-md-1">
+                    <span className={this.props.IconClass}></span>
+                </div>
+                <div className="col-md-10">
+                    <p>{this.props.Caption}</p>
+                </div>
+            </div>
+        );
+    }
+});
+
 var UpdateUserDlg = React.createClass({
     getInitialState: function(){
         return {
             username: '',
             password: '',
             first_name: '',
-            last_name: ''
+            last_name: '',
+            is_superuser: false
         }
     },
     handleUsernameChange: function(event){
@@ -206,6 +241,11 @@ var UpdateUserDlg = React.createClass({
     handleLastnameChange: function(event){
         this.setState({
             last_name: event.target.value
+        });
+    },
+    handleChangeUserStatus: function(){
+        this.setState({
+            is_superuser: !this.state.is_superuser
         });
     },
     handleUpdateUser: function(){
@@ -258,13 +298,14 @@ var UpdateUserDlg = React.createClass({
                             <Edit Label="Временный пароль" Value="" Type="password" LabelId="temp-password-label" EditId="temp-password-input" FormName="update-user-form" Change={this.handlePasswordChange} />
                             <Edit Label="Имя" Type="text" Value={this.state.first_name} LabelId="user-firstname-label" EditId="user-firstname-input" FormName="update-user-form" Change={this.handleFirstnameChange} />
                             <Edit Label="Фамилия" Type="text" Value={this.state.last_name} LabelId="user-secondname-label" EditId="user-secondname-input" FormName="update-user-form" Change={this.handleLastnameChange} />
+                            <Checkbox Id="is-superuser-checkbox" Change={this.handleChangeUserStatus} IconClass="glyphicon glyphicon-briefcase" Caption="Суперпользователь" />
                         </fieldset>
                     </form>
                 </div>
                 <div className="modal-footer">
                     <div className="col-md-8"></div>
                     <div className="col-md-4">
-                        <OKButton Link="#" Class="btn btn-warning" Id="update-user-button" Caption="Сохранить" Click={this.handleUpdateUser} />
+                        <OKButton Link="#" Class="btn btn-success" Id="update-user-button" Caption="Сохранить" Click={this.handleUpdateUser} />
                     </div>
                 </div>
             </div>
@@ -308,7 +349,7 @@ $.ajax({
     },
     success: function(response){
         ReactDOM.render(
-            <UserTable users={response} />,
+            <UserTable Accounts={response} />,
             document.getElementById('usertable')
         );
     }

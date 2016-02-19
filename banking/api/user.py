@@ -118,7 +118,8 @@ class user(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         if 'username' not in data or 'password' not in data or \
-           'first_name' not in data or 'last_name' not in data:
+           'first_name' not in data or 'last_name' not in data or \
+           'is_superuser' not in data:
             return Response(
                 'Wrong credentials',
                 status=status.HTTP_401_UNAUTHORIZED
@@ -140,6 +141,8 @@ class user(APIView):
         )
         user.first_name = data['first_name']
         user.last_name = data['last_name']
+        user.is_superuser =  False if data['is_superuser']=='false' else True
+        user.is_staff = False if data['is_superuser']=='false' else True
 
         acc = Account(user=user)  # by default rate field get '1.0' value
         if 'rate' in data:
@@ -147,29 +150,12 @@ class user(APIView):
 
         user.save()
         acc.save()
-
-        users = User.objects.all()
-        users = UserSerializer(users, many=True)
-        return JsonResponse({
-            'users': users.data
-        })
+        return Response(status=status.HTTP_200_OK)
 
     def put(self, request, format=None):
         pass
 
-    def delete(self, request, format=None):
-        try:
-            data = request.data
-        except ParseError as error:
-            return Response(
-                'Invalid JSON - {0}'.format(error.detail),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if 'username' not in data:
-            return Response(
-                'Wrong credentials',
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+    def delete(self, request, pk, format=None):
         try:
             if not has_permisions(request):
                 return HttpResponse(
@@ -182,43 +168,8 @@ class user(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         user = User.objects.get(pk=pk)
-        if not user:
-            return Response(
-                'User does not exist',
-                status=status.HTTP_404_NOT_FOUND
-            )
-        user.username = data['username']
-        if data['password']:
-            user.password = data['password']
-        user.first_name = data['first_name']
-        user.last_name = data['last_name']
-        user.save()
-        users = User.objects.all().order_by('pk')
-        users = UserSerializer(users, many=True)
-        return Response(users.data)
-
-    def delete(self, request, pk, pattern, format=None):
-        try:
-            if not has_permisions(request):
-                return HttpResponse(
-                    'You do not have permission',
-                    status=status.HTTP_403_FORBIDDEN
-                )
-        except ParseError:
-            return HttpResponse(
-                'Invalid HTTP request - {0}',
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        user = User.objects.get(pk=pk)
-        if not user:
-            return Response(
-                'User does not exist',
-                status=status.HTTP_404_NOT_FOUND
-            )
-        user.delete();
-        users = User.objects.all().order_by('pk')
-        users = UserSerializer(users, many=True)
-        return Response(users.data)
+        user.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class user_list(APIView):

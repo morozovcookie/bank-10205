@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.db import models
 from django.db.models import F, Sum
 
@@ -63,11 +61,6 @@ class Event(models.Model):
         self.private = t.private
 
     def get_participants(self):
-        """Get participants of Event
-        @return:  participants List of dicts, where keys: 'account', 'rate'.
-        'rate' - is participation rate(parts).
-        @rtype :  List
-        """
         accs_rates = Transaction.objects.filter(event=self)\
             .values('account', 'rate').distinct()
         for p in accs_rates:
@@ -106,7 +99,7 @@ class Event(models.Model):
                 acc = Account.objects.get(id=t['account'])
                 new_price = acc.rate * party_pay * t['rate']
                 diff = t['credit'] - new_price
-                assert diff > 0, "Incomer should change oldiers debt."
+                assert(diff > 0, "Incomer should change oldiers debt.")
                 # old price > new price(diff > 0), when we have newbies.
                 # Oldiers get little part back.
                 newt = Transaction(event=self, debit=diff)
@@ -120,6 +113,7 @@ class Event(models.Model):
             t.rate = part
             t.credit = account.rate * party_pay * t.rate
             t.save()
+
 
     def remove_participants(self, leavers):
         # get transacts with accs exclude leavers
@@ -144,7 +138,7 @@ class Event(models.Model):
                 acc = Account.objects.get(id=t['account'])
                 new_price = acc.rate * party_pay * t['rate']
                 diff = t['credit'] - new_price
-                assert diff < 0, "Leavers should change oldiers debt."
+                assert(diff < 0, "Leavers should change oldiers debt.")
                 # old price < new price(diff < 0), when we have leavers.
                 # Rest participants split leaver debt by between themselves.
                 newt = Transaction(event=self, credit=abs(diff))
@@ -184,10 +178,10 @@ class Transaction(models.Model):
 
     def __str__(self):
         if self.credit == 0:
-            return str(self.account) + "←(" + str(self.rate) + ")" + str(self.event)\
+            return str(self.account) + "<-(" + str(self.rate) + ")" + str(self.event)\
                 + ":%.1f" % self.debit
         else:
-            return str(self.account) + "→(" + str(self.rate) + ")" + str(self.event) \
+            return str(self.account) + "->(" + str(self.rate) + ")" + str(self.event) \
                 + ":%.1f" % self.credit
 
 

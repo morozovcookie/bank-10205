@@ -4,11 +4,8 @@
         var token = window.localStorage.getItem('token');
         if (token!=undefined)
         {
-            var is_superuser = window.localStorage.getItem('is_superuser');
-            if (is_superuser === 'true')
-                document.location.href = '/admin/';
-            else
-                document.location.href = '/client/';
+            var user = window.localStorage.getItem('user');
+            document.location.href = (JSON.parse(user).is_superuser ? '/admin/' : '/client/');
         }
         else
             document.location.href = '/auth/';
