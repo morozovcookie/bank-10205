@@ -6,3 +6,5 @@ staticfiles/
 *.pyc
 nginx.log/
 *.backup
+.coverage
+htmlcov/
