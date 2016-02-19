@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """
 Django settings for bankdjangoreact project.
 

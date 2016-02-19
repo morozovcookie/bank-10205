@@ -1,0 +1,1021 @@
+[
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 1,
+        "fields": {
+            "app_label": "admin",
+            "model": "logentry"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 2,
+        "fields": {
+            "app_label": "auth",
+            "model": "permission"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 3,
+        "fields": {
+            "app_label": "auth",
+            "model": "group"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 4,
+        "fields": {
+            "app_label": "auth",
+            "model": "user"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 5,
+        "fields": {
+            "app_label": "contenttypes",
+            "model": "contenttype"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 6,
+        "fields": {
+            "app_label": "sessions",
+            "model": "session"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 7,
+        "fields": {
+            "app_label": "authtoken",
+            "model": "token"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 8,
+        "fields": {
+            "app_label": "banking",
+            "model": "account"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 9,
+        "fields": {
+            "app_label": "banking",
+            "model": "event"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 10,
+        "fields": {
+            "app_label": "banking",
+            "model": "eventtemplate"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 11,
+        "fields": {
+            "app_label": "banking",
+            "model": "transaction"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 12,
+        "fields": {
+            "app_label": "banking",
+            "model": "transfer"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "7wtuia9ohrn0f8cui1h196j7l7r008ln",
+        "fields": {
+            "session_data": "MDQyMWUwNzk0ODUzOTQzODVhMDkyM2I5NmFjMmJlMDVmNTI1MWQ1Njp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2hhc2giOiIxYjkyM2UwY2UzZDU3N2E4NjQ3ZDQ5Njg0MDQ2NjFkNzNlYTE1YjQ3In0=",
+            "expire_date": "2016-03-01T18:30:09.558Z"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "d0dyzcx33kpqwf82bxo3bx9c1cle02ql",
+        "fields": {
+            "session_data": "MGJlZDE3NzNhMTBhZWVlOTZhYzU5MTI0NjQ2MDk3ZjJjZDk1MmE0Zjp7Il9hdXRoX3VzZXJfaGFzaCI6IjFiOTIzZTBjZTNkNTc3YTg2NDdkNDk2ODQwNDY2MWQ3M2VhMTViNDciLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxIn0=",
+            "expire_date": "2016-03-02T17:31:10.632Z"
+        }
+    },
+    {
+        "model": "banking.event",
+        "pk": 1,
+        "fields": {
+            "name": "Cookies",
+            "date": "2016-02-16",
+            "price": 2000.0,
+            "author": 1,
+            "private": false
+        }
+    },
+    {
+        "model": "banking.event",
+        "pk": 2,
+        "fields": {
+            "name": "Pizza",
+            "date": "2016-02-16",
+            "price": 1000.0,
+            "author": 2,
+            "private": false
+        }
+    },
+    {
+        "model": "banking.event",
+        "pk": 3,
+        "fields": {
+            "name": "Hookers",
+            "date": "2016-02-17",
+            "price": 4000.0,
+            "author": 1,
+            "private": false
+        }
+    },
+    {
+        "model": "banking.event",
+        "pk": 5,
+        "fields": {
+            "name": "Donuts",
+            "date": "2016-02-17",
+            "price": 4000.0,
+            "author": 2,
+            "private": false
+        }
+    },
+    {
+        "model": "banking.event",
+        "pk": 6,
+        "fields": {
+            "name": "Somena",
+            "date": "2016-02-19",
+            "price": 200.0,
+            "author": 1,
+            "private": false
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 1,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-16T18:58:45.139Z",
+            "credit": 444.44444444444446,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 2,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-16T18:58:45.279Z",
+            "credit": 888.8888888888889,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 4,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T15:54:51.592Z",
+            "credit": 0.0,
+            "debit": 323.2323232323232,
+            "type": "DF"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 5,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T15:54:51.703Z",
+            "credit": 0.0,
+            "debit": 646.4646464646464,
+            "type": "DF"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 8,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T15:55:38.947Z",
+            "credit": 0.0,
+            "debit": 383.83838383838383,
+            "type": "DF"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 9,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T15:55:39.092Z",
+            "credit": 0.0,
+            "debit": 767.6767676767677,
+            "type": "DF"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 11,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T15:55:39.313Z",
+            "credit": 0.0,
+            "debit": -60.60606060606061,
+            "type": "DF"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 12,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T15:55:39.380Z",
+            "credit": 0.0,
+            "debit": -121.21212121212122,
+            "type": "DF"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 16,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 2,
+            "date": "2016-02-17T16:40:55.392Z",
+            "credit": 1000.0,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 17,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 2,
+            "date": "2016-02-17T16:44:34.315Z",
+            "credit": 0.0,
+            "debit": 714.2857142857142,
+            "type": "DF"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 18,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 2,
+            "date": "2016-02-17T16:44:34.417Z",
+            "credit": 571.4285714285714,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 19,
+        "fields": {
+            "account": 3,
+            "rate": 1.0,
+            "event": 2,
+            "date": "2016-02-17T16:44:34.519Z",
+            "credit": 142.85714285714286,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 20,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:21.376Z",
+            "credit": 222.22222222222223,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 21,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:21.518Z",
+            "credit": 444.44444444444446,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 23,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:21.711Z",
+            "credit": 222.22222222222223,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 24,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:21.784Z",
+            "credit": 444.44444444444446,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 26,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:31.840Z",
+            "credit": 222.22222222222223,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 27,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:31.979Z",
+            "credit": 444.44444444444446,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 28,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:32.079Z",
+            "credit": 222.22222222222223,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 29,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:32.145Z",
+            "credit": 444.44444444444446,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 30,
+        "fields": {
+            "account": 1,
+            "rate": 1.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:32.234Z",
+            "credit": 0.0,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "banking.transaction",
+        "pk": 31,
+        "fields": {
+            "account": 2,
+            "rate": 2.0,
+            "event": 1,
+            "date": "2016-02-17T21:44:32.301Z",
+            "credit": 0.0,
+            "debit": 0.0,
+            "type": "IN"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 1,
+        "fields": {
+            "name": "Can add log entry",
+            "content_type": 1,
+            "codename": "add_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 2,
+        "fields": {
+            "name": "Can change log entry",
+            "content_type": 1,
+            "codename": "change_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 3,
+        "fields": {
+            "name": "Can delete log entry",
+            "content_type": 1,
+            "codename": "delete_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 4,
+        "fields": {
+            "name": "Can add permission",
+            "content_type": 2,
+            "codename": "add_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 5,
+        "fields": {
+            "name": "Can change permission",
+            "content_type": 2,
+            "codename": "change_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 6,
+        "fields": {
+            "name": "Can delete permission",
+            "content_type": 2,
+            "codename": "delete_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 7,
+        "fields": {
+            "name": "Can add group",
+            "content_type": 3,
+            "codename": "add_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 8,
+        "fields": {
+            "name": "Can change group",
+            "content_type": 3,
+            "codename": "change_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 9,
+        "fields": {
+            "name": "Can delete group",
+            "content_type": 3,
+            "codename": "delete_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 10,
+        "fields": {
+            "name": "Can add user",
+            "content_type": 4,
+            "codename": "add_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 11,
+        "fields": {
+            "name": "Can change user",
+            "content_type": 4,
+            "codename": "change_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 12,
+        "fields": {
+            "name": "Can delete user",
+            "content_type": 4,
+            "codename": "delete_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 13,
+        "fields": {
+            "name": "Can add content type",
+            "content_type": 5,
+            "codename": "add_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 14,
+        "fields": {
+            "name": "Can change content type",
+            "content_type": 5,
+            "codename": "change_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 15,
+        "fields": {
+            "name": "Can delete content type",
+            "content_type": 5,
+            "codename": "delete_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 16,
+        "fields": {
+            "name": "Can add session",
+            "content_type": 6,
+            "codename": "add_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 17,
+        "fields": {
+            "name": "Can change session",
+            "content_type": 6,
+            "codename": "change_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 18,
+        "fields": {
+            "name": "Can delete session",
+            "content_type": 6,
+            "codename": "delete_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 19,
+        "fields": {
+            "name": "Can add token",
+            "content_type": 7,
+            "codename": "add_token"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 20,
+        "fields": {
+            "name": "Can change token",
+            "content_type": 7,
+            "codename": "change_token"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 21,
+        "fields": {
+            "name": "Can delete token",
+            "content_type": 7,
+            "codename": "delete_token"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 22,
+        "fields": {
+            "name": "Can add account",
+            "content_type": 8,
+            "codename": "add_account"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 23,
+        "fields": {
+            "name": "Can change account",
+            "content_type": 8,
+            "codename": "change_account"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 24,
+        "fields": {
+            "name": "Can delete account",
+            "content_type": 8,
+            "codename": "delete_account"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 25,
+        "fields": {
+            "name": "Can add event",
+            "content_type": 9,
+            "codename": "add_event"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 26,
+        "fields": {
+            "name": "Can change event",
+            "content_type": 9,
+            "codename": "change_event"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 27,
+        "fields": {
+            "name": "Can delete event",
+            "content_type": 9,
+            "codename": "delete_event"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 28,
+        "fields": {
+            "name": "Can add event template",
+            "content_type": 10,
+            "codename": "add_eventtemplate"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 29,
+        "fields": {
+            "name": "Can change event template",
+            "content_type": 10,
+            "codename": "change_eventtemplate"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 30,
+        "fields": {
+            "name": "Can delete event template",
+            "content_type": 10,
+            "codename": "delete_eventtemplate"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 31,
+        "fields": {
+            "name": "Can add transaction",
+            "content_type": 11,
+            "codename": "add_transaction"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 32,
+        "fields": {
+            "name": "Can change transaction",
+            "content_type": 11,
+            "codename": "change_transaction"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 33,
+        "fields": {
+            "name": "Can delete transaction",
+            "content_type": 11,
+            "codename": "delete_transaction"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 34,
+        "fields": {
+            "name": "Can add transfer",
+            "content_type": 12,
+            "codename": "add_transfer"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 35,
+        "fields": {
+            "name": "Can change transfer",
+            "content_type": 12,
+            "codename": "change_transfer"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 36,
+        "fields": {
+            "name": "Can delete transfer",
+            "content_type": 12,
+            "codename": "delete_transfer"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$24000$LQgH1onLQO6C$hxZLxOFl97IQUMP2qwkSdtr4qgvYUYbdNisY3k2okCY=",
+            "last_login": "2016-02-17T17:31:10.554Z",
+            "is_superuser": true,
+            "username": "intey",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2016-02-16T17:08:27.103Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$24000$DyjWvpkmZVUy$1QKLjdyQ7mawjJowXrnW6j9pQ9V/UPc2nZNROsGjkBg=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "Andrey",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-02-16T18:30:40.908Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$24000$74OVgKSjMv8D$McVY8z1FH2Fv9+7a9df1q22zDBZ9njCxiay38nR6QgE=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "Cookie",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-02-16T18:30:59.746Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+            "password": "",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "Kichael",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-02-17T15:23:18.873Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 5,
+        "fields": {
+            "password": "pbkdf2_sha256$24000$rqbGYjVeHwAf$e1qVlZ6xBp36YrUL9JeCEaUADUHb2aKGx00ObHCUe6M=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "Babayka",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-02-17T21:35:39.442Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "authtoken.token",
+        "pk": "6be285bae0ca1ea644d3244a335165d7f7b9bd82",
+        "fields": {
+            "user": 1,
+            "created": "2016-02-18T07:22:11.569Z"
+        }
+    },
+    {
+        "model": "banking.account",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "rate": 1.0
+        }
+    },
+    {
+        "model": "banking.account",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "rate": 1.0
+        }
+    },
+    {
+        "model": "banking.account",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "rate": 0.5
+        }
+    },
+    {
+        "model": "banking.account",
+        "pk": 4,
+        "fields": {
+            "user": 4,
+            "rate": 1.0
+        }
+    },
+    {
+        "model": "banking.account",
+        "pk": 5,
+        "fields": {
+            "user": 5,
+            "rate": 1.0
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 1,
+        "fields": {
+            "action_time": "2016-02-16T18:30:26.570Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "1",
+            "object_repr": "intey(1.0)",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 2,
+        "fields": {
+            "action_time": "2016-02-16T18:30:40.954Z",
+            "user": 1,
+            "content_type": 4,
+            "object_id": "2",
+            "object_repr": "Andrey",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 3,
+        "fields": {
+            "action_time": "2016-02-16T18:30:43.693Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "2",
+            "object_repr": "Andrey(1.0)",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 4,
+        "fields": {
+            "action_time": "2016-02-16T18:30:59.791Z",
+            "user": 1,
+            "content_type": 4,
+            "object_id": "3",
+            "object_repr": "Cookie",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 5,
+        "fields": {
+            "action_time": "2016-02-16T18:31:06.344Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "3",
+            "object_repr": "Cookie(0.5)",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 6,
+        "fields": {
+            "action_time": "2016-02-16T18:31:12.563Z",
+            "user": 1,
+            "content_type": 9,
+            "object_id": "1",
+            "object_repr": "Cookies",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 7,
+        "fields": {
+            "action_time": "2016-02-17T21:35:39.489Z",
+            "user": 1,
+            "content_type": 4,
+            "object_id": "5",
+            "object_repr": "Babayka",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 8,
+        "fields": {
+            "action_time": "2016-02-17T21:35:41.949Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "5",
+            "object_repr": "Babayka(1.0)",
+            "action_flag": 1,
+            "change_message": "Added."
+        }
+    }
+]
