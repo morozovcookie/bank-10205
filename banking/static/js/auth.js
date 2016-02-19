@@ -28,16 +28,9 @@ var AuthForm = React.createClass({
                 },
                 dataType: 'json',
                 success: function(response){
-                    if (response.is_superuser)
-                    {
-                        document.location.href = '/admin/';
-                        window.localStorage.setItem('is_superuser', 'true');
-                    }
-                    else
-                    {
-                        document.location.href = '/client/';   
-                        window.localStorage.setItem('is_superuser', 'false');
-                    }
+                    window.localStorage.setItem('user', JSON.stringify(response));
+                    console.log(response.is_superuser);
+                    document.location.href = (response.is_superuser == true ? '/admin/' : '/client/');   
                 }
             });
         });

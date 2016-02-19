@@ -240,15 +240,25 @@ var EventBuilder = React.createClass({
             POST
             /api/event
         */
-        this.state.fd.append('event', JSON.stringify({
-            title: this.state.title,
-            type: this.state.type,
-            date: this.state.date,
-            sum: this.state.sum,
-            private: this.state.private,
-            participants: this.state.participants
-        }));
-        document.location.href = '/events/';
+        $.ajax({
+            type: 'post',
+            url: '/api/events/',
+            headers: {
+                Authorization: 'Token ' + window.localStorage.getItem('token')
+            },
+            data: {
+                name: this.state.title,
+                type: this.state.type,
+                date: this.state.date,
+                price: this.state.sum,
+                author: JSON.parse(window.localStorage.getItem('user')).id,
+                private: this.state.private,
+            },
+            success: function(response){
+                console.log(response);
+                //document.location.href = '/events/';
+            }
+        });
     },
     handleRemoveParticipant: function(event){
         var row = $(event.currentTarget).parents()[1];
@@ -520,7 +530,6 @@ var AccessCheckbox = React.createClass({
     }
 });
 
-
 var Dropdown = React.createClass({
     render: function(){
         var idx = 0;
@@ -643,18 +652,5 @@ $.ajax({
             <EventTable events={response} />,
             document.getElementById('event-content')
         );
-    }
-});
-
-var user = null;
-$.ajax({
-    type: 'get',
-    url: '/api/user/',
-    headers: {
-        Authorization: 'Token ' + window.localStorage.getItem('token')
-    },
-    datatype: 'json',
-    success: function(response){
-        user = response;
     }
 });
