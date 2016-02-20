@@ -164,6 +164,7 @@ var NewUserDlg = React.createClass({
             data: this.state,
             success: function(response){
                 dlg.replaceState(dlg.getInitialState());
+                $('form[name="create-user-form"] #is-superuser-checkbox').prop('checked', false);
                 $.ajax({
                     type: 'get',
                     url: '/api/users/',
@@ -266,16 +267,25 @@ var UpdateUserDlg = React.createClass({
        var token = window.localStorage.getItem('token');
         $.ajax({
             type: 'put',
-            url: '/api/user/' + this.props.Id,
+            url: '/api/users/' + this.props.Id + '/',
             headers: {
                 Authorization: 'Token ' + token
             },
             data: this.state,
             success: function(response){
-                ReactDOM.render(
-                    <UserTable users={response} />,
-                    document.getElementById('usertable')
-                );
+                $.ajax({
+                    type: 'get',
+                    url: '/api/users/',
+                    headers: {
+                        Authorization: 'Token ' + token
+                    },
+                    success: function(response){
+                        ReactDOM.render(
+                            <UserTable Accounts={response} />,
+                            document.getElementById('usertable')
+                        );
+                    }
+                });
                 $('#update-user').empty();
             }
         });
@@ -285,7 +295,7 @@ var UpdateUserDlg = React.createClass({
         var dlg = this;
         $.ajax({
             type: 'get',
-            url: '/api/user/' + this.props.Id,
+            url: '/api/users/' + this.props.Id + '/',
             headers: {
                 Authorization: 'Token ' + token
             },
@@ -293,8 +303,10 @@ var UpdateUserDlg = React.createClass({
                 dlg.setState({
                     username: response.username,
                     first_name: response.first_name,
-                    last_name: response.last_name
+                    last_name: response.last_name,
+                    is_superuser: response.is_superuser
                 });
+                $('form[name="update-user-form"] #is-superuser-checkbox').prop('checked', response.is_superuser);
             }
         });
     },
@@ -309,7 +321,7 @@ var UpdateUserDlg = React.createClass({
                     <form className="form-horizontal" name="update-user-form">
                         <fieldset>
                             <Edit Label="Логин" Value={this.state.username} Type="text" LabelId="username-label" EditId="username-input" FormName="update-user-form" Change={this.handleUsernameChange} />
-                            <Edit Label="Временный пароль" Value="" Type="password" LabelId="temp-password-label" EditId="temp-password-input" FormName="update-user-form" Change={this.handlePasswordChange} />
+                            <Edit Label="Временный пароль" Type="password" LabelId="temp-password-label" EditId="temp-password-input" FormName="update-user-form" Change={this.handlePasswordChange} />
                             <Edit Label="Имя" Type="text" Value={this.state.first_name} LabelId="user-firstname-label" EditId="user-firstname-input" FormName="update-user-form" Change={this.handleFirstnameChange} />
                             <Edit Label="Фамилия" Type="text" Value={this.state.last_name} LabelId="user-secondname-label" EditId="user-secondname-input" FormName="update-user-form" Change={this.handleLastnameChange} />
                             <Checkbox Id="is-superuser-checkbox" Change={this.handleChangeUserStatus} IconClass="glyphicon glyphicon-briefcase" Caption="Суперпользователь" />
