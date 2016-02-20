@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     # 'rest_framework_swagger',  # pip install django-rest-swagger
     'banking',
-    'django_nose'
+    #'django_nose'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -76,24 +76,24 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 
 
 # Database
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bank',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'bank',
-#         'USER': 'admin',
-#         'PASSWORD': 'admin',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
-#
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
