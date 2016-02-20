@@ -32,15 +32,24 @@ var UserRow = React.createClass({
         var id = $($($(event.currentTarget).parents()[1]).children()[0]).text();
         $.ajax({
             type: 'delete',
-            url: '/api/user/' + id,
+            url: '/api/users/' + id + '/',
             headers: {
                 Authorization: 'Token ' + token
             },
             success: function(response){
-                ReactDOM.render(
-                    <UserTable users={response} />,
-                    document.getElementById('usertable')
-                );
+                $.ajax({
+                    type: 'get',
+                    url: '/api/users/',
+                    headers: {
+                        Authorization: 'Token ' + token
+                    },
+                    success: function(response){
+                        ReactDOM.render(
+                            <UserTable Accounts={response} />,
+                            document.getElementById('usertable')
+                        );
+                    }
+                });
             }
         });
     },
@@ -52,20 +61,25 @@ var UserRow = React.createClass({
         );
     },
     render: function(){
-        if (this.props.data.is_superuser && this.props.data.username === JSON.parse(window.localStorage.getItem('user')).username)
+        var role = 'Пользователь';
+        if (this.props.data.is_superuser)
         {
-            return (
-                <tr>
-                    <td>{this.props.data.id}</td>
-                    <td>{this.props.data.username}</td>
-                    <td>{this.props.data.last_name}</td>
-                    <td>{this.props.data.first_name}</td>
-                    <td>Администратор</td>
-                    <td>
-                        <UserModalAction ButtonClass="btn btn-warning" Icon="glyphicon glyphicon-edit" Target="#update-user-dlg" Click={this.handleUpdateUser} />
-                    </td>
-                </tr>
-            );
+            role = 'Администратор';
+            if (this.props.data.username === JSON.parse(window.localStorage.getItem('user')).username)
+            {
+                return (
+                    <tr>
+                        <td>{this.props.data.id}</td>
+                        <td>{this.props.data.username}</td>
+                        <td>{this.props.data.last_name}</td>
+                        <td>{this.props.data.first_name}</td>
+                        <td>{role}</td>
+                        <td>
+                            <UserModalAction ButtonClass="btn btn-warning" Icon="glyphicon glyphicon-edit" Target="#update-user-dlg" Click={this.handleUpdateUser} />
+                        </td>
+                    </tr>
+                );
+            }
         }
         return (
             <tr>
@@ -73,7 +87,7 @@ var UserRow = React.createClass({
                 <td>{this.props.data.username}</td>
                 <td>{this.props.data.last_name}</td>
                 <td>{this.props.data.first_name}</td>
-                <td>Пользователь</td>
+                <td>{role}</td>
                 <td>
                     <UserModalAction ButtonClass="btn btn-warning" Icon="glyphicon glyphicon-edit" Target="#update-user-dlg" Click={this.handleUpdateUser} />
                     <UserAction ButtonClass="btn btn-danger" Icon="glyphicon glyphicon-trash" Click={this.handleDeleteUser} />
@@ -154,7 +168,7 @@ var NewUserDlg = React.createClass({
                     type: 'get',
                     url: '/api/users/',
                     headers: {
-                        Authorization: 'Token ' + window.localStorage.getItem('token')
+                        Authorization: 'Token ' + token
                     },
                     success: function(response){
                         ReactDOM.render(
