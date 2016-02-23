@@ -10,9 +10,27 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# ## Load setting from 'BANK' Environment variable.
+# ## Scheme:
+#   - {'db': str(), 'apps': array()}
+# ## Variants:
+#   - 'db': ['sqlite', '']
+#   - 'apps': 'any valid apps, that can be added to INSTALLED_APPS
+
+BANK_SETTINGS = {'db': '', 'apps': []}
+BANK_ENV = os.getenv("BANK")
+BANK_ENV = BANK_ENV.replace("'", '"')  # json.loads expect " instead '
+if BANK_ENV:
+    try:
+        temp = json.loads(BANK_ENV)
+        BANK_SETTINGS = temp
+    except json.decoder.JSONDecodeError as e:
+        print("Failed load settings from BANK ENV VAR. Error:", e)
+del BANK_ENV
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -30,7 +48,7 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,10 +57,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    # 'rest_framework_swagger',  # pip install django-rest-swagger
     'banking',
-    #'django_nose'
-)
+]
+apps = BANK_SETTINGS.get('apps')
+if len(apps) > 0:
+    INSTALLED_APPS += apps
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,23 +95,24 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 
 
 # Database
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bank',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '',
+if BANK_SETTINGS.get('db') == 'sqlite':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'bank',
+            'USER': 'admin',
+            'PASSWORD': 'admin',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/

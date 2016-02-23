@@ -2,12 +2,13 @@
 
 from django.db import models
 from django.db.models import F, Sum
+from datetime import date
 from .account import Account
 
 
 class Event(models.Model):
     name = models.CharField(max_length=100, unique_for_date='date')
-    date = models.DateField(auto_now_add=True, blank=False)
+    date = models.DateField(default=date.today, blank=False)
     price = models.FloatField()
     author = models.ForeignKey(Account)
     private = models.BooleanField(default=False)
@@ -21,28 +22,28 @@ class Event(models.Model):
 
     def get_participants(self):
         """Get participants of Event
-        @return:  participants List of dicts, where keys: 'account', 'rate'.
-        'rate' - is participation rate(parts).
+        @return:  participants List of dicts, where keys: 'account', 'parts'.
+        'parts' - is participation rate(parts).
         @rtype :  List
         """
         from banking.models import Transaction
 
         accs_rates = Transaction.objects.filter(event=self)\
-            .values('account', 'rate').distinct()
+            .values('account', 'parts').distinct()
         for p in accs_rates:
             p.update({'account': Account.objects.get(id=p['account'])})
         return accs_rates
 
     def add_participants(self, newbies):
-        """Add participants in event. Takes dict, where keys - is account models
-        and values is participation part(int)."""
+        """Add participants in event. Takes dict, where keys - is account
+        models and values is participation part(int)."""
         from banking.models import Transaction
 
         rated_parts = 0
         # get already participated users.
         # select account - for distinct, and next three for data
         old_trs = Transaction.objects.filter(event=self)\
-            .values('account', 'account__rate', 'credit', 'rate')\
+            .values('account', 'account__rate', 'credit', 'parts')\
             .distinct()
 
         # Don't add participant, when he is already participated
@@ -52,7 +53,7 @@ class Event(models.Model):
         # calc old rated-parts
         if old_trs.count() != 0:
             for t in old_trs:
-                rated_parts += t['rate']
+                rated_parts += t['parts']
 
         for account, part in newbies.items():
             rated_parts += part
@@ -63,11 +64,11 @@ class Event(models.Model):
         if old_trs.count() != 0:
             for t in old_trs:
                 acc = Account.objects.get(id=t['account'])
-                new_price = party_pay * t['rate']
+                new_price = party_pay * t['parts']
                 diff = abs(t['credit'] - new_price)
                 # Oldiers get little part back.
                 newt = Transaction(event=self, debit=diff)
-                newt.rate = t['rate']
+                newt.parts = t['parts']
                 newt.account = acc
                 newt.type = newt.DIFF
                 newt.save()
@@ -75,8 +76,8 @@ class Event(models.Model):
         # create participation transactions
         for account, part in newbies.items():
             t = Transaction(account=account, event=self)
-            t.rate = part
-            t.credit = party_pay * t.rate
+            t.parts = part
+            t.credit = party_pay * t.parts
             t.type = t.PARTICIPATE
             t.save()
 
@@ -94,13 +95,13 @@ class Event(models.Model):
         # remove all transactions on leavers
         rest_trs = Transaction.objects.filter(event=self)\
             .exclude(account__in=leavers)\
-            .values('account', 'account__rate', 'credit', 'rate')\
+            .values('account', 'account__rate', 'credit', 'parts')\
             .distinct()
 
         rated_parts = 0
         if rest_trs.count() != 0:
             for t in rest_trs:
-                rated_parts += t['rate']
+                rated_parts += t['parts']
 
         party_pay = self.price / rated_parts
 
@@ -108,11 +109,11 @@ class Event(models.Model):
         if rest_trs.count() != 0:
             for t in rest_trs:
                 acc = Account.objects.get(id=t['account'])
-                new_price = party_pay * t['rate']
+                new_price = party_pay * t['parts']
                 diff = abs(t['credit'] - new_price)
                 # Rest participants split leaver debt by between themselves.
                 newt = Transaction(event=self, credit=abs(diff))
-                newt.rate = t['rate']
+                newt.parts = t['parts']
                 newt.account = acc
                 newt.type = newt.DIFF
                 newt.save()
@@ -121,9 +122,9 @@ class Event(models.Model):
         rm_trs.delete()
 
     def rest(self):
+        """ Return rest moneys, that not payed yet."""
         from banking.models import Transaction
 
-        """ Return rest moneys, that not payed yet."""
         payed = Transaction.objects.filter(event=self)\
             .aggregate(balance=Sum(F('credit')-F('debit')))['balance']
         return self.price - (0 if payed is None else payed)
