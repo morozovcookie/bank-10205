@@ -2,12 +2,13 @@
 
 from django.db import models
 from django.db.models import F, Sum
+from datetime import date
 from .account import Account
 
 
 class Event(models.Model):
     name = models.CharField(max_length=100, unique_for_date='date')
-    date = models.DateField(auto_now_add=True, blank=False)
+    date = models.DateField(default=date.today, blank=False)
     price = models.FloatField()
     author = models.ForeignKey(Account)
     private = models.BooleanField(default=False)
