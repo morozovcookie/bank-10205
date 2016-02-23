@@ -34,8 +34,8 @@ class Event(models.Model):
         return accs_rates
 
     def add_participants(self, newbies):
-        """Add participants in event. Takes dict, where keys - is account models
-        and values is participation part(int)."""
+        """Add participants in event. Takes dict, where keys - is account
+        models and values is participation part(int)."""
         from banking.models import Transaction
 
         rated_parts = 0
@@ -121,9 +121,9 @@ class Event(models.Model):
         rm_trs.delete()
 
     def rest(self):
+        """ Return rest moneys, that not payed yet."""
         from banking.models import Transaction
 
-        """ Return rest moneys, that not payed yet."""
         payed = Transaction.objects.filter(event=self)\
             .aggregate(balance=Sum(F('credit')-F('debit')))['balance']
         return self.price - (0 if payed is None else payed)
