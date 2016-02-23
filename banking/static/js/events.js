@@ -300,7 +300,10 @@ var EventBuilder = React.createClass({
             type: this.props.BaseInformation.type,
             template: this.props.BaseInformation.template,
             private: false,
-            participants: [user],
+            participants: [{
+                username: user.username,
+                fullname: user.last_name + ' ' + user.first_name
+            }],
             fd: new FormData()
         }
     },
@@ -413,7 +416,7 @@ var EventBuilder = React.createClass({
                 type: this.state.type,
                 date: this.state.date,
                 price: this.state.sum,
-                author: JSON.parse(window.localStorage.getItem('user')).id,
+                author: JSON.parse(window.localStorage.getItem('user')).account,
                 private: this.state.private,
             },
             success: function(response){
@@ -470,7 +473,9 @@ var EventBuilder = React.createClass({
     },
     render: function(){
         var events = ['Перевод', 'Пополнение', 'Списание'];
-        var user = JSON.parse(window.localStorage.getItem('user'));
+        var owner = JSON.parse(window.localStorage.getItem('user')).last_name +
+            ' ' +
+            JSON.parse(window.localStorage.getItem('user')).first_name;
         return (
             <div className="col-md-12">
                 <div className="row">
@@ -493,7 +498,7 @@ var EventBuilder = React.createClass({
                                     <div className="col-md-1"></div>
                                     <label className="col-md-3" form="new-event-form">Создатель</label>
                                     <div className="col-md-1"></div>
-                                    <div className="col-md-7" style={{padding:'10px'}}>{user.username}</div>
+                                    <div className="col-md-7" style={{padding:'10px'}}>{owner}</div>
                                 </div>
 
                                 <div className="row">

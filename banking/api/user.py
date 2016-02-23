@@ -83,7 +83,7 @@ class user(APIView):
         IsAuthenticated,
     )
 
-    def get(self, request, pk, pattern, format=None):
+    def get(self, request, pk=None, pattern=None, format=None):
         key = request.META.get('HTTP_AUTHORIZATION')
         if key is None:
             return Response(
@@ -152,10 +152,44 @@ class user(APIView):
 
         user.save()
         acc.save()
-        return Response(status=status.HTTP_200_OK)
+        return HttpResponse(status=status.HTTP_200_OK)
 
-    def put(self, request, format=None):
-        pass
+    def put(self, request, pk, format=None):
+        try:
+            data = request.data
+        except ParseError as error:
+            return Response(
+                'Invalid JSON - {0}'.format(error.detail),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if 'username' not in data or 'password' not in data or \
+           'first_name' not in data or 'last_name' not in data or \
+           'is_superuser' not in data:
+            return Response(
+                'Wrong credentials',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        try:
+            if not has_permisions(request):
+                return HttpResponse(
+                    'You do not have permission',
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        except ParseError:
+            return HttpResponse(
+                'Invalid HTTP request - {0}',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user = User.objects.get(pk=pk)
+        user.username = data['username']
+        user.first_name = data['first_name']
+        user.last_name = data['last_name']
+        user.is_superuser =  False if data['is_superuser']=='false' else True
+        user.is_staff = False if data['is_superuser']=='false' else True
+        if data['password']:
+            user.set_password(data['password']);
+        user.save()
+        return HttpResponse(status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
         try:
@@ -171,7 +205,7 @@ class user(APIView):
             )
         user = User.objects.get(pk=pk)
         user.delete()
-        return Response(status=status.HTTP_200_OK)
+        return HttpResponse(status=status.HTTP_200_OK)
 
 
 class UserList(generics.ListCreateAPIView):
