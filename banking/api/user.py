@@ -1,4 +1,6 @@
 from rest_framework.views import APIView
+from rest_framework import generics
+
 from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
@@ -172,15 +174,20 @@ class user(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class user_list(APIView):
+class UserList(generics.ListCreateAPIView):
     authentication_classes = (
         TokenAuthentication,
     )
-    permission_classes = (
-        IsAuthenticated,
-    )
+    # permission_classes = (
+    #     IsAuthenticated,
+    # )
 
-    def get(self, request, format=None):
-        users = Account.objects.all().order_by('pk')
-        users = AccountSerializer(users, many=True, context={'request': request})
-        return Response(users.data)
+    model = Account
+    serializer_class = AccountSerializer
+    queryset = Account.objects.all()
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Account
+    serializer_class = AccountSerializer
+    queryset = Account.objects.all()
