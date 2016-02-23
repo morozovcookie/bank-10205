@@ -19,9 +19,15 @@ class EventPostSerializer(serializers.ModelSerializer):
 
 
 class ParticipationSerializer(serializers.Serializer):
-    rate = serializers.IntegerField()
-    account = serializers.HyperlinkedRelatedField(
-        read_only=True, many=False, view_name='user-detail')
+    id = serializers.IntegerField(source='account.id')
+    parts = serializers.IntegerField()
+    username = serializers.CharField(source='account.user.username')
+    rate = serializers.IntegerField(source='account.rate')
+    is_superuser = serializers.BooleanField(source='account.user.is_superuser')
+    first_name = serializers.CharField(source='account.user.first_name')
+    last_name = serializers.CharField(source='account.user.last_name')
+    url = serializers.HyperlinkedRelatedField(source='account',
+        read_only=True, many=False, view_name='account-detail')
 
 
 class EventFullSerializer(serializers.ModelSerializer):
