@@ -3,7 +3,7 @@ from banking.models import Event, Account
 
 
 class ParticipationPostSerializer(serializers.Serializer):
-    rate = serializers.FloatField()
+    parts = serializers.FloatField()
     account = serializers.PrimaryKeyRelatedField(
         required=True, many=False, queryset=Account.objects.all())
 
@@ -23,7 +23,7 @@ class EventPostSerializer(serializers.ModelSerializer):
 
         if len(participants) > 0:
             for p in participants:
-                e.add_participants({p.get('account'): p.get('rate')})
+                e.add_participants({p.get('account'): p.get('parts')})
         return e
 
     class Meta:
