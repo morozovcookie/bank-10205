@@ -1,10 +1,19 @@
-from django.http import Http404
-
+# from django.http import Http404
+# from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework.response import Response
+
+from rest_framework import filters
+# import django_filters  # for fields
 
 from banking.models import Transaction
 from banking.serializers.transaction import TransactionSerializer
+
+
+class TransactionFilter(filters.FilterSet):
+    class Meta:
+        model = Transaction
+        fields = ['parts', 'date', 'credit', 'debit', 'type',
+                  'account', 'event']
 
 
 class TransactionListView(generics.ListAPIView):
@@ -12,14 +21,5 @@ class TransactionListView(generics.ListAPIView):
     model = Transaction
     queryset = Transaction.objects.all()
 
-    def get(self, req, event_pk=None):
-        if event_pk:
-            ts = Transaction.objects.filter(event=event_pk)
-        else:
-            ts = Transaction.objects.all()
-        if len(ts) > 0:
-            ser = TransactionSerializer(ts,
-                                        many=True,
-                                        context={'request': req})
-            return Response(ser.data)
-        raise Http404
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = TransactionFilter
