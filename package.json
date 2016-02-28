@@ -1,0 +1,36 @@
+{
+  "name": "bank-10205",
+  "version": "1.0.0",
+  "description": "Bank for friends",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/morozovcookie/bank-10205.git"
+  },
+  "keywords": [
+    "bank",
+    "django",
+    "react"
+  ],
+  "author": "Intey & MorozovCookie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/morozovcookie/bank-10205/issues"
+  },
+  "homepage": "https://github.com/morozovcookie/bank-10205#readme",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.5.2",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
+    "webpack": "^1.12.14",
+    "webpack-bundle-tracker": "0.0.93"
+  },
+  "dependencies": {
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7"
+  }
+}
