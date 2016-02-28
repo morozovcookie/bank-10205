@@ -135,13 +135,13 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles'
 
 REST_FRAMEWORK = {
-    'DEAFULT_PERMISSION_CLASSES': [
-        'rst_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    # ],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    )
+    ),
 }
 
 MIGRATION_MODULES = {
