@@ -1,7 +1,8 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+import django_filters
 
-from rest_framework import views, status, generics
+from rest_framework import views, status, generics, filters
 from rest_framework.response import Response
 
 from banking.models import Event
@@ -36,11 +37,23 @@ def _get_participation(e, pk):
     return participation
 
 
+class EventFilter(filters.FilterSet):
+    max_price = django_filters.NumberFilter(name="price", lookup_type='gte')
+    min_price = django_filters.NumberFilter(name="price", lookup_type='lte')
+    author = django_filters.CharFilter(name='author__user__username')
+    class Meta:
+        model = Event
+        fields = ['price', 'name', 'min_price', 'max_price', 'author']
+
+
 class EventListView(generics.ListCreateAPIView):
     """ Show Event with participants list.  """
     model = Event
     serializer_class = EventFullSerializer
     queryset = Event.objects.all()
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = EventFilter
 
     def post(self, request):
         """ Create new event. Accept event data and array of participation. """
