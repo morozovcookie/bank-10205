@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'django_filters',
     'banking',
 ]
-apps = BANK_SETTINGS.get('apps')
+apps = BANK_SETTINGS.get('apps', [])
 if len(apps) > 0:
     INSTALLED_APPS += apps
 
