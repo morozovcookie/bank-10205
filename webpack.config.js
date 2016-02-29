@@ -28,10 +28,15 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loaders: ['react-hot', 'babel?presets[]=react,presets[]=es2015'],
-                //  query: {
-                //      presets: ['es2015', 'react']
-                //  }
+                loader: 'react-hot',
+            },
+            {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                loader: 'babel',
+                query: {
+                    presets: ['es2015', 'react']
+                }
             },
         ]
     },
@@ -40,4 +45,6 @@ module.exports = {
         modulesDirectories: ['node_modules', 'bower_components'],
         extensions: ['', '.js', '.jsx']
     },
+
+    devtool: 'eval',
 }
