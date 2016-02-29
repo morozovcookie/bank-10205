@@ -6,5 +6,9 @@ staticfiles/
 *.pyc
 nginx.log/
 *.backup
+*.orig
+node_modules/
+webpack-stats.json
 .coverage
 htmlcov/
+
