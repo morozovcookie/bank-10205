@@ -1,11 +1,14 @@
 {% load staticfiles %}
+{% load render_bundle from webpack_loader %}
 <div class="col-md-12" id="event-content">. . .</div>
 
 <div class="modal fade" id="new-event-dlg" tabindex="-1">
 	<div class="modal-dialog" id="create-event">. . .</div>
 </div>
+<div id="react-app">Some date should be there</div>
 
 
 <link rel="stylesheet" href="{% static 'css/events.css' %}" />
 <link rel="stylesheet" href="{% static 'css/eventbuilder.css' %}" />
 <script type="text/babel" src="{% static 'js/events.js' %}"></script>
+{% render_bundle 'main' %}
