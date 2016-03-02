@@ -136,8 +136,8 @@ var EventBuilder = React.createClass({
             private: false,
             participants: [{
                 username: JSON.parse(window.localStorage.getItem('user')).username,
-                fullname: JSON.parse(window.localStorage.getItem('user')).last_name + 
-                    ' ' + 
+                fullname: JSON.parse(window.localStorage.getItem('user')).last_name +
+                    ' ' +
                     JSON.parse(window.localStorage.getItem('user')).first_name
             }],
             fd: new FormData()
@@ -309,8 +309,8 @@ var EventBuilder = React.createClass({
     },
     render: function(){
         var events = ['Перевод', 'Пополнение', 'Списание'];
-        var owner = JSON.parse(window.localStorage.getItem('user')).last_name + 
-            ' ' + 
+        var owner = JSON.parse(window.localStorage.getItem('user')).last_name +
+            ' ' +
             JSON.parse(window.localStorage.getItem('user')).first_name;
         return (
             <div className="col-md-12">
