@@ -2,15 +2,24 @@ var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
+/** Create entry name for webpack hot realoading(WHR).
+ * @return {Array} entry array, where filepath to entry wll be last.
+ */
+function HotEntry(filepath) {
+    return [
+        'webpack-dev-server/client?http://localhost:3000',
+        'webpack/hot/dev-server',
+        filepath];
+}
 module.exports = {
     context: __dirname,
 
     entry: {
         //
-        main:   ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/index.js'],
-        events: ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/events.js'],
-        users:  ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/users.js'],
-        auth:   ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/auth.js'],
+        main:   HotEntry('./assets/js/index.js'),
+        events: HotEntry('./assets/js/events.js'),
+        users:  HotEntry('./assets/js/users.js'),
+        auth:   HotEntry('./assets/js/auth.js'),
     },
     output: {
         path: path.resolve('./assets/bundles/'),
