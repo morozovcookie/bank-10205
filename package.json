@@ -4,7 +4,7 @@
   "description": "Bank for friends",
   "main": "index.js",
   "scripts": {
-      "dev-server": "webpack-dev-server --config webpack.config.js --hot --inline --progress --colors --port 3000"
+      "dev": "node server.js"
   },
   "repository": {
     "type": "git",
