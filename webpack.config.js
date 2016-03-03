@@ -11,6 +11,7 @@ function HotEntry(filepath) {
         'webpack/hot/dev-server',
         filepath];
 }
+
 module.exports = {
     context: __dirname,
 
@@ -24,7 +25,7 @@ module.exports = {
     output: {
         path: path.resolve('./assets/bundles/'),
         filename: '[name].js', // use entry field name.
-        // for hot reload. Does it need?
+        // for hot reload.
         publicPath: 'http://localhost:3000/assets/bundles/',
     },
 
@@ -41,12 +42,12 @@ module.exports = {
         loaders: [
             // to transform JSX into JS
             {
-                test: /\.js?$/,
+                test: [/\.js?$/, /\.jsx?$/],
                 exclude: /node_modules/,
                 loader: 'react-hot',
             },
             {
-                test: /\.js?$/,
+                test: [/\.js?$/, /\.jsx?$/],
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
