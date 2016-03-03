@@ -23,7 +23,7 @@ module.exports = {
         auth:   HotEntry('./assets/js/auth.js'),
     },
     output: {
-        path: path.resolve('./assets/bundles/'),
+        path: path.resolve(__dirname, '/banking/statis/js'),
         filename: '[name].js', // use entry field name.
         // for hot reload.
         publicPath: 'http://localhost:3000/assets/bundles/',
