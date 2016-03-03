@@ -1,3 +1,6 @@
+var React = require('react');
+var ReactDOM = require('react-dom');
+
 var NavMenu = React.createClass({
     getInitialState: function(){
         return {
@@ -17,7 +20,7 @@ var NavMenu = React.createClass({
                     <div className="col-md-12">
                         <MenuList />
                     </div>
-                    
+
                 </div>
             </div>
         );

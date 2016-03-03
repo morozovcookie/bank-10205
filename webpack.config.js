@@ -6,10 +6,11 @@ module.exports = {
     context: __dirname,
 
     entry: {
-        main: './assets/js/index.js',
-        events: './assets/js/events.js',
-        users: './assets/js/users.js',
-        auth: './assets/js/auth.js',
+        //
+        main:   ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/index.js'],
+        events: ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/events.js'],
+        users:  ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/users.js'],
+        auth:   ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './assets/js/auth.js'],
     },
     output: {
         path: path.resolve('./assets/bundles/'),
@@ -31,12 +32,12 @@ module.exports = {
         loaders: [
             // to transform JSX into JS
             {
-                test: /\.jsx?$/,
+                test: /\.js?$/,
                 exclude: /node_modules/,
                 loader: 'react-hot',
             },
             {
-                test: /\.jsx?$/,
+                test: /\.js?$/,
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
