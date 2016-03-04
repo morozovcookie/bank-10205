@@ -5,7 +5,6 @@ module.exports = React.createClass({
         var idx = 0;
         var events = this.props.events.map(function(event){
             idx = idx + 1;
-            console.log(event)
             return (<EventRow key={idx} data={event}/>);
         });
         return (

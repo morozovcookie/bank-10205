@@ -2,28 +2,19 @@ var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
-/** Create entry name for webpack hot realoading(WHR).
- * @return {Array} entry array, where filepath to entry wll be last.
- */
-function HotEntry(filepath) {
-    return [
-        'webpack-dev-server/client?http://localhost:3000',
-        'webpack/hot/dev-server',
-        filepath];
-}
 
 module.exports = {
-    context: __dirname,
+    context: path.resolve(__dirname, './banking/'),
 
     entry: {
         //
-        main:   HotEntry('./assets/js/index.js'),
-        events: HotEntry('./assets/js/events.js'),
-        users:  HotEntry('./assets/js/users.js'),
-        auth:   HotEntry('./assets/js/auth.js'),
+        main:   ['./frontend/js/index.js'],
+        events: ['./frontend/js/events.js'],
+        users:  ['./frontend/js/users.js'],
+        auth:   ['./frontend/js/auth.js'],
     },
     output: {
-        path: path.resolve(__dirname, '/banking/statis/js'),
+        path: path.resolve(__dirname, './banking/statis/js'),
         filename: '[name].js', // use entry field name.
         // for hot reload.
         publicPath: 'http://localhost:3000/assets/bundles/',
@@ -31,7 +22,7 @@ module.exports = {
 
     plugins: [
         // reload only changed part of page
-        new webpack.HotModuleReplacementPlugin(),
+        // new webpack.HotModuleReplacementPlugin(),
         // no genereta empty output, if errors occur
         new webpack.NoErrorsPlugin(),
         // integration with django
@@ -58,6 +49,7 @@ module.exports = {
     },
 
     resolve: {
+        root: __dirname,
         modulesDirectories: ['node_modules', 'bower_components'],
         extensions: ['', '.js', '.jsx']
     },
