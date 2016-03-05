@@ -13,7 +13,7 @@ module.exports = {
         auth:   ['./frontend/js/auth.js'],
     },
     output: {
-        path: path.resolve(__dirname, './banking/statis/js'),
+        path: path.resolve(__dirname, './banking/static/js'),
         filename: '[name].js', // use entry field name.
         // for hot reload.
         publicPath: 'http://localhost:3000/assets/bundles/',
