@@ -2,7 +2,6 @@ var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
-
 module.exports = {
     context: path.resolve(__dirname, './banking/'),
 
@@ -27,6 +26,9 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         // integration with django
         new BundleTracker({filename: './webpack-stats.json'}),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'commons',
+        }),
     ],
 
     module: {
