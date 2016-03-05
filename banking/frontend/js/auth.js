@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 var AuthForm = React.createClass({
     getInitialState: function(){
         return {

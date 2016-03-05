@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 var UserTable = React.createClass({
     render: function(){
         var idx = 0;
