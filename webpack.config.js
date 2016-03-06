@@ -11,6 +11,8 @@ module.exports = {
         events: ['./frontend/js/events.js'],
         users:  ['./frontend/js/users.js'],
         auth:   ['./frontend/js/auth.js'],
+        jquery: ['../node_modules/jquery/dist/jquery.min.js'],
+        bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
     },
     output: {
         path: path.resolve(__dirname, './banking/static/js'),
@@ -26,9 +28,9 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         // integration with django
         new BundleTracker({filename: './webpack-stats.json'}),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'commons',
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'commons',
+        // }),
     ],
 
     module: {
