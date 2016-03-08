@@ -10,6 +10,8 @@
     <div class="col-md-1"></div>
 </div>
 <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+{% render_bundle 'auth' %}
+{% render_bundle 'jquery' %}
 <script type="text/javascript">
     $(document).ready(function(){
         var token = window.localStorage.getItem('token');
@@ -20,4 +22,3 @@
         }
     });
 </script>
-{% render_bundle 'auth' %}

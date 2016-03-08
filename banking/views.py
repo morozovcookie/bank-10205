@@ -3,6 +3,7 @@ from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
 from banking.serializers.user import UserSerializer
 
+
 def default(request):
     content = render(request, 'banking/redirect.html').content
     return render(request, 'banking/index.html', dict(body=content))
@@ -21,22 +22,30 @@ def client(request):
     return render(request, 'banking/index.html', dict(body=content,
                                                       title=title))
 
+
 def admin(request):
     content = render(request, 'banking/admin/index.html').content
     title = 'Bank::Admin'
-    return render(request, 'banking/index.html', dict(body=content, title=title))
+    return render(request, 'banking/index.html', dict(body=content,
+                                                      title=title))
+
 
 def events(request):
     content = render(request, 'banking/events.html').content
-    body = render(request, 'banking/admin/index.html', dict(content=content)).content
+    body = render(request, 'banking/admin/index.html',
+                  dict(content=content)).content
     title = 'Bank::Events'
-    return render(request, 'banking/index.html', dict(body=body, title=title))
+    return render(request, 'banking/index.html', dict(body=body,
+                                                      title=title))
+
 
 def users(request):
     content = render(request, 'banking/users.html').content
-    body = render(request, 'banking/admin/index.html', dict(content=content)).content
+    body = render(request, 'banking/admin/index.html',
+                  dict(content=content)).content
     title = 'Bank::Users'
     return render(request, 'banking/index.html', dict(body=body, title=title))
+
 
 def error(request):
     content = render(request, 'banking/error.html').content
@@ -44,7 +53,9 @@ def error(request):
     return render(request, 'banking/index.html', dict(body=content,
                                                       title=title))
 
+
 def has_permisions(request):
+    """ Checks that user with token is admin.  """
     key = request.META.get('HTTP_AUTHORIZATION')
     if key is None:
         raise ParseError

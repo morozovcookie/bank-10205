@@ -2,7 +2,6 @@ var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
-
 module.exports = {
     context: path.resolve(__dirname, './banking/'),
 
@@ -12,13 +11,17 @@ module.exports = {
         events: ['./frontend/js/events.js'],
         users:  ['./frontend/js/users.js'],
         auth:   ['./frontend/js/auth.js'],
+        jquery: ['../node_modules/jquery/dist/jquery.min.js'],
+        bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
     },
     output: {
-        path: path.resolve(__dirname, './banking/statis/js'),
+        path: path.resolve(__dirname, './banking/static/js'),
         filename: '[name].js', // use entry field name.
         // for hot reload.
         publicPath: 'http://localhost:3000/assets/bundles/',
+        library: '$' // for inlined JS in HTML.
     },
+
 
     plugins: [
         // reload only changed part of page
@@ -27,6 +30,13 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         // integration with django
         new BundleTracker({filename: './webpack-stats.json'}),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'commons',
+        // }),
+
+        new webpack.ProvidePlugin({ // for bootstrap.js in node_modules
+            jQuery: 'jquery',
+        }),
     ],
 
     module: {

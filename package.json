@@ -33,6 +33,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "bootstrap": "^3.3.6",
     "font-awesome": "^4.5.0",
     "jquery": "^2.2.1",
     "react": "^0.14.7",
