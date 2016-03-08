@@ -34,6 +34,10 @@ def users(request):
     return render(request, 'banking/users.html', dict(title=title))
 
 
+def userDetail(request, pk):
+    return render(request, 'banking/user.jade')
+
+
 def error(request):
     title = 'Bank::Error'
     return render(request, 'banking/error.html', dict(title=title))

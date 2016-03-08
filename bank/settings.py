@@ -79,23 +79,9 @@ ROOT_URLCONF = 'bank.urls'
 
 TEMPLATES = [
     {
-        'NAME': 'html',
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,  # 'couze set loaders
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-    {
         'NAME': 'jade',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'jade')],
+        'DIRS': [],
         # 'APP_DIRS': True,  # 'couze set loaders
         'OPTIONS': {
             'context_processors': [
@@ -110,7 +96,7 @@ TEMPLATES = [
                     'django.template.loaders.app_directories.Loader',
                 ))
             ],
-            # 'builtins': ['pyjade.ext.django.templatetags'],
+            'builtins': ['pyjade.ext.django.templatetags'],
         },
     },
 ]
