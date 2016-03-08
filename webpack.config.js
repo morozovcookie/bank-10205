@@ -19,7 +19,9 @@ module.exports = {
         filename: '[name].js', // use entry field name.
         // for hot reload.
         publicPath: 'http://localhost:3000/assets/bundles/',
+        library: '$' // for inlined JS in HTML.
     },
+
 
     plugins: [
         // reload only changed part of page
@@ -31,6 +33,10 @@ module.exports = {
         // new webpack.optimize.CommonsChunkPlugin({
         //     name: 'commons',
         // }),
+
+        new webpack.ProvidePlugin({ // for bootstrap.js in node_modules
+            jQuery: 'jquery',
+        }),
     ],
 
     module: {

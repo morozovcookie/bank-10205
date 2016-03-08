@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load render_bundle from webpack_loader %}
+{% render_bundle 'jquery' %}
 <script type="text/javascript">
     $(document).ready(function(){
         var token = window.localStorage.getItem('token');
