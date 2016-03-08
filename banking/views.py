@@ -10,48 +10,33 @@ def default(request):
 
 
 def auth(request):
-    content = render(request, 'banking/auth.html').content
     title = 'Bank::Authentication'
-    return render(request, 'banking/index.html', dict(body=content,
-                                                      title=title))
+    return render(request, 'banking/auth.html', dict(title=title))
 
 
 def client(request):
-    content = render(request, 'banking/client/index.html').content
     title = 'Bank::Client Application'
-    return render(request, 'banking/index.html', dict(body=content,
-                                                      title=title))
+    return render(request, 'banking/client/index.html', dict(title=title))
 
 
 def admin(request):
-    content = render(request, 'banking/admin/index.html').content
     title = 'Bank::Admin'
-    return render(request, 'banking/index.html', dict(body=content,
-                                                      title=title))
+    return render(request, 'banking/admin/index.html', dict(title=title))
 
 
 def events(request):
-    content = render(request, 'banking/events.html').content
-    body = render(request, 'banking/admin/index.html',
-                  dict(content=content)).content
     title = 'Bank::Events'
-    return render(request, 'banking/index.html', dict(body=body,
-                                                      title=title))
+    return render(request, 'banking/events.html', dict(title=title))
 
 
 def users(request):
-    content = render(request, 'banking/users.html').content
-    body = render(request, 'banking/admin/index.html',
-                  dict(content=content)).content
     title = 'Bank::Users'
-    return render(request, 'banking/index.html', dict(body=body, title=title))
+    return render(request, 'banking/users.html', dict(title=title))
 
 
 def error(request):
-    content = render(request, 'banking/error.html').content
     title = 'Bank::Error'
-    return render(request, 'banking/index.html', dict(body=content,
-                                                      title=title))
+    return render(request, 'banking/error.html', dict(title=title))
 
 
 def has_permisions(request):

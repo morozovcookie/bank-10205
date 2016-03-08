@@ -1,5 +1,7 @@
+{% extends "banking/index.html" %}
 {% load staticfiles %}
 {% load render_bundle from webpack_loader %}
+{% block body %}
 <div class="container-fluid">
     <div class="col-md-7"></div>
     <div class="col-md-4">
@@ -22,3 +24,4 @@
         }
     });
 </script>
+{% endblock body %}

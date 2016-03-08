@@ -10,8 +10,6 @@
         {% render_bundle 'bootstrap_js' %}
     </head>
     <body>
-        {% autoescape off %}
-            {{ body }}
-        {% endautoescape %}
+        {% block body %} {% endblock body %}
 	</body>
 </html>
