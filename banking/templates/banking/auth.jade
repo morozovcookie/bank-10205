@@ -1,0 +1,22 @@
+extends "banking/index.html"
+- load staticfiles
+- load render_bundle from webpack_loader
+block body
+    div.container-fluid
+        div.col-md-7
+        div.col-md-4
+            div.panel.panel-default#signin-panel
+                div.panel-body#auth-panel . . .
+        div.col-md-1
+    link(rel="stylesheet", href="{% static 'css/auth.css' %}")
+    - render_bundle 'auth'
+    - render_bundle 'jquery'
+    script(type="text/javascript")
+        | $(document).ready(function(){
+        |     var token = window.localStorage.getItem('token');
+        |     if (token!=undefined)
+        |     {
+        |         var user = window.localStorage.getItem('user');
+        |         document.location.href = (JSON.parse(user).is_superuser ? '/admin/' : '/client/');
+        |     }
+        | });

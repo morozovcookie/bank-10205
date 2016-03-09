@@ -1,34 +1,26 @@
-{% extends "banking/index.html" %}
-
-{% block body %}
-    {% load staticfiles %}
-    {% load render_bundle from webpack_loader %}
-    <link rel="stylesheet" href="{% static 'css/admin/index.css' %}" />
-    <div class="container-fluid">
-        <div class="row" id="navbar">. . .</div>
-        <div class="row">
-            <div class="col-md-2" id="nav">. . .</div>
-            <div class="col-md-10">
-                <div class="well col-md-12">
-                    {% block content %}
-                    {% endblock content %}
-                </div>
-            </div>
-        </div>
-    </div>
-    {% render_bundle 'main' %}
-    {% render_bundle 'jquery' %}
-    <script type="text/javascript">
-    $(document).ready(function(){
-        var token = window.localStorage.getItem('token');
-        if (token!=undefined)
-        {
-            var user = window.localStorage.getItem('user');
-            if (!JSON.parse(user).is_superuser)
-                document.location.href = '/error/';
-        }
-        else
-            document.location.href = '/auth/';
-    });
-    </script>
-{% endblock body %}
+extends "banking/index.html"
+block body
+    - load staticfiles
+    - load render_bundle from webpack_loader
+    link(rel="stylesheet", href="{% static 'css/admin/index.css' %}")
+    div.container-fluid
+        div.row#navbar . . .
+        div.row
+            div.col-md-2#nav . . .
+            div.col-md-10
+                div.well.col-md-12
+                    block content
+    - render_bundle 'main'
+    - render_bundle 'jquery'
+    script(type="text/javascript")
+        | $(document).ready(function(){
+        |     var token = window.localStorage.getItem('token');
+        |     if (token!=undefined)
+        |     {
+        |         var user = window.localStorage.getItem('user');
+        |         if (!JSON.parse(user).is_superuser)
+        |             document.location.href = '/error/';
+        |     }
+        |     else
+        |         document.location.href = '/auth/';
+        | });

@@ -1,0 +1,22 @@
+- extends "banking/admin/index.html"
+block content
+    - load staticfiles
+    - load render_bundle from webpack_loader
+    div.col-md-12
+        div.row
+            div.col-md-10
+                h3 Список сотрудников
+            div.col-md-2
+                a.btn.btn-success(href="#" style="margin-top:16px;" data-toggle="modal" data-target="#create-user-dlg")
+                    span.glyphicon.glyphicon-plus Новый сотрудник
+        div.row(style="margin-top:20px;")
+            div.col-md-12#usertable . . .
+
+    div.modal.fade#create-user-dlg(tabindex="-1")
+        div.modal-dialog#new-user . . .
+
+    div.modal.fade#update-user-dlg(tabindex="-1")
+        div.modal-dialog#update-user . . .
+
+    link(rel="stylesheet", href="- static 'css/users.css'")
+    - render_bundle 'users'

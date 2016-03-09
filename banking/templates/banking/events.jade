@@ -1,0 +1,12 @@
+extends "banking/admin/index.html"
+block content
+    - load staticfiles
+    - load render_bundle from webpack_loader
+    div.col-md-12#event-content . . .
+
+    div.modal.fade#new-event-dlg(tabindex="-1")
+        div.modal-dialog#create-event . . .
+
+    link(rel="stylesheet", href="{% static 'css/events.css' %}")
+    link(rel="stylesheet", href="{% static 'css/eventbuilder.css' %}")
+    - render_bundle 'events'
