@@ -5,33 +5,32 @@ from banking.serializers.user import UserSerializer
 
 
 def default(request):
-    content = render(request, 'banking/redirect.html').content
-    return render(request, 'banking/index.html', dict(body=content))
+    return render(request, 'banking/redirect.jade')
 
 
 def auth(request):
     title = 'Bank::Authentication'
-    return render(request, 'banking/auth.html', dict(title=title))
+    return render(request, 'banking/auth.jade', dict(title=title))
 
 
 def client(request):
     title = 'Bank::Client Application'
-    return render(request, 'banking/client/index.html', dict(title=title))
+    return render(request, 'banking/client/index.jade', dict(title=title))
 
 
 def admin(request):
     title = 'Bank::Admin'
-    return render(request, 'banking/admin/index.html', dict(title=title))
+    return render(request, 'banking/admin/index.jade', dict(title=title))
 
 
 def events(request):
     title = 'Bank::Events'
-    return render(request, 'banking/events.html', dict(title=title))
+    return render(request, 'banking/events.jade', dict(title=title))
 
 
 def users(request):
     title = 'Bank::Users'
-    return render(request, 'banking/users.html', dict(title=title))
+    return render(request, 'banking/users.jade', dict(title=title))
 
 
 def userDetail(request, pk):
@@ -40,7 +39,7 @@ def userDetail(request, pk):
 
 def error(request):
     title = 'Bank::Error'
-    return render(request, 'banking/error.html', dict(title=title))
+    return render(request, 'banking/error.jade', dict(title=title))
 
 
 def has_permisions(request):
