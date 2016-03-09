@@ -21,6 +21,19 @@ class Transaction(models.Model):
     debit = models.FloatField(verbose_name="account get from event", default=0)
     type = models.CharField(max_length=2, choices=TYPES, default=PARTICIPATE)
 
+    def summ(self):
+        """ Return summ of debit and credit. Used for displaying """
+        return round(self.debit - self.credit, 2)
+
+    def type_view(self):
+        """ Return string view of transaction type.  """
+        ret = "Неизвестно"
+        if self.type == 'DF':
+            ret = "Перерасчет"
+        elif self.type == 'IN':
+            ret = 'Оплата'
+        return ret
+
     def __str__(self):
         if self.credit == 0:
             return self.type + ":" + str(self.account)\

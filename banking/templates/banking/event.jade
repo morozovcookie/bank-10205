@@ -1,0 +1,30 @@
+extends banking/admin/index.jade
+block content
+    .col-md-6
+        form.form-horizontal
+            .form-group
+                input.btn.btn-submit.col-md-4.col-md-offset-7(type="submit", value="Сохранить")
+            .form-group
+                label.control-label.col-md-4(for="name") Название
+                .col-md-8
+                    input#name.form-control(type="text", value="{{event.name}}")
+            .form-group
+                label.control-label.col-md-4(for="date") Дата
+                .col-md-8
+                    input#date.form-control(type="text", value="{{event.date}}")
+            .form-group
+                label.control-label.col-md-4(for="price") Цена
+                .col-md-8
+                    input#price.form-control(type="text", value="{{event.price}}")
+            .form-group
+                label.control-label.col-md-4(for="author") Автор
+                .col-md-8
+                    input#author.form-control(type="text", value="{{event.author}}")
+            .form-group
+                label.control-label.col-md-4(for="private") Приватность
+                .col-md-8
+                    input#private(type="checkbox", value="{{event.private}}")
+
+    include banking/includes/transactions.jade
+
+    include banking/includes/participants.jade

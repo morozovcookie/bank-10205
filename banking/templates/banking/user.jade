@@ -1,4 +1,32 @@
 extends banking/admin/index.jade
 block content
-    div.col-md-12
-        p Should be user page
+    .col-md-6
+        form.form-horizontal
+            .form-group
+                label.control-label.col-md-4(for="login") Псевдоним
+                .col-md-8
+                    input#login.form-control(type="text", value="{{account.user.username}}")
+            .form-group
+                label.control-label.col-md-4(for="fname") Имя
+                .col-md-8
+                    input#fname.form-control(type="text", value="{{account.user.firstname}}")
+            .form-group
+                label.control-label.col-md-4(for="sname") Фамилия
+                .col-md-8
+                    input#sname.form-control(type="text", value="{{account.user.lastname}}")
+            .form-group
+                label.control-label.col-md-4(for="birthdate") Дата рождения
+                .col-md-8
+                    input#birthdate.form-control(type="text", value="{{account.birthdate}}")
+            .form-group
+                label.control-label.col-md-4(for="rate") Коэфициент
+                .col-md-8
+                    input#rate.form-control(type="text", value="{{account.rate}}")
+            .form-group
+                label.control-label.col-md-4(for="balance") Баланс
+                .col-md-8
+                    input#balance.form-control(type="text", value="{{account.balance}}")
+    .col-md-6
+        img.img-responsive.img-rounded(src="{{account.avatar_url}}", alt="{{account.user.username}}'s Avatar")
+
+    include banking/includes/transactions.jade

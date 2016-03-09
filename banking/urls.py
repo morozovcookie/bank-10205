@@ -13,8 +13,9 @@ urlpatterns = [
     url(r'^error/$', views.error),
 
     url(r'^events/$', views.events),
+    url(r'^events/(?P<pk>[0-9]+)$', views.eventDetail),
     url(r'^users/$', views.users),
-    url(r'^user/(?P<pk>[0-9]+)/$', views.userDetail),
+    url(r'^users/(?P<pk>[0-9]+)/$', views.userDetail),
     url(r'^$', views.default),
 
     # api calls
