@@ -15,7 +15,7 @@
                             a(href="/events/{{t.event.id}}")=t.event
                         else
                             =t.event
-                    td=t.date
+                    td=t.date| date:"d.m.Y"
                     td=t.parts
                     td=t.summ
                     td=t.type_view
