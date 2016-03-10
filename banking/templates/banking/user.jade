@@ -1,7 +1,9 @@
 extends banking/admin/index.jade
 block content
-    .col-md-6
-        form.form-horizontal
+    form.form-horizontal
+        .col-md-2
+            button.btn.btn-submit(type='submit') Сохранить
+        .col-md-5
             .form-group
                 label.control-label.col-md-4(for="login") Псевдоним
                 .col-md-8
@@ -25,8 +27,8 @@ block content
             .form-group
                 label.control-label.col-md-4(for="balance") Баланс
                 .col-md-8
-                    input#balance.form-control(type="text", value="{{account.balance}}")
-    .col-md-6
+                    input#balance.form-control(type="text", value="{{account.balance | floatformat}}")
+        .col-md-5
         img.img-responsive.img-rounded(src="{{account.avatar_url}}", alt="{{account.user.username}}'s Avatar")
 
     include banking/includes/transactions.jade
