@@ -43,7 +43,7 @@ var CreateEventDlg = React.createClass({
     handleGoToEventBuilder: function(){
         ReactDOM.render(
             <EventBuilder BaseInformation={this.state} />,
-            document.getElementById('event-content')
+            document.getElementById('event-block')
         );
     },
     render: function(){
