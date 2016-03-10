@@ -2,10 +2,20 @@ extends "banking/admin/index.html"
 block content
     - load staticfiles
     - load render_bundle from webpack_loader
-    div.col-md-12#event-content . . .
+    .col-md-12
+        .col-md-12
+            h3 Список событий
+            .row
+                .col-md-10
+                .col-md-2
+                    a.btn.btn-success(href="#", style='margin-top:16px', data-toggle="modal", data-target="#new-event-dlg")
+                        span.glyphicon.glyphicon-plus Новое событие
+            .row(style='margin-top:20px')
+                .col-md-12
+                    #event-content
 
-    div.modal.fade#new-event-dlg(tabindex="-1")
-        div.modal-dialog#create-event . . .
+    .modal.fade#new-event-dlg(tabindex="-1")
+        .modal-dialog#create-event . . .
 
     link(rel="stylesheet", href="{% static 'css/events.css' %}")
     link(rel="stylesheet", href="{% static 'css/eventbuilder.css' %}")
