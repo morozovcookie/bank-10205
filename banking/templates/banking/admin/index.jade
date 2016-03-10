@@ -1,4 +1,4 @@
-extends "banking/index.html"
+extends banking/index.jade
 block body
     - load staticfiles
     - load render_bundle from webpack_loader
@@ -24,3 +24,4 @@ block body
         |     else
         |         document.location.href = '/auth/';
         | });
+    block scripts

@@ -51,4 +51,4 @@ class Account(models.Model):
         return res
 
     def __str__(self):
-        return self.user.__str__() + "(" + str(self.rate) + ")"
+        return self.user.__str__()
