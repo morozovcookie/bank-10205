@@ -93,7 +93,7 @@ class user(APIView):
         if pk:
             user = User.objects.get(pk=pk)
         elif pattern:
-            pattern = urllib.unquote(pattern)
+            pattern = urllib.parse.unquote(pattern)
 
             query = Q(username__startswith=pattern) |\
                 Q(first_name__startswith=pattern) |\

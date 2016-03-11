@@ -27,7 +27,7 @@ urlpatterns = [
         ParticipantDetail.as_view()),
 
     url(r'^api/auth/$', api_user.auth.as_view(), name='auth'),
-    url(r'^api/user/$', api_user.user.as_view(), name='user'),
+    url(r'^api/user/((?P<pk>\d*)|(?P<pattern>\w*))$', api_user.user.as_view(), name='user'),
     url(r'^api/users/$', api_user.user_list.as_view(), name='user-list'),
     url(r'^api/users/(?P<pk>[0-9]+)/$', api_user.user.as_view(),
         name='account-detail'),
