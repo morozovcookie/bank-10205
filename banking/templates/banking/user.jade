@@ -29,6 +29,6 @@ block content
                 .col-md-8
                     input#balance.form-control(type="text", value="{{account.balance | floatformat}}")
         .col-md-5
-        img.img-responsive.img-rounded(src="{{account.avatar_url}}", alt="{{account.user.username}}'s Avatar")
+            img.img-responsive.img-rounded(src="{{account.avatar_url}}", alt="{{account.user.username}}'s Avatar")
 
     include banking/includes/transactions.jade
