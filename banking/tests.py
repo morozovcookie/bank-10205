@@ -159,11 +159,6 @@ class EventParticipationTest(TestCase):
         })
 
         #########################################
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
-
         party_pay = self.eprice / (len(users) - 2)
 
         self.assertEqual(users[0].balance(), self.ubalance - party_pay)
@@ -175,11 +170,6 @@ class EventParticipationTest(TestCase):
         """ When calculating debt with participation-parts value."""
         e, party_pay, _ = generate_participation(list(range(0, 4)))
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
-
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
 
         print(Transaction.objects.all())
 
@@ -236,15 +226,6 @@ class EventParticipationTest(TestCase):
         #########################################
 
         print_list(Transaction.objects.all())
-        # newbies should have only one transact
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
-
-        # odliers should have +1 recalc transaction
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[4])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[5])), 2)
 
         party_pay =\
             self.eprice / sum(self.parts)
@@ -287,11 +268,6 @@ class EventParticipationTest(TestCase):
 
         print_list(Transaction.objects.all())
 
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 2)
-
         # event should be closed
         self.assertEqual(e.rest(), 0)
         self.assertGreater(u1_old_balance, users[0].balance())
@@ -309,10 +285,6 @@ class EventParticipationTest(TestCase):
                          self.ubalance - party_pay * self.parts[2])
         self.assertEqual(users[3].balance(),
                          self.ubalance - party_pay * self.parts[3])
-        self.assertEqual(Transaction.objects.filter(account=users[4]).count(),
-                         0)
-        self.assertEqual(Transaction.objects.filter(account=users[5]).count(),
-                         0)
 
     def test_remove_unparticipated(self):
         e, _, _ = generate_participation([0, 4, 3])
