@@ -210,7 +210,7 @@ var EventBuilder = React.createClass({
                 type: this.state.type,
                 date: this.state.date,
                 price: this.state.sum,
-                author: JSON.parse(window.localStorage.getItem('user')).account,
+                author: JSON.parse(window.localStorage.getItem('user')).id,
                 private: this.state.private,
             },
             success: function(response){
