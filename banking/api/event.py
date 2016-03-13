@@ -9,7 +9,7 @@ from banking.models import Event
 from banking.serializers.event import *
 
 
-def _get_event(pk):
+def get_event(pk):
     """ Internal helper. Get event by pk or 404. """
     try:
         e = Event.objects.get(pk=pk)
@@ -18,7 +18,7 @@ def _get_event(pk):
         raise Http404
 
 
-def _get_participation(e, pk):
+def get_participation(e, pk):
     """ Internal helper. Get participation dict, or 404.
     keys:
         account -- account object
@@ -124,7 +124,7 @@ class ParticipantListView(views.APIView):
         if ser.is_valid():
             newbies = {}
             for p in ser.validated_data:
-                newbies.update({p['account']: p['rate']})
+                newbies.update({p['account']: p['parts']})
             print(newbies)
             e = get_event(event_pk)
             e.add_participants(newbies)
