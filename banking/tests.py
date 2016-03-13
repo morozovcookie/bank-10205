@@ -1,7 +1,9 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 
 from banking.models import Event, Account, Transaction, Transfer
-from django.contrib.auth.models import User
+from banking.domain import get_participants, add_participants,\
+    remove_participants
 
 
 def this_func_name():
@@ -63,7 +65,7 @@ def generate_participation(ids=None):
     if ids is None:
         print_list(participation, "used participants")
 
-    e.add_participants(participation)
+    add_participants(e, participation)
 
     party_pay =\
         eprice / sum(participation.values())
@@ -149,7 +151,7 @@ class EventParticipationTest(TestCase):
         e = Event.objects.get(name="Target")
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
         #########################################
-        e.add_participants({
+        add_participants(e, {
             users[0]: 1,
             users[1]: 1,
             users[2]: 1,
@@ -230,7 +232,7 @@ class EventParticipationTest(TestCase):
         u2_old_balance = users[1].balance()
 
         #########################################
-        e.add_participants(newbies)
+        add_participants(e, newbies)
         #########################################
 
         print_list(Transaction.objects.all())
@@ -267,7 +269,7 @@ class EventParticipationTest(TestCase):
 
     def test_recalc_debt_outcomers(self):
         """When some participation leave event, other split his debt."""
-        e, _, participation = generate_participation(list(range(0,6)))
+        e, _, participation = generate_participation(list(range(0, 6)))
         users = list(participation.keys())
 
         print_list(Transaction.objects.all())
@@ -280,7 +282,7 @@ class EventParticipationTest(TestCase):
         u2_old_balance = users[1].balance()
 
         #########################################
-        e.remove_participants(outcomers)
+        remove_participants(e, outcomers)
         #########################################
 
         print_list(Transaction.objects.all())
@@ -319,13 +321,13 @@ class EventParticipationTest(TestCase):
         oldts_count = Transaction.objects.all().count()
 
         #########################################
-        e.remove_participants([users[1], users[2]])
+        remove_participants(e, [users[1], users[2]])
         #########################################
 
         print_list(Transaction.objects.all(), this_func_name())
 
-        self.assertEqual(e.get_participants().count(), 3)
-        self.assertEqual(e.get_participants()[0]['account'], users[0])
+        self.assertEqual(get_participants(e).count(), 3)
+        self.assertEqual(get_participants(e)[0]['account'], users[0])
         # Transactions should be not changed
         self.assertEqual(oldts_count, Transaction.objects.all().count())
 
@@ -339,11 +341,11 @@ class EventParticipationTest(TestCase):
         # Check that event in balance
         self.assertEqual(e.rest(), 0)
 
-        e.remove_participants([users[0], users[1]])
+        remove_participants(e, [users[0], users[1]])
         print_list(Transaction.objects.all(), "REMOVE users 1, 2")
         self.assertEqual(e.rest(), 0)
 
-        e.add_participants({users[0]: self.parts[0]})
+        add_participants(e, {users[0]: self.parts[0]})
         print_list(Transaction.objects.all(), "RETURNED user 1")
         self.assertEqual(e.rest(), 0)
         #########################################
