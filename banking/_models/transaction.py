@@ -20,6 +20,7 @@ class Transaction(models.Model):
     credit = models.FloatField(verbose_name="account pay", default=0)
     debit = models.FloatField(verbose_name="account get from event", default=0)
     type = models.CharField(max_length=2, choices=TYPES, default=PARTICIPATE)
+    parent = models.ForeignKey("self", null=True, blank=True)
 
     def summ(self):
         """ Return summ of debit and credit. Used for displaying """
