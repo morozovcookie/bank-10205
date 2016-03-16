@@ -6,8 +6,8 @@ from rest_framework import views, status, generics, filters
 from rest_framework.response import Response
 
 from banking.models import Event
-from banking.domain import get_participants, remove_participants,\
-    add_participants
+from banking.operations.domain.event import get_participants,\
+    remove_participants, add_participants
 from banking.serializers.event import *
 
 
@@ -43,6 +43,7 @@ class EventFilter(filters.FilterSet):
     max_price = django_filters.NumberFilter(name="price", lookup_type='gte')
     min_price = django_filters.NumberFilter(name="price", lookup_type='lte')
     author = django_filters.CharFilter(name='author__user__username')
+
     class Meta:
         model = Event
         fields = ['price', 'name', 'min_price', 'max_price', 'author']

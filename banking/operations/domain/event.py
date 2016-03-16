@@ -102,11 +102,22 @@ def is_participated(event, accounts):
 def remove_participants(event, leavers):
     # check, that leaver is participated
     from banking.models import Transaction, Account
+    from django.db.models import F, Sum
 
     leavers = is_participated(event, leavers)
     if not leavers:
         return
 
+    for acc in leavers:
+        summary = Transaction.objects.filter(account=acc)\
+            .aggregate(summ=Sum(F('credit')), parts=Sum(F('parts')))
+        summ = summary['summ']
+        parts = summary['parts']
+        newt = Transaction(event=event, debit=summ)
+        newt.parts = parts
+        newt.account = acc
+        newt.type = newt.DIFF
+        newt.save()
     # get transacts with accs exclude leavers
     # calc party_pay
     # create diffs for selected

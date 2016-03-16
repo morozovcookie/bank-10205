@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 from banking.models import Event, Account, Transaction, Transfer
-from banking.domain import get_participants, add_participants,\
-    remove_participants
+from banking.operations.domain.event import get_participants,\
+    add_participants, remove_participants
 
 
 def this_func_name():
