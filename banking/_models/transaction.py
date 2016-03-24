@@ -2,24 +2,24 @@
 
 from django.db import models
 
-from .account import Account
-from .event import Event
+from .participation import Participation
 
 
 class Transaction(models.Model):
     DIFF = 'DF'
     PARTICIPATE = 'IN'
+    INIT = 'NW'
     TYPES = (
+        ('NW', 'initial'),
         ('DF', 'diff'),
         ('IN', 'participation')
     )
-    account = models.ForeignKey(Account)
-    parts = models.FloatField(default=1.0)
-    event = models.ForeignKey(Event)
+    participation = models.ForeignKey(Participation)
     date = models.DateTimeField(auto_now_add=True, blank=False)
     credit = models.FloatField(verbose_name="account pay", default=0)
     debit = models.FloatField(verbose_name="account get from event", default=0)
     type = models.CharField(max_length=2, choices=TYPES, default=PARTICIPATE)
+    parent = models.ForeignKey('self', null=True)
 
     def summ(self):
         """ Return summ of debit and credit. Used for displaying """
@@ -35,11 +35,14 @@ class Transaction(models.Model):
         return ret
 
     def __str__(self):
+        account = self.participation.account
+        parts = self.participation.parts
+        event = self.participation.event
         if self.credit == 0:
-            return self.type + ":" + str(self.account)\
-                + "←(" + str(self.parts) + ")" + str(self.event)\
+            return self.type + ":" + str(account)\
+                + "←(" + str(parts) + ")" + str(event)\
                 + ":%.1f" % self.debit
         else:
-            return self.type + ":" + str(self.account)\
-                + "→(" + str(self.parts) + ")" + str(self.event)\
+            return self.type + ":" + str(account)\
+                + "→(" + str(parts) + ")" + str(event)\
                 + ":%.1f" % self.credit

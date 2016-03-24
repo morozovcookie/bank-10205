@@ -25,8 +25,12 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('account', 'event', 'date', 'credit', 'debit')
+    list_display = ('participation', 'date', 'credit', 'debit', 'type')
 
+
+@admin.register(Participation)
+class ParticipationAdmin(admin.ModelAdmin):
+    list_display = ('date', 'event', 'account', 'parts')
 
 admin.site.register(EventTemplate)
 admin.site.register(Transfer)

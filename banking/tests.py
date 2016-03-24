@@ -87,7 +87,6 @@ class AccountBalanceTest(TestCase):
         self.assertEqual(p1.balance(), 800)
 
     def test_transactions_change_balance(self):
-        """ When user have transfers and transactions."""
         p1 = Account.objects.get(user__username="P1")
         e = Event.objects.get(name="test")
         #########################################

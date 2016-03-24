@@ -12,8 +12,8 @@ from banking.serializers.transaction import TransactionSerializer
 class TransactionFilter(filters.FilterSet):
     class Meta:
         model = Transaction
-        fields = ['parts', 'date', 'credit', 'debit', 'type',
-                  'account', 'event']
+        fields = ['date', 'credit', 'debit', 'type', ]
+        # 'parts', 'account', 'event'
 
 
 class TransactionListView(generics.ListAPIView):

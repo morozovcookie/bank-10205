@@ -41,13 +41,16 @@ class Account(models.Model):
 
     def balance(self):
         from .transfer import Transfer
+        from .participation import Participation
         from .transaction import Transaction
 
-        res = float(Transaction.objects.filter(account=self).aggregate(
-            balance=Sum(F('debit') - F('credit')))['balance'] or 0)
-        res += float(Transfer.objects.filter(account=self).aggregate(
-            balance=Sum(F('debit') - F('credit')))['balance'] or 0)
+        def sum_query(field):
+            return {field: Sum(F('debit') - F('credit'))}
 
+        res = float(Transfer.objects.filter(account=self).\
+                    aggregate(**sum_query('sum'))['sum'] or 0)
+        res += float(Transaction.objects.filter(participation__account=self).\
+                     aggregate(**sum_query('sum'))['sum'] or 0)
         return res
 
     def __str__(self):
