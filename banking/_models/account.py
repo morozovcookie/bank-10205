@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import F, Sum
 from django.contrib.auth.models import User
 
-from banking.domain import sawn
+from banking.operations.domain.event import sawn
 
 
 class Account(models.Model):

@@ -1,7 +1,8 @@
-from django.test import TestCase
+from django.contrib.auth.models import User
 
 from banking.models import Event, Account, Transaction, Transfer
-from django.contrib.auth.models import User
+from banking.operations.domain.event import get_participants,\
+    add_participants, remove_participants
 
 
 def this_func_name():
@@ -44,7 +45,7 @@ def generate_participation(ids=None):
     from random import randint
 
     eprice = 3000
-    parts = {1: 1, 2: 2, 3: 3, 4: 4, 5: 0.2, 6: 1.5}
+    parts = [1, 2, 3, 4, 0.5, 1.5]
 
     e = Event.objects.get(name="Target")
     users = Account.objects.filter(user__username__iregex=r'^P\d$')
@@ -60,13 +61,15 @@ def generate_participation(ids=None):
     for i in ids:
         participation[users[i]] = parts[i]
 
-    e.add_participants(participation)
+    if ids is None:
+        print_list(participation, "used participants")
+
+    add_participants(e, participation)
 
     party_pay =\
         eprice / sum(participation.values())
 
-    out = {"event": e, "participants": participation, "party_pay": party_pay}
-    return out
+    return (e, party_pay, participation,)
 
 
 class AccountBalanceTest(TestCase):
@@ -103,7 +106,7 @@ class EventParticipationTest(TestCase):
     ubalance = 3000
     eprice = 3000
     rates = [1, 1, 1, 1, 0.5, 0.5]
-    parts = [1, 2, 3, 4, 0.2, 1.5]
+    parts = [1, 2, 3, 4, 0.5, 1.5]
 
     def setUp(self):
         a = User.objects.create(username="Author")
@@ -131,12 +134,8 @@ class EventParticipationTest(TestCase):
 
     def test_single_participation(self):
         """ When user participate in event(1part)."""
-        e = Event.objects.get(name="Target")
-        u = Account.objects.get(user__username="P1")
-
-        #########################################
-        e.add_participants({u: 1})
-        #########################################
+        e, party_pay, participation = generate_participation([1])
+        u = list(participation.keys())[0]
 
         self.assertEqual(u.balance(), 0)
         self.assertEqual(e.rest(), 0)
@@ -150,7 +149,7 @@ class EventParticipationTest(TestCase):
         e = Event.objects.get(name="Target")
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
         #########################################
-        e.add_participants({
+        add_participants(e, {
             users[0]: 1,
             users[1]: 1,
             users[2]: 1,
@@ -158,46 +157,18 @@ class EventParticipationTest(TestCase):
         })
 
         #########################################
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
-
         party_pay = self.eprice / (len(users) - 2)
 
-        self.assertEqual(users[0].balance(),
-                         self.ubalance - party_pay)
-        self.assertEqual(users[1].balance(),
-                         self.ubalance - party_pay)
-        self.assertEqual(users[2].balance(),
-                         self.ubalance - party_pay)
-        self.assertEqual(users[3].balance(),
-                         self.ubalance - party_pay)
+        self.assertEqual(users[0].balance(), self.ubalance - party_pay)
+        self.assertEqual(users[1].balance(), self.ubalance - party_pay)
+        self.assertEqual(users[2].balance(), self.ubalance - party_pay)
+        self.assertEqual(users[3].balance(), self.ubalance - party_pay)
 
     def test_multiple_participation_with_different_parts(self):
         """ When calculating debt with participation-parts value."""
-        e = Event.objects.get(name="Target")
+        e, party_pay, _ = generate_participation(list(range(0, 4)))
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
-        participation = {
-            users[0]: self.parts[0],
-            users[1]: self.parts[1],
-            users[2]: self.parts[2],
-            users[3]: self.parts[3]
-        }
-
-        #########################################
-        e.add_participants(participation)
-        #########################################
-
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
-
         print(Transaction.objects.all())
-        party_pay =\
-            self.eprice / (self.parts[0] + self.parts[1]
-                           + self.parts[2] + self.parts[3])
 
         self.assertEqual(e.rest(), 0)
 
@@ -212,27 +183,13 @@ class EventParticipationTest(TestCase):
 
     def test_diff_parts_rates(self):
         """ Different parts counts, and user rates."""
-        e = Event.objects.get(name="Target")
+        e, party_pay, _ = generate_participation([0, 1, 4, 5])
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
-        participation = {
-            users[0]: self.parts[0],
-            users[1]: self.parts[1],
-            users[4]: self.parts[4],
-            users[5]: self.parts[5]
-        }
-
-        #########################################
-        e.add_participants(participation)
-        #########################################
 
         self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
         self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
         self.assertEqual(len(Transaction.objects.filter(account=users[4])), 1)
         self.assertEqual(len(Transaction.objects.filter(account=users[5])), 1)
-
-        party_pay =\
-            self.eprice / (self.parts[0] + self.parts[1]
-                           + self.parts[4] + self.parts[5])
 
         print_list(Transaction.objects.all())
 
@@ -249,15 +206,8 @@ class EventParticipationTest(TestCase):
 
     def test_recalc_debt(self):
         """ Participation in event, where exists participants."""
-        e = Event.objects.get(name="Target")
+        e, _, _ = generate_participation([0, 1, 4, 5])
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
-        participation = {
-            users[0]: self.parts[0],
-            users[1]: self.parts[1],
-            users[4]: self.parts[4],
-            users[5]: self.parts[5]
-        }
-        e.add_participants(participation)
 
         print_list(Transaction.objects.all())
 
@@ -269,25 +219,13 @@ class EventParticipationTest(TestCase):
         u2_old_balance = users[1].balance()
 
         #########################################
-        e.add_participants(newbies)
+        add_participants(e, newbies)
         #########################################
 
         print_list(Transaction.objects.all())
-        # newbies should have only one transact
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 1)
-
-        # odliers should have +1 recalc transaction
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[4])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[5])), 2)
 
         party_pay =\
-            self.eprice / (self.parts[1] + self.parts[1]
-                           + self.parts[3] + self.parts[3]
-                           + self.parts[5] + self.parts[5]
-                           )
+            self.eprice / sum(self.parts)
 
         # event should be closed
         self.assertEqual(e.rest(), 0)
@@ -309,18 +247,8 @@ class EventParticipationTest(TestCase):
 
     def test_recalc_debt_outcomers(self):
         """When some participation leave event, other split his debt."""
-        e = Event.objects.get(name="Target")
-        users = Account.objects.filter(user__username__iregex=r'^P\d$')
-
-        participation = {
-            users[0]: self.parts[0],
-            users[1]: self.parts[1],
-            users[2]: self.parts[2],
-            users[3]: self.parts[3],
-            users[4]: self.parts[4],
-            users[5]: self.parts[5],
-        }
-        e.add_participants(participation)
+        e, _, participation = generate_participation(list(range(0, 6)))
+        users = list(participation.keys())
 
         print_list(Transaction.objects.all())
 
@@ -332,15 +260,10 @@ class EventParticipationTest(TestCase):
         u2_old_balance = users[1].balance()
 
         #########################################
-        e.remove_participants(outcomers)
+        remove_participants(e, outcomers)
         #########################################
 
         print_list(Transaction.objects.all())
-
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[2])), 2)
-        self.assertEqual(len(Transaction.objects.filter(account=users[3])), 2)
 
         # event should be closed
         self.assertEqual(e.rest(), 0)
@@ -359,52 +282,39 @@ class EventParticipationTest(TestCase):
                          self.ubalance - party_pay * self.parts[2])
         self.assertEqual(users[3].balance(),
                          self.ubalance - party_pay * self.parts[3])
-        self.assertEqual(Transaction.objects.filter(account=users[4]).count(),
-                         0)
-        self.assertEqual(Transaction.objects.filter(account=users[5]).count(),
-                         0)
 
     def test_remove_unparticipated(self):
-        e = Event.objects.get(name="Target")
+        e, _, _ = generate_participation([0, 4, 3])
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
-
-        participation = {
-            users[0]: self.parts[0],
-            users[4]: self.parts[4],
-            users[3]: self.parts[3],
-        }
-        e.add_participants(participation)
 
         oldts_count = Transaction.objects.all().count()
 
         #########################################
-        e.remove_participants([users[1], users[2]])
+        remove_participants(e, [users[1], users[2]])
         #########################################
 
         print_list(Transaction.objects.all(), this_func_name())
 
-        self.assertEqual(e.get_participants().count(), 3)
-        self.assertEqual(e.get_participants()[0]['account'], users[0])
+        self.assertEqual(get_participants(e).count(), 3)
+        self.assertEqual(get_participants(e)[0]['account'], users[0])
         # Transactions should be not changed
         self.assertEqual(oldts_count, Transaction.objects.all().count())
 
     def test_sway_participants(self):
-        e = Event.objects.get(name="Target")
-        users = Account.objects.filter(user__username__iregex=r'^P\d$')
-
-        # Check that event in balance
-        #########################################
-        e.add_participants({users[0]: self.parts[0],
-                            users[1]: self.parts[1],
-                            users[2]: self.parts[2]})
+        e, _, participation = generate_participation([0, 1, 2])
         print_list(Transaction.objects.all(), "ADDED users 1, 2, 3")
+
+        users = list(participation.keys())
+
+        #########################################
+        # Check that event in balance
         self.assertEqual(e.rest(), 0)
 
-        e.remove_participants([users[0]])
-        print_list(Transaction.objects.all(), "REMOVE users 1")
+        remove_participants(e, [users[0], users[1]])
+        print_list(Transaction.objects.all(), "REMOVE users 1, 2")
         self.assertEqual(e.rest(), 0)
 
-        e.add_participants({users[0]: self.parts[0]})
+        add_participants(e, {users[0]: self.parts[0]})
         print_list(Transaction.objects.all(), "RETURNED user 1")
         self.assertEqual(e.rest(), 0)
         #########################################
@@ -412,6 +322,7 @@ class EventParticipationTest(TestCase):
         # unparticipated, not lose money
         self.assertEqual(users[1].balance(), self.ubalance)
 
+        # recalc party_pay, because participants changed
         # users debts only on participation list
         party_pay =\
             self.eprice / (self.parts[0] + self.parts[2])

@@ -6,6 +6,8 @@ from rest_framework import views, status, generics, filters
 from rest_framework.response import Response
 
 from banking.models import Event
+from banking.operations.domain.event import get_participants,\
+    remove_participants, add_participants
 from banking.serializers.event import *
 
 
@@ -25,7 +27,7 @@ def get_participation(e, pk):
         rate -- participation parts
     """
     acc = get_object_or_404(Account, pk=pk)
-    tmp = e.get_participants()
+    tmp = get_participants(e)
     participation = None
     for p in tmp:
         if p['account'] == acc:
@@ -41,6 +43,7 @@ class EventFilter(filters.FilterSet):
     max_price = django_filters.NumberFilter(name="price", lookup_type='gte')
     min_price = django_filters.NumberFilter(name="price", lookup_type='lte')
     author = django_filters.CharFilter(name='author__user__username')
+
     class Meta:
         model = Event
         fields = ['price', 'name', 'min_price', 'max_price', 'author']
@@ -111,7 +114,7 @@ class ParticipantListView(views.APIView):
     def get(self, req, event_pk, format=None):
         """ Return participation entity for event: account link + parts """
         e = get_event(event_pk)
-        ps = ParticipationSerializer(e.get_participants(), many=True,
+        ps = ParticipationSerializer(get_participants(e), many=True,
                                      context={'request': req})
         return Response(ps.data)
 
@@ -127,8 +130,8 @@ class ParticipantListView(views.APIView):
                 newbies.update({p['account']: p['parts']})
             print(newbies)
             e = get_event(event_pk)
-            e.add_participants(newbies)
-            return Response(ParticipationSerializer(e.get_participants()).data)
+            add_participants(e, newbies)
+            return Response(ParticipationSerializer(get_participants(e)).data)
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -147,5 +150,5 @@ class ParticipantDetail(views.APIView):
         """ Remove participant from event. """
         e = get_event(event_pk)
         p = get_participation(e, pk)
-        e.remove_participants([p['account']])
+        remove_participants(e, [p['account']])
         return Response(status=status.HTTP_204_NO_CONTENT)
