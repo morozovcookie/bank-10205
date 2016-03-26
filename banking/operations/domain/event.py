@@ -8,7 +8,7 @@ def get_participants(event):
     @rtype :  List
     """
     from banking.models import Transaction, Account
-    accs_rates = Transaction.objects.filter(event=event)\
+    accs_rates = Transaction.objects.filter(participation__event=event)\
         .values('account', 'parts').distinct()
     for p in accs_rates:
         p.update({'account': Account.objects.get(id=p['account'])})

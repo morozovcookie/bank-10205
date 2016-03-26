@@ -17,7 +17,7 @@ class Event(models.Model):
         """ Return rest moneys, that not payed yet."""
         from banking.models import Transaction
 
-        payed = Transaction.objects.filter(event=self)\
+        payed = Transaction.objects.filter(participation__event=self)\
             .aggregate(balance=Sum(F('credit')-F('debit')))['balance']
         return self.price - (0 if payed is None else payed)
 
