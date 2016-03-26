@@ -36,20 +36,18 @@ class Account(models.Model):
         not do this(joke)."""
         from .transfer import Transfer
         if self.balance() > count:
-            t = Transfer(account=self, direction="OUT", count=count)
-            t.save()
+            Transfer.objects.create(account=self, direction="OUT", count=count)
 
     def balance(self):
         from .transfer import Transfer
-        from .participation import Participation
         from .transaction import Transaction
 
         def sum_query(field):
             return {field: Sum(F('debit') - F('credit'))}
 
-        res = float(Transfer.objects.filter(account=self).\
+        res = float(Transfer.objects.filter(account=self).
                     aggregate(**sum_query('sum'))['sum'] or 0)
-        res += float(Transaction.objects.filter(participation__account=self).\
+        res += float(Transaction.objects.filter(participation__account=self).
                      aggregate(**sum_query('sum'))['sum'] or 0)
         return res
 
