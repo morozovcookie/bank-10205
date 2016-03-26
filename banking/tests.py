@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
+from django.test import TestCase
 
-from banking.models import Event, Account, Transaction, Transfer
+from banking.models import Event, Account, Transaction, Transfer, Participation
 from banking.operations.domain.event import get_participants,\
     add_participants, remove_participants
 
@@ -96,8 +97,11 @@ class AccountBalanceTest(TestCase):
         Transfer.objects.create(account=p1, debit=100)
         Transfer.objects.create(account=p1, debit=300)
         Transfer.objects.create(account=p1, debit=400)
-        Transaction.objects.create(account=p1, event=e, credit=200)
-        Transaction.objects.create(account=p1, event=e, debit=300)
+
+        p = Participation(account=p1, event=e)
+        p.save()
+        Transaction.objects.create(participation=p, credit=200)
+        Transaction.objects.create(participation=p, debit=300)
         #########################################
         self.assertEqual(p1.balance(), 900)
 
@@ -132,8 +136,8 @@ class EventParticipationTest(TestCase):
         for u in users:
             Transfer.objects.create(account=u, debit=self.ubalance)
 
+    # When user participate in event(1part).
     def test_single_participation(self):
-        """ When user participate in event(1part)."""
         e, party_pay, participation = generate_participation([1])
         u = list(participation.keys())[0]
 
@@ -141,10 +145,10 @@ class EventParticipationTest(TestCase):
         self.assertEqual(e.rest(), 0)
         print("END test_single_participation")
 
+    # When user participate in event, where someone already participated.
+    # Should create Transactions for each participant on each new
+    # participation. Should increace balance of already participated user.
     def test_multiple_participation(self):
-        """ When user participate in event, where someone already participated.
-        Should create Transactions for each participant on each new
-        participation. Should increace balance of already participated user."""
 
         e = Event.objects.get(name="Target")
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
@@ -165,7 +169,6 @@ class EventParticipationTest(TestCase):
         self.assertEqual(users[3].balance(), self.ubalance - party_pay)
 
     def test_multiple_participation_with_different_parts(self):
-        """ When calculating debt with participation-parts value."""
         e, party_pay, _ = generate_participation(list(range(0, 4)))
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
         print(Transaction.objects.all())
@@ -182,14 +185,8 @@ class EventParticipationTest(TestCase):
                          self.ubalance - party_pay * self.parts[3])
 
     def test_diff_parts_rates(self):
-        """ Different parts counts, and user rates."""
         e, party_pay, _ = generate_participation([0, 1, 4, 5])
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
-
-        self.assertEqual(len(Transaction.objects.filter(account=users[0])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[1])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[4])), 1)
-        self.assertEqual(len(Transaction.objects.filter(account=users[5])), 1)
 
         print_list(Transaction.objects.all())
 
@@ -204,8 +201,8 @@ class EventParticipationTest(TestCase):
         self.assertEqual(users[5].balance(),
                          self.ubalance - party_pay * self.parts[5])
 
+    # Participation in event, where exists participants.
     def test_recalc_debt(self):
-        """ Participation in event, where exists participants."""
         e, _, _ = generate_participation([0, 1, 4, 5])
         users = Account.objects.filter(user__username__iregex=r'^P\d$')
 
@@ -245,8 +242,8 @@ class EventParticipationTest(TestCase):
         self.assertEqual(users[5].balance(),
                          self.ubalance - party_pay * self.parts[5])
 
+    # When some participation leave event, other split his debt.
     def test_recalc_debt_outcomers(self):
-        """When some participation leave event, other split his debt."""
         e, _, participation = generate_participation(list(range(0, 6)))
         users = list(participation.keys())
 
