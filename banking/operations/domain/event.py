@@ -4,6 +4,38 @@ from django.db.models import Sum, Q
 from banking.models import Transaction, Account, Participation
 
 
+def delegate_debt(participation, credit):
+    """Make diff transactions for given participation(event,user) with given
+    credit. This means, that we get money from user and spend it to event.
+
+    @param participation:  Event-User link that for create transaction
+    @type  participation:  Participation
+    """
+    t = Transaction(participation=participation, type=Transaction.DIFF)
+    t.credit = credit
+    t.save()
+
+
+def return_money(participation, debit, parent):
+    """Make diff transactions for given participation(event,user) with given
+    debit. This means, that we get money from event and return it to user.
+
+    @param participation:  Event-User link that for create transaction
+    @type  participation:  Participation
+
+    @param debit:  Money count that was returned
+    @type  debit:  float
+
+    @param parent:  Parent transaction, that initiate return(incomer for
+                    example)
+    @type  parent:  Transaction
+    """
+    t = Transaction(participation=participation, type=Transaction.DIFF,
+                    parent=parent)
+    t.debit = debit
+    t.save()
+
+
 def get_participants(event):
     """Get participants of Event
 
@@ -62,38 +94,20 @@ def add_participants(event, newbies):
             tr.credit = party_pay * parts
             tr.save()
 
-    incomers_sum = sum(newbies.values()) * party_pay
+    parent_transactions = Transaction.objects.filter(
+        participation__account__in=newbies.keys())
+
     # create diffs for old participants
     # if no recalcers(incomers if first participants) we have exist_parts = 0
-    for participation in recalcers:
-        assert (exist_parts != 0), "On add participants when we need recalc \
-            exist participants exist_parts should be positive(not zero)"
-        tr = Transaction(participation=participation, type=Transaction.DIFF)
-        tr.debit = (incomers_sum / exist_parts) * participation.parts
-        tr.save(0)
-
-
-def delegate_debt(participation, credit):
-    """Make diff transactions for given participation(event,user) with given
-    credit. This means, that we get money from user and spend it to event.
-
-    @param participation:  Event-User link that for create transaction
-    @type  participation:  Participation
-    """
-    t = Transaction(participation=participation, type=Transaction.DIFF)
-    t.credit = credit
-    t.save()
-
-
-def return_money(participation, debit):
-    """Make diff transactions for given participation(event,user) with given
-    debit. This means, that we get money from event and return it to user.
-    @param participation:  Event-User link that for create transaction
-    @type  participation:  Participation
-    """
-    t = Transaction(participation=participation, type=Transaction.DIFF)
-    t.debit = debit
-    t.save()
+    for newbie_transaction in parent_transactions:
+        newbie_parts = newbie_transaction.participation.parts
+        for participation in recalcers:
+            assert (exist_parts != 0),\
+                "On add participants when we need recalc exist participants\
+                exist_parts should be positive(not zero)"
+            debit = (((party_pay * newbie_parts) / exist_parts)
+                     * participation.parts)
+            return_money(participation, debit, newbie_transaction)
 
 
 def remove_participants(event, leavers):
@@ -114,6 +128,6 @@ def remove_participants(event, leavers):
     leaver_participations = all_participants.filter(account__in=leavers)
     # return money
     for participation in leaver_participations:
-        return_money(participation, party_pay * participation.parts)
+        return_money(participation, party_pay * participation.parts, None)
 
     leaver_participations.delete()
