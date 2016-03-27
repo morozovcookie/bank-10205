@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from string import Template
+
 from django.db import models
 
 from .participation import Participation
@@ -38,11 +40,15 @@ class Transaction(models.Model):
         account = self.participation.account
         parts = self.participation.parts
         event = self.participation.event
-        if self.credit == 0:
-            return self.type + ":" + str(account)\
-                + "←(" + str(parts) + ")" + str(event)\
-                + ":%.1f" % self.debit
+        out = Template("$id|$type$parent:$account <- $event($parts) = $summ")
+
+        summ = (self.debit if self.credit == 0 else self.credit)
+        # show parent only for diff transactions
+        if self.type == self.DIFF and self.parent:
+            parent = "[%s]" % self.parent.id
         else:
-            return self.type + ":" + str(account)\
-                + "→(" + str(parts) + ")" + str(event)\
-                + ":%.1f" % self.credit
+            parent = ""
+
+        return out.substitute(id=self.id, type=self.type, parent=parent,
+                              account=account, event=event, parts=parts,
+                              summ=summ)
