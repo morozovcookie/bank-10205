@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import F, Sum, Q
+from django.db.models import Sum, Q
 from banking.models import Transaction, Account, Participation
 
 
@@ -10,7 +10,7 @@ def get_participants(event):
     'parts' - is participation rate(parts).
     @rtype :  List
     """
-    accs_rates = Transaction.objects.filter(participation__event=event)\
+    accs_rates = Participation.objects.filter(event=event)\
         .values('account', 'parts').distinct()
     for p in accs_rates:
         p.update({'account': Account.objects.get(id=p['account'])})
@@ -38,7 +38,6 @@ def is_participated(event, accounts):
 def add_participants(event, newbies):
     """Add participants in event. Takes dict, where keys - is account
     models and values is participation part(int)."""
-    rated_parts = 0
 
     recalcers = Participation.objects.filter(~Q(account__in=newbies.keys()))
 
@@ -65,52 +64,48 @@ def add_participants(event, newbies):
         tr.save(0)
 
 
+def delegate_debt(participation, credit):
+    """Make diff transactions for given participation(event,user) with given
+    credit. This means, that we get money from user and spend it to event.
+
+    @param participation:  Event-User link that for create transaction
+    @type  participation:  Participation
+    """
+    t = Transaction(participation=participation, type=Transaction.DIFF)
+    t.credit = credit
+    t.save()
+
+
+def return_money(participation, debit):
+    """Make diff transactions for given participation(event,user) with given
+    debit. This means, that we get money from event and return it to user.
+    @param participation:  Event-User link that for create transaction
+    @type  participation:  Participation
+    """
+    t = Transaction(participation=participation, type=Transaction.DIFF)
+    t.debit = debit
+    t.save()
+
+
+
 def remove_participants(event, leavers):
     # check, that leaver is participated
-
     leavers = is_participated(event, leavers)
     if not leavers:
         return
 
-    for acc in leavers:
-        summary = Transaction.objects.filter(participation__account=acc)\
-            .aggregate(summ=Sum(F('credit')), parts=Sum(F('participation__parts')))
-        summ = summary['summ']
-        parts = summary['parts']
-        newt = Transaction(event=event, debit=summ)
-        newt.parts = parts
-        newt.account = acc
-        newt.type = newt.DIFF
-        newt.save()
-    # get transacts with accs exclude leavers
-    # calc party_pay
-    # create diffs for selected
-    # remove all transactions on leavers
-    rest_trs = Transaction.objects.filter(participation__event=event)\
-        .exclude(account__in=leavers)\
-        .values('account', 'account__rate', 'credit', 'parts')\
-        .distinct()
+    all_participants = Participation.objects.all()
 
-    rated_parts = 0
-    if rest_trs.count() != 0:
-        for t in rest_trs:
-            rated_parts += t['parts']
+    party_pay = event.price / all_participants.aggregate(p=Sum('parts'))['p']
 
-    party_pay = event.price / rated_parts
+    rest_participations = all_participants.filter(~Q(account__in=leavers))
+    # yep folks, you should pay for this leavers
+    for participation in rest_participations:
+        delegate_debt(participation, party_pay * participation.parts)
 
-    # create for oldiers diff transactions
-    if rest_trs.count() != 0:
-        for t in rest_trs:
-            acc = Account.objects.get(id=t['account'])
-            new_price = party_pay * t['parts']
-            diff = abs(t['credit'] - new_price)
-            # Rest participants split leaver debt by between themselves.
-            newt = Transaction(event=event, credit=abs(diff))
-            newt.parts = t['parts']
-            newt.account = acc
-            newt.type = newt.DIFF
-            newt.save()
+    leaver_participations = all_participants.filter(account__in=leavers)
+    # return money
+    for participation in leaver_participations:
+        return_money(participation, party_pay * participation.parts)
 
-    rm_trs = Transaction.objects.filter(participation__event=event,
-                                        participation__account__in=leavers)
-    rm_trs.delete()
+    leaver_participations.delete()
