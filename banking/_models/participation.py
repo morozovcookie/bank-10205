@@ -11,6 +11,7 @@ class Participation(models.Model):
     parts = models.FloatField(default=1.0)
     event = models.ForeignKey(Event)
     date = models.DateTimeField(auto_now_add=True, blank=False)
+    active = models.BooleanField()
 
     def __str__(self):
         return str(self.account) + " -> " + str(self.event)

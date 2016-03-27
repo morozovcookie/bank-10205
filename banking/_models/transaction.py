@@ -11,10 +11,12 @@ class Transaction(models.Model):
     DIFF = 'DF'
     PARTICIPATE = 'IN'
     INIT = 'NW'
+    OUT = 'OT'
     TYPES = (
         ('NW', 'initial'),
         ('DF', 'diff'),
-        ('IN', 'participation')
+        ('IN', 'participation'),
+        ('OT', 'leave')
     )
     participation = models.ForeignKey(Participation)
     date = models.DateTimeField(auto_now_add=True, blank=False)
@@ -40,9 +42,14 @@ class Transaction(models.Model):
         account = self.participation.account
         parts = self.participation.parts
         event = self.participation.event
-        out = Template("$id|$type$parent:$account($parts) <- $event = $summ")
+        out = Template("$id|$type$parent:$account($parts) $direction $event = $summ")
 
-        summ = (self.debit if self.credit == 0 else self.credit)
+        if self.credit == 0:
+            summ = self.debit
+            direction = "<-"
+        else:
+            summ = self.credit
+            direction = "->"
         # show parent only for diff transactions
         if self.type == self.DIFF and self.parent:
             parent = "[%s]" % self.parent.id
@@ -51,4 +58,4 @@ class Transaction(models.Model):
 
         return out.substitute(id=self.id, type=self.type, parent=parent,
                               account=account, event=event, parts=parts,
-                              summ=summ)
+                              summ=summ, direction=direction)
