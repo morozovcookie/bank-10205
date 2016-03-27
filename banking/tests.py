@@ -118,12 +118,12 @@ class EventParticipationTest(TestCase):
 
         Event.objects.create(name="Target", price=self.eprice, author=author)
 
-        u1 = User.objects.create(username="P1")
-        u2 = User.objects.create(username="P2")
-        u3 = User.objects.create(username="P3")
-        u4 = User.objects.create(username="P4")
-        u5 = User.objects.create(username="P5")
-        u6 = User.objects.create(username="P6")
+        u1 = User.objects.create(username="P0")
+        u2 = User.objects.create(username="P1")
+        u3 = User.objects.create(username="P2")
+        u4 = User.objects.create(username="P3")
+        u5 = User.objects.create(username="P4")
+        u6 = User.objects.create(username="P5")
         p1 = Account.objects.create(user=u1)
         p2 = Account.objects.create(user=u2)
         p3 = Account.objects.create(user=u3)
