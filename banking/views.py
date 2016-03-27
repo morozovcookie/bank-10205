@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
 from banking.serializers.user import UserSerializer
-from banking.models import Account, Transaction, Transfer, Event
+from banking.models import Account, Transaction, Event, Participation
 
 
 def default(request):
@@ -39,7 +39,7 @@ def userDetail(request, pk):
     acc = get_object_or_404(Account, pk=pk)
     print(acc)
     context['account'] = acc
-    context['transactions'] = Transaction.objects.filter(account=acc)
+    context['transactions'] = Transaction.objects.filter(participation__account=acc)
     context['user'] = acc.user
     return render(request, 'banking/user.jade', context)
 
@@ -48,7 +48,8 @@ def eventDetail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     context = dict()
     context['event'] = event
-    context['transactions'] = Transaction.objects.filter(event=event)
+    context['transactions'] = Transaction.objects.filter(participation__event=event)
+    context['participants'] = Participation.objects.filter(event=event)
     return render(request, 'banking/event.jade', context)
 
 
