@@ -300,7 +300,7 @@ class EventParticipationTest(TestCase):
 
     def test_sway_participants(self):
         e, _, participation = generate_participation([0, 1, 2])
-        print_list(Transaction.objects.all(), "ADDED users 1, 2, 3")
+        print_list(Transaction.objects.all(), "ADDED users 0, 1, 2")
 
         users = list(participation.keys())
 
@@ -309,22 +309,30 @@ class EventParticipationTest(TestCase):
         self.assertEqual(e.rest(), 0)
 
         remove_participants(e, [users[0], users[1]])
-        print_list(Transaction.objects.all(), "REMOVE users 1, 2")
+        print_list(Transaction.objects.all(), "REMOVE users 0, 1")
         self.assertEqual(e.rest(), 0)
 
         add_participants(e, {users[0]: self.parts[0]})
+        print_list(Transaction.objects.all(), "RETURNED user 0")
+        self.assertEqual(e.rest(), 0)
+
+        add_participants(e, {users[1]: self.parts[1]})
         print_list(Transaction.objects.all(), "RETURNED user 1")
+        self.assertEqual(e.rest(), 0)
+
+        remove_participants(e, [users[2]])
+        print_list(Transaction.objects.all(), "REMOVE users 2")
         self.assertEqual(e.rest(), 0)
         #########################################
 
         # unparticipated, not lose money
-        self.assertEqual(users[1].balance(), self.ubalance)
+        self.assertEqual(users[2].balance(), self.ubalance)
 
         # recalc party_pay, because participants changed
         # users debts only on participation list
         party_pay =\
-            self.eprice / (self.parts[0] + self.parts[2])
+            self.eprice / (self.parts[0] + self.parts[1])
         self.assertEqual(users[0].balance(),
                          self.ubalance - party_pay * self.parts[0])
-        self.assertEqual(users[2].balance(),
-                         self.ubalance - party_pay * self.parts[2])
+        self.assertEqual(users[1].balance(),
+                         self.ubalance - party_pay * self.parts[1])
