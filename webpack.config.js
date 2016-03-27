@@ -7,7 +7,8 @@ module.exports = {
 
     entry: {
         //
-        main:   ['./frontend/js/index.js'],
+        index:  ['./frontend/js/index.js'],
+        summary:['./frontend/js/summary.js'], // index table. Events, participants...
         events: ['./frontend/js/events.js'],
         users:  ['./frontend/js/users.js'],
         auth:   ['./frontend/js/auth.js'],

@@ -1,4 +1,5 @@
 extends banking/index.jade
+
 block body
     - load staticfiles
     - load render_bundle from webpack_loader
@@ -10,8 +11,12 @@ block body
             div.col-md-10
                 div.well.col-md-12
                     block content
-    - render_bundle 'main'
+                        #summary loading summary...
+    - render_bundle 'index'
     - render_bundle 'jquery'
+    - render_bundle 'summary'
+
+block scripts
     script(type="text/javascript")
         | $(document).ready(function(){
         |     var token = window.localStorage.getItem('token');
@@ -24,4 +29,3 @@ block body
         |     else
         |         document.location.href = '/auth/';
         | });
-    block scripts

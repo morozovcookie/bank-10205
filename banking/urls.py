@@ -5,6 +5,7 @@ from banking.api import user as api_user
 from banking.api.event import\
     EventListView, EventDetail, ParticipantListView, ParticipantDetail
 from banking.api.transaction import TransactionListView
+from banking.api.summary import Summary
 
 urlpatterns = [
     url(r'^auth/$', views.auth),
@@ -34,6 +35,7 @@ urlpatterns = [
 
     url(r'^api/transactions/$', TransactionListView.as_view(),
         name='transaction-list'),
+    url(r'^api/summary/$', Summary.as_view(), name='summary'),
     # API docs. Uncomment 'django-rest-swagger' in apps, and install package.
     # By the way, it's need more work, to become nice.
     url(r'^docs/', include('rest_framework_swagger.urls')),
