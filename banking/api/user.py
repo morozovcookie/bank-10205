@@ -1,9 +1,9 @@
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ParseError
-from rest_framework import status
 
 from django.contrib.auth.models import User
 
@@ -206,15 +206,13 @@ class user(APIView):
         return HttpResponse(status=status.HTTP_200_OK)
 
 
-class user_list(APIView):
+class user_list(generics.ListCreateAPIView):
     # authentication_classes = (
     #     TokenAuthentication,
     # )
     # permission_classes = (
     #     IsAuthenticated,
     # )
-
-    def get(self, request, format=None):
-        users = Account.objects.all().order_by('pk')
-        users = AccountSerializer(users, many=True, context={'request': request})
-        return Response(users.data)
+    model = Account
+    serializer_class = AccountSerializer
+    queryset = Account.objects.all()
