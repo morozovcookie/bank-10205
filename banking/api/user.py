@@ -74,12 +74,12 @@ class auth(APIView):
 
 
 class user(APIView):
-    authentication_classes = (
-        TokenAuthentication,
-    )
-    permission_classes = (
-        IsAuthenticated,
-    )
+    # authentication_classes = (
+    #     TokenAuthentication,
+    # )
+    # permission_classes = (
+    #     IsAuthenticated,
+    # )
 
     def get(self, request, pk=None, pattern=None, format=None):
         key = request.META.get('HTTP_AUTHORIZATION')
@@ -207,12 +207,12 @@ class user(APIView):
 
 
 class user_list(APIView):
-    authentication_classes = (
-        TokenAuthentication,
-    )
-    permission_classes = (
-        IsAuthenticated,
-    )
+    # authentication_classes = (
+    #     TokenAuthentication,
+    # )
+    # permission_classes = (
+    #     IsAuthenticated,
+    # )
 
     def get(self, request, format=None):
         users = Account.objects.all().order_by('pk')
