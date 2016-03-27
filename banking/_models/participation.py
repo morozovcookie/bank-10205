@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from string import Template
+
 from django.db import models
 
 from .account import Account
@@ -14,4 +16,7 @@ class Participation(models.Model):
     active = models.BooleanField()
 
     def __str__(self):
-        return str(self.account) + " -> " + str(self.event)
+        out = Template("[$active]$account: $event")
+        active = "+" if self.active else "-"
+        return out.substitute(active=active, account=self.account,
+                              event=self.event)
