@@ -6,8 +6,9 @@ from banking.models import Transaction, Account, Participation
 
 def get_participants(event):
     """Get participants of Event
+
     @return:  participants List of dicts, where keys: 'account', 'parts'.
-    'parts' - is participation rate(parts).
+              'parts' - is participation rate(parts).
     @rtype :  List
     """
     accs_rates = Participation.objects.filter(event=event)\
@@ -39,28 +40,36 @@ def add_participants(event, newbies):
     """Add participants in event. Takes dict, where keys - is account
     models and values is participation part(int)."""
 
-    recalcers = Participation.objects.filter(~Q(account__in=newbies.keys()))
+    # calc party-pay,
+    participants = Participation.objects.filter(event=event)
+
+    exist_parts = participants.aggregate(s=Sum('parts'))['s']
+    exist_parts = 0.0 if exist_parts is None else exist_parts  # fix None
+    all_parts = exist_parts + sum(newbies.values())
+    party_pay = event.price / all_parts
+
+    recalcers = participants.filter(~Q(account__in=newbies.keys()))
 
     # participate incomers
     for (acc, parts) in newbies.items():
         # if not already participated
-        if len(Participation.objects.filter(account=acc)) == 0:
+        if len(participants.filter(account=acc)) == 0:
             participation = Participation(account=acc, parts=parts,
                                           event=event)
             participation.save()
             tr = Transaction(participation=participation,
                              type=Transaction.PARTICIPATE)
-            tr.credit = 0
+            tr.credit = party_pay * parts
             tr.save()
 
-    # calc party-pay,
-    all_parts = Participation.objects.all().aggregate(s=Sum('parts'))['s']
-    party_pay = event.price / all_parts
-
+    incomers_sum = sum(newbies.values()) * party_pay
     # create diffs for old participants
+    # if no recalcers(incomers if first participants) we have exist_parts = 0
     for participation in recalcers:
+        assert (exist_parts != 0), "On add participants when we need recalc \
+            exist participants exist_parts should be positive(not zero)"
         tr = Transaction(participation=participation, type=Transaction.DIFF)
-        tr.debit = party_pay * participation.parts
+        tr.debit = (incomers_sum / exist_parts) * participation.parts
         tr.save(0)
 
 
@@ -85,7 +94,6 @@ def return_money(participation, debit):
     t = Transaction(participation=participation, type=Transaction.DIFF)
     t.debit = debit
     t.save()
-
 
 
 def remove_participants(event, leavers):
