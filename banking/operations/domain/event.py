@@ -100,12 +100,11 @@ def add_participants(event, newbies):
     # create diffs for old participants
     # if no recalcers(incomers if first participants) we have exist_parts = 0
     for newbie_transaction in parent_transactions:
-        newbie_parts = newbie_transaction.participation.parts
         for participation in recalcers:
             assert (exist_parts != 0),\
                 "On add participants when we need recalc exist participants\
                 exist_parts should be positive(not zero)"
-            debit = (((party_pay * newbie_parts) / exist_parts)
+            debit = ((newbie_transaction.credit / exist_parts)
                      * participation.parts)
             return_money(participation, debit, newbie_transaction)
 
