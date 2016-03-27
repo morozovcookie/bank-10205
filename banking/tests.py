@@ -99,6 +99,7 @@ class AccountBalanceTest(TestCase):
         Transfer.objects.create(account=p1, debit=400)
 
         p = Participation(account=p1, event=e)
+        p.active = True
         p.save()
         Transaction.objects.create(participation=p, credit=200)
         Transaction.objects.create(participation=p, debit=300)

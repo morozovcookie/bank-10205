@@ -4,14 +4,22 @@ from django.db.models import Sum, Q
 from banking.models import Transaction, Account, Participation
 
 
-def delegate_debt(participation, credit):
+def delegate_debt(participation, credit, parent):
     """Make diff transactions for given participation(event,user) with given
     credit. This means, that we get money from user and spend it to event.
 
     @param participation:  Event-User link that for create transaction
     @type  participation:  Participation
+
+    @param debit:  Money count that was returned
+    @type  debit:  float
+
+    @param parent:  Parent transaction, that initiate return(incomer for
+                    example)
+    @type  parent:  Transaction
     """
-    t = Transaction(participation=participation, type=Transaction.DIFF)
+    t = Transaction(participation=participation, type=Transaction.DIFF,
+                    parent=parent)
     t.credit = credit
     t.save()
 
@@ -43,7 +51,7 @@ def get_participants(event):
               'parts' - is participation rate(parts).
     @rtype :  List
     """
-    accs_rates = Participation.objects.filter(event=event)\
+    accs_rates = Participation.objects.filter(event=event, active=True)\
         .values('account', 'parts').distinct()
     for p in accs_rates:
         p.update({'account': Account.objects.get(id=p['account'])})
@@ -62,7 +70,8 @@ def is_participated(event, accounts):
 
     out = set()
     participants = Participation.objects.filter(event=event,
-                                                account__in=accounts)
+                                                account__in=accounts,
+                                                active=True)
     for p in participants:
         out.add(p.account)
     return out
@@ -73,29 +82,33 @@ def add_participants(event, newbies):
     models and values is participation part(int)."""
 
     # calc party-pay,
-    participants = Participation.objects.filter(event=event)
+    participants = Participation.objects.filter(event=event, active=True)
 
     exist_parts = participants.aggregate(s=Sum('parts'))['s']
     exist_parts = 0.0 if exist_parts is None else exist_parts  # fix None
     all_parts = exist_parts + sum(newbies.values())
+
     party_pay = event.price / all_parts
-
     recalcers = participants.filter(~Q(account__in=newbies.keys()))
-
+    parent_transactions = []
     # participate incomers
     for (acc, parts) in newbies.items():
         # if not already participated
-        if len(participants.filter(account=acc)) == 0:
+        participation = participants.filter(account=acc)
+        if len(participation) == 0:
             participation = Participation(account=acc, parts=parts,
                                           event=event)
-            participation.save()
-            tr = Transaction(participation=participation,
-                             type=Transaction.PARTICIPATE)
-            tr.credit = party_pay * parts
-            tr.save()
+        else:
+            participation = participation[0]
 
-    parent_transactions = Transaction.objects.filter(
-        participation__account__in=newbies.keys())
+        participation.active = True
+        participation.save()
+
+        tr = Transaction(participation=participation,
+                         type=Transaction.PARTICIPATE)
+        tr.credit = party_pay * parts
+        parent_transactions.append(tr)
+        tr.save()
 
     # create diffs for old participants
     # if no recalcers(incomers if first participants) we have exist_parts = 0
@@ -115,18 +128,29 @@ def remove_participants(event, leavers):
     if not leavers:
         return
 
-    all_participants = Participation.objects.all()
+    participants = Participation.objects.filter(event=event, active=True)
 
-    party_pay = event.price / all_participants.aggregate(p=Sum('parts'))['p']
+    exist_parts = participants.aggregate(s=Sum('parts'))['s']
+    exist_parts = 0.0 if exist_parts is None else exist_parts  # fix None
+    party_pay = event.price / exist_parts
 
-    rest_participations = all_participants.filter(~Q(account__in=leavers))
-    # yep folks, you should pay for this leavers
-    for participation in rest_participations:
-        delegate_debt(participation, party_pay * participation.parts)
+    rest_participations = participants.filter(~Q(account__in=leavers))
 
-    leaver_participations = all_participants.filter(account__in=leavers)
+    leaver_participations = participants.filter(account__in=list(leavers))
     # return money
-    for participation in leaver_participations:
-        return_money(participation, party_pay * participation.parts, None)
 
-    leaver_participations.delete()
+    for participation in leaver_participations:
+        leaver_transaction = Transaction(participation=participation,
+                                         type=Transaction.OUT)
+        debit = party_pay * participation.parts
+        leaver_transaction.debit = debit
+        leaver_transaction.save()
+        # create diffs
+        # yep folks, you should pay for this leavers
+        rest_parts = rest_participations.aggregate(s=Sum('parts'))['s']
+        for victum in rest_participations:
+            credit = ((leaver_transaction.debit / rest_parts)
+                      * victum.parts)
+            delegate_debt(victum, credit, leaver_transaction)
+
+    leaver_participations.update(active=False)
