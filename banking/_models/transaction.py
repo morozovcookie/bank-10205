@@ -40,7 +40,7 @@ class Transaction(models.Model):
         account = self.participation.account
         parts = self.participation.parts
         event = self.participation.event
-        out = Template("$id|$type$parent:$account <- $event($parts) = $summ")
+        out = Template("$id|$type$parent:$account($parts) <- $event = $summ")
 
         summ = (self.debit if self.credit == 0 else self.credit)
         # show parent only for diff transactions
