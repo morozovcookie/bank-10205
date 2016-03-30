@@ -162,7 +162,7 @@ var NewUserDlg = React.createClass({
         var dlg = this;
         $.ajax({
             type: 'post',
-            url: '/api/user/',
+            url: '/api/users/',
             headers: {
                 Authorization: 'Token ' + token
             },

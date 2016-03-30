@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 
 from banking.models import Account
 from banking.views import has_permisions
-from banking.serializers.user import UserSerializer, AccountSerializer
+from banking.serializers.user import UserSerializer, AccountSerializer, \
+    AccountPostSerializer
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -216,3 +217,17 @@ class user_list(generics.ListCreateAPIView):
     model = Account
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
+
+    def post(self, request):
+        """ Create new Account. """
+        serializer_class = AccountPostSerializer
+        aps = AccountPostSerializer(data=request.data)
+        if not aps.is_valid():
+            return Response(
+                'Invalid JSON - {0}'.format(aps.errors),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user = User.objects.create(**aps.validated_data)
+        Account.objects.create(user=user)
+
+        return super(user_list, self).post(request)

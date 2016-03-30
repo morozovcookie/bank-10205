@@ -10,6 +10,14 @@ class UserDataSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'is_superuser')
 
 
+class AccountPostSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    is_superuser = serializers.BooleanField()
+    password = serializers.CharField()
+
+
 class AccountSerializer(serializers.ModelSerializer):
     user = UserDataSerializer(many=False)
 
