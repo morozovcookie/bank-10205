@@ -2,6 +2,9 @@ var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
+const dev = false;
+const publicPath = dev ? 'http://localhost:3000/assets/bundles/' : '/static/js/';
+
 module.exports = {
     context: path.resolve(__dirname, './banking/'),
 
@@ -14,12 +17,13 @@ module.exports = {
         auth:   ['./frontend/js/auth.js'],
         jquery: ['../node_modules/jquery/dist/jquery.min.js'],
         bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
+        participate: ['./frontend/js/components/participate.js'],
     },
     output: {
         path: path.resolve(__dirname, './banking/static/js'),
         filename: '[name].js', // use entry field name.
         // for hot reload.
-        publicPath: 'http://localhost:3000/assets/bundles/',
+        publicPath: publicPath,
         library: '$' // for inlined JS in HTML.
     },
 
