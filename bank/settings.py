@@ -64,8 +64,6 @@ INSTALLED_APPS = [
 apps = BANK_SETTINGS.get('apps', [])
 if len(apps) > 0:
     INSTALLED_APPS += apps
-else:
-    INSTALLED_APPS += ['psycopg2']  # in deploy use PostgreSql
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
