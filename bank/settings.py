@@ -23,8 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 BANK_SETTINGS = {'db': '', 'apps': []}
 BANK_ENV = os.getenv("BANK")
-BANK_ENV = BANK_ENV.replace("'", '"')  # json.loads expect " instead '
 if BANK_ENV:
+    BANK_ENV = BANK_ENV.replace("'", '"')  # json.loads expect " instead '
     try:
         temp = json.loads(BANK_ENV)
         BANK_SETTINGS = temp
