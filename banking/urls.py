@@ -38,5 +38,5 @@ urlpatterns = [
     url(r'^api/summary/$', Summary.as_view(), name='summary'),
     # API docs. Uncomment 'django-rest-swagger' in apps, and install package.
     # By the way, it's need more work, to become nice.
-    url(r'^docs/', include('rest_framework_swagger.urls')),
+    # url(r'^docs/', include('rest_framework_swagger.urls')),
 ]
