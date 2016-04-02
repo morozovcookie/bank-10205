@@ -17,7 +17,6 @@ module.exports = {
         auth:   ['./frontend/js/auth.js'],
         jquery: ['../node_modules/jquery/dist/jquery.min.js'],
         bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
-        participate: ['./frontend/js/components/participate.js'],
     },
     output: {
         path: path.resolve(__dirname, './banking/static/js'),
