@@ -21,13 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #   - 'db': ['sqlite', '']
 #   - 'apps': 'any valid apps, that can be added to INSTALLED_APPS
 
-BANK_SETTINGS = {'db': '', 'apps': []}
+BANK_SETTINGS = {'db': '', 'apps': [], 'statfile': './webpack-prod-stats.json'}
 BANK_ENV = os.getenv("BANK")
 if BANK_ENV:
     BANK_ENV = BANK_ENV.replace("'", '"')  # json.loads expect " instead '
     try:
         temp = json.loads(BANK_ENV)
-        BANK_SETTINGS = temp
+        BANK_SETTINGS.update(temp)
     except json.decoder.JSONDecodeError as e:
         print("Failed load settings from BANK ENV VAR. Error:", e)
 del BANK_ENV
@@ -164,10 +164,12 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'assets'),
 # )
+
+statFile = BANK_SETTINGS['statfile'] or "./webpack-prod-stats.json"
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'banking/static/js',
-        #'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'STATS_FILE': os.path.join(BASE_DIR, statFile),
         'POLL_INTERVAL': 0.1,
     },
 }

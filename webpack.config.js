@@ -2,7 +2,10 @@ var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
-const dev = false;
+const config = JSON.parse(process.env.BANK);
+const dev = config.isdev || false;
+const statFile = config.statfile || "./webpack-prod-stats.json";
+
 const publicPath = dev ? 'http://localhost:3000/assets/bundles/' : '/static/js/';
 
 module.exports = {
@@ -33,7 +36,7 @@ module.exports = {
         // no genereta empty output, if errors occur
         new webpack.NoErrorsPlugin(),
         // integration with django
-        new BundleTracker({filename: './webpack-stats.json'}),
+        new BundleTracker({filename: statFile}),
         // new webpack.optimize.CommonsChunkPlugin({
         //     name: 'commons',
         // }),
