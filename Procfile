@@ -1,1 +1,1 @@
-web: gunicorn literal.wsgi --log-file -
+web: gunicorn bank.wsgi --log-file -
