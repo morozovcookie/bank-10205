@@ -153,9 +153,9 @@ MIGRATION_MODULES = {
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # add loading for hot reload
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'assets'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 statFile = BANK_SETTINGS['statfile'] or "./webpack-prod-stats.json"
 WEBPACK_LOADER = {
