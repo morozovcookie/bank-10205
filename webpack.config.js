@@ -2,8 +2,6 @@ var path = require("path")
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
-const config = JSON.parse(process.env.BANK);
-
 module.exports = {
     context: path.resolve(__dirname, './banking/'),
 
