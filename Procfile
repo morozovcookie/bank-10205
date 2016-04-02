@@ -1,1 +1,1 @@
-web: gunicorn bank.wsgi --log-file -
+web: gunicorn bankdjangoreact.wsgi --log-file -
