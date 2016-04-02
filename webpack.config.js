@@ -3,10 +3,10 @@ var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
 const config = JSON.parse(process.env.BANK);
-const dev = config.isdev || false;
-const statFile = config.statfile || "./webpack-prod-stats.json";
+const dev = false;
+const statFile = "./webpack-prod-stats.json";
 
-const publicPath = dev ? 'http://localhost:3000/assets/bundles/' : '/static/js/';
+const publicPath = '/static/js/';
 
 module.exports = {
     context: path.resolve(__dirname, './banking/'),
@@ -71,5 +71,5 @@ module.exports = {
         extensions: ['', '.js', '.jsx']
     },
 
-    devtool: 'eval',
+    //  devtool: 'eval',
 }
