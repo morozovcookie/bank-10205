@@ -3,10 +3,6 @@ var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
 
 const config = JSON.parse(process.env.BANK);
-const dev = false;
-const statFile = "./webpack-prod-stats.json";
-
-const publicPath = '/static/js/';
 
 module.exports = {
     context: path.resolve(__dirname, './banking/'),
@@ -25,7 +21,7 @@ module.exports = {
         path: path.resolve(__dirname, './banking/static/js'),
         filename: '[name].js', // use entry field name.
         // for hot reload.
-        publicPath: publicPath,
+        publicPath: '/static/js/',
         library: '$' // for inlined JS in HTML.
     },
 
@@ -36,7 +32,7 @@ module.exports = {
         // no genereta empty output, if errors occur
         new webpack.NoErrorsPlugin(),
         // integration with django
-        new BundleTracker({filename: statFile}),
+        new BundleTracker({filename: "./webpack-prod-stats.json"}),
         // new webpack.optimize.CommonsChunkPlugin({
         //     name: 'commons',
         // }),
