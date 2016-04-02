@@ -104,7 +104,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bank.wsgi.application'
 
-
 # Database
 DATABASES = {}
 if BANK_SETTINGS.get('db') == 'sqlite':
