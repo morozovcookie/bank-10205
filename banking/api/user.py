@@ -1,5 +1,7 @@
 from rest_framework import status, generics
 from rest_framework.views import APIView
+from rest_framework import generics
+
 from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
@@ -207,13 +209,14 @@ class user(APIView):
         return HttpResponse(status=status.HTTP_200_OK)
 
 
-class user_list(generics.ListCreateAPIView):
+class UserList(generics.ListCreateAPIView):
     # authentication_classes = (
     #     TokenAuthentication,
     # )
     # permission_classes = (
     #     IsAuthenticated,
     # )
+
     model = Account
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
@@ -230,4 +233,10 @@ class user_list(generics.ListCreateAPIView):
         user = User.objects.create(**aps.validated_data)
         Account.objects.create(user=user)
 
-        return super(user_list, self).post(request)
+        return super(UserList, self).post(request)
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Account
+    serializer_class = AccountSerializer
+    queryset = Account.objects.all()
