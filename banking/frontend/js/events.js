@@ -2,7 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require('jquery');
 
-var EventTable = require('./eventtable');
+import {EventTable} from './eventtable';
+import {ParticipantsTable} from './components/participantstable';
 
 /**
  * @param {string} url - path for get request
@@ -20,126 +21,6 @@ function _get(url, succ) {
 		success: succ
     });
 }
-
-/** Editable element have many fields that can be edited.
-* @param {Array} values - list of elements, that can be edited
-*/
-var EditableElement = React.createClass({
-    getInitialState: function() {
-        return {
-            value: 0
-        };
-    },
-    render: function() {
-        return (
-            <div>
-                {content}
-                <div>
-                    <button className="btn btn-yellow"></button>
-                    <button className="btn"></button>
-                </div>
-            </div>
-
-        );
-    }
-});
-
-/** Show list of components, with additional actions - edit, delete, add.
- * Useful for display EditableElement
- * Element should have propsValidations: it's used for creating new element
- * checking.
-*/
-var EditableParticipantsList = React.createClass({
-    propTypes: {
-        // updater: React.PropTypes.func.isRequired
-        /** URL of element, on which we call update.
-        */
-        url: React.PropTypes.string.isRequired
-    },
-    getInitialState: function() {
-        return {
-            items: []
-        };
-    },
-    componentDidMount: function() {
-        _get( this.props.url,
-             function(response){
-                 this.setState({ items: response })
-             }.bind(this)
-        );
-    },
-    addItem: function(item) {
-        // this.setState({ items: this.state.items + item });
-    },
-    removeItem: function(item) {
-        // this.state.items.removeOne(item);
-        // remove item from list
-    },
-    render: function() {
-        var content = this.state.items.map(function(i){
-            return (
-                <li className="list-group-item" key={i.user.id}>
-                    <span>ID: {i.user.id}</span>
-                    <span>Rate: {i.rate}</span>
-                    <span>Username: {i.user.username}</span>
-                </li>
-            );
-        });
-        return (
-            <ul className="list-group">
-                {content}
-            </ul>
-        );
-    }
-});
-
-/** Display single element. On click, this dropdown it's hidden content.
-* @param {Object} event - Event, that was displayed
-*/
-var EventSection = React.createClass({
-    propTypes: {
-        /** Expect, that given only 2 childrens: header and content for
-         * dropdown. */
-        children: function(props, propName, componentName){
-            if (React.Children.count(props[propName]) < 2) {
-                return new Error("EventSection takes 2 childrens: "
-                                 +"header, and dropdown content");
-            }
-        },
-    },
-    getInitialState: function(){
-        return {
-            open: false,
-            class: "section",
-        }
-    },
-	render: function() {
-        var content;
-        if (this.state.open) {
-            content = this.props.children[1]
-        }
-        return (
-			<div className={this.state.class}>
-				<div className="sectionhead" onClick={this.handleClick}>
-                    {this.props.children[0]}
-				</div>
-				<div className="articlewrap">
-					<div className="article">
-                        {content}
-					</div>
-				</div>
-			</div>
-		);
-	},
-	handleClick: function(){
-        if(this.state.open) {
-            this.setState({ open: false, class: "section" });
-        }
-        else{
-            this.setState({ open: true,  class: "section open" });
-        }
-	},
-});
 
 var CreateEventDlg = React.createClass({
     getInitialState: function(){
@@ -522,89 +403,6 @@ var HintUserRow = React.createClass({
                     {fullname}
                 </div>
             </div>
-        );
-    }
-});
-
-var ParticipantsTable = React.createClass({
-    render: function(){
-        var participants = this.props.Participants.map(function(p){
-            console.log(p);
-            return (
-                <ParticipantRow key={p.id} data={p} Id={p.id} Click={this.props.Click} />
-            );
-        }, this);
-        return (
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Логин</th>
-                        <th>Полное имя</th>
-                        <th>Доля</th>
-                        <th>Итог</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {participants}
-                </tbody>
-            </table>
-        );
-    }
-});
-
-var ParticipantRow = React.createClass({
-    render: function(){
-        if (this.props.Id == 1)
-        {
-            return (
-                <tr>
-                    <td>
-                        <span className="glyphicon glyphicon-user"></span>
-                    </td>
-                    <td>
-                        <b>
-                            {this.props.data.username}
-                        </b>
-                    </td>
-                    <td>
-                        {this.props.data.fullname}
-                    </td>
-                    <td>
-                        <input type="text" className="form-control" id="part" defaultValue="0.0" />
-                    </td>
-                    <td>
-                        <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly />
-                    </td>
-                </tr>
-            );
-        }
-        return (
-            <tr>
-                <td>
-                    <span className="glyphicon glyphicon-user"></span>
-                </td>
-                <td>
-                    <b>
-                        {this.props.data.username}
-                    </b>
-                </td>
-                <td>
-                    {this.props.data.fullname}
-                </td>
-                <td>
-                    <input type="text" className="form-control" id="part" defaultValue="0.0" />
-                </td>
-                <td>
-                    <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly />
-                </td>
-                <td>
-                    <a href="#" className="btn btn-danger" onClick={this.props.Click} >
-                        <span className="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
-            </tr>
         );
     }
 });

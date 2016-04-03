@@ -1,8 +1,9 @@
 var React = require('react');
 var $ = require('jquery');
+var EventAccordion = require('./components/accordion');
 
-module.exports = React.createClass({
-    render: function(){
+export class EventTable extends React.Component{
+    render() {
         var idx = 0;
         var events = this.props.events.map(function(event){
             idx = idx + 1;
@@ -24,7 +25,7 @@ module.exports = React.createClass({
             </table>
         );
     }
-});
+};
 
 var EventRow = React.createClass({
     render: function(){
@@ -77,27 +78,5 @@ var EventTableAccorded = React.createClass({
     }
 });
 
-/** Show elements with it's hiden dropdown content. On click expand or collapse
- * dropdown content.
- * Work together with Section.
- * @param {String} title - title of accordion
- */
-var EventAccordion = React.createClass({
-	render: function() {
-        var sections = this.props.items.map(function(item) {
-            return (
-                <EventSection key={item.id} >
-                    <EventRow data={item}/>
-                    <EditableParticipantsList url={'/api/events/'+item.id+'/participants'}/>
-                </EventSection>
-            );
-        });
-        return (
-            <div className="main">
-                {sections}
-            </div>
-        );
-    }
-});
 
 
