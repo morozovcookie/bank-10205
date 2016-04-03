@@ -55,7 +55,7 @@ class ParticipantRow extends React.Component {
     }
 }
 
-export class ParticipantsTable extends React.Component {
+export default class ParticipantsTable extends React.Component {
     render(){
         var participants = this.props.Participants.map(function(p){
             console.log(p);

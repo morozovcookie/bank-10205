@@ -1,9 +1,10 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var $ = require('jquery');
+'use strict';
+import React    from 'react';
+import ReactDOM from 'react-dom';
+import $        from 'jquery';
 
-import {EventTable} from './eventtable';
-import {ParticipantsTable} from './components/participantstable';
+import EventTable        from './eventtable';
+import ParticipantsTable from './components/participantstable';
 
 /**
  * @param {string} url - path for get request
@@ -104,6 +105,11 @@ var CreateEventDlg = React.createClass({
 var EventBuilder = React.createClass({
     getInitialState: function(){
         var user = JSON.parse(window.localStorage.getItem('user'));
+        user.fullname =
+            JSON.parse(window.localStorage.getItem('user')).last_name
+            + ' '
+            + JSON.parse(window.localStorage.getItem('user')).first_name;
+
         return {
             title: this.props.BaseInformation.title,
             date: this.props.BaseInformation.date,
@@ -111,12 +117,7 @@ var EventBuilder = React.createClass({
             type: this.props.BaseInformation.type,
             template: this.props.BaseInformation.template,
             private: false,
-            participants: [{
-                username: JSON.parse(window.localStorage.getItem('user')).username,
-                fullname: JSON.parse(window.localStorage.getItem('user')).last_name +
-                    ' ' +
-                    JSON.parse(window.localStorage.getItem('user')).first_name
-            }],
+            participants: [user],
             fd: new FormData()
         }
     },

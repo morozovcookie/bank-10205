@@ -2,7 +2,7 @@ var React = require('react');
 var $ = require('jquery');
 var EventAccordion = require('./components/accordion');
 
-export class EventTable extends React.Component{
+export default class EventTable extends React.Component{
     render() {
         var idx = 0;
         var events = this.props.events.map(function(event){
