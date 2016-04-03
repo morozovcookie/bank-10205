@@ -1,8 +1,27 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var $ = require('jquery');
+'use strict';
+import React    from 'react';
+import ReactDOM from 'react-dom';
+import $        from 'jquery';
 
-var EventTable = require('./eventtable');
+import EventTable        from './eventtable';
+import ParticipantsTable from './components/participantstable';
+
+/**
+ * @param {string} url - path for get request
+ * @param {func} succ - success handler. function(response)
+ * @returns {undefined}
+ */
+function _get(url, succ) {
+    return $.ajax({
+        type: 'get',
+        url: url,
+        headers: {
+            Authorization: 'Token ' + window.localStorage.getItem('token')
+        },
+        dataType: 'json',
+		success: succ
+    });
+}
 
 var CreateEventDlg = React.createClass({
     getInitialState: function(){
@@ -85,6 +104,12 @@ var CreateEventDlg = React.createClass({
 
 var EventBuilder = React.createClass({
     getInitialState: function(){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        user.fullname =
+            JSON.parse(window.localStorage.getItem('user')).last_name
+            + ' '
+            + JSON.parse(window.localStorage.getItem('user')).first_name;
+
         return {
             title: this.props.BaseInformation.title,
             date: this.props.BaseInformation.date,
@@ -92,12 +117,7 @@ var EventBuilder = React.createClass({
             type: this.props.BaseInformation.type,
             template: this.props.BaseInformation.template,
             private: false,
-            participants: [{
-                username: JSON.parse(window.localStorage.getItem('user')).username,
-                fullname: JSON.parse(window.localStorage.getItem('user')).last_name +
-                    ' ' +
-                    JSON.parse(window.localStorage.getItem('user')).first_name
-            }],
+            participants: [user],
             fd: new FormData()
         }
     },
@@ -388,90 +408,6 @@ var HintUserRow = React.createClass({
     }
 });
 
-var ParticipantsTable = React.createClass({
-    render: function(){
-        var idx = 0;
-        var participants = this.props.Participants.map(function(participant){
-            idx = idx + 1;
-            return (
-                <ParticipantRow key={idx} data={participant} Id={idx} Click={this.props.Click} />
-            );
-        }, this);
-        return (
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Логин</th>
-                        <th>Полное имя</th>
-                        <th>Доля</th>
-                        <th>Итог</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {participants}
-                </tbody>
-            </table>
-        );
-    }
-});
-
-var ParticipantRow = React.createClass({
-    render: function(){
-        if (this.props.Id == 1)
-        {
-            return (
-                <tr>
-                    <td>
-                        <span className="glyphicon glyphicon-user"></span>
-                    </td>
-                    <td>
-                        <b>
-                            {this.props.data.username}
-                        </b>
-                    </td>
-                    <td>
-                        {this.props.data.fullname}
-                    </td>
-                    <td>
-                        <input type="text" className="form-control" id="part" defaultValue="0.0" />
-                    </td>
-                    <td>
-                        <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly />
-                    </td>
-                </tr>
-            );
-        }
-        return (
-            <tr>
-                <td>
-                    <span className="glyphicon glyphicon-user"></span>
-                </td>
-                <td>
-                    <b>
-                        {this.props.data.username}
-                    </b>
-                </td>
-                <td>
-                    {this.props.data.fullname}
-                </td>
-                <td>
-                    <input type="text" className="form-control" id="part" defaultValue="0.0" />
-                </td>
-                <td>
-                    <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly />
-                </td>
-                <td>
-                    <a href="#" className="btn btn-danger" onClick={this.props.Click} >
-                        <span className="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
-            </tr>
-        );
-    }
-});
-
 var AccessCheckbox = React.createClass({
     render: function(){
         return (
@@ -563,6 +499,17 @@ var DropdownItem = React.createClass({
     }
 });
 
+
+/** Component for Edit something.
+ * @param {String} Type of input, that represent edit value
+ * @param {Integer} EditId is html id.
+ * @param {...} Value - initial of input
+ * @param {String} FormName that for input will be attached
+ * @param {Integer} LabelId i don't know what is it for
+ * @param {Function} Change callback, on changing.
+ * @param {Function} Focus callback, on focus.
+ * @param {Function} Blur callback, on blur. (?)
+ */
 var Edit = React.createClass({
     render: function(){
         return (
