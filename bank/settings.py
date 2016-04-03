@@ -105,7 +105,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bank.wsgi.application'
 
 # Database
-DATABASES = {}
+DATABASES = dj_database_url.config()
 if BANK_SETTINGS.get('db') == 'sqlite':
     DATABASES = {
         'default': {
@@ -113,8 +113,6 @@ if BANK_SETTINGS.get('db') == 'sqlite':
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-else:
-    DATABASES = dj_database_url.config()
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
