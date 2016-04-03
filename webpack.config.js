@@ -69,8 +69,9 @@ if (DEFS.dev) {
         new webpack.HotModuleReplacementPlugin()
     );
 
+    // order is affects
     loaders.push(
-        { // hope that order not does not affect
+        {
             test: [/\.js?$/, /\.jsx?$/],
             exclude: /node_modules/,
             loader: 'react-hot'
@@ -88,6 +89,7 @@ else {
 }
 
 config.plugins = config.plugins.concat(plugins);
-config.module.loaders = config.module.loaders.concat(loaders);
+// prepending, because order is affects
+config.module.loaders = loaders.concat(config.module.loaders);
 
 module.exports = config;
