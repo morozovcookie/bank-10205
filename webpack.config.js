@@ -11,13 +11,12 @@ context: path.resolve(__dirname, './banking/'),
 
 entry: {
     //
-    index:  ['./frontend/js/index.js'],
-    summary:['./frontend/js/summary.js'], // index table. Events, participants...
-    events: ['./frontend/js/events.js'],
-    users:  ['./frontend/js/users.js'],
-    auth:   ['./frontend/js/auth.js'],
     jquery: ['../node_modules/jquery/dist/jquery.min.js'],
     bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
+    auth:   ['./frontend/js/auth.js'],
+    index:  ['./frontend/js/index.js'],
+    events: ['./frontend/js/events.js'],
+    users:  ['./frontend/js/users.js'],
 },
 output: {
     path: path.resolve(__dirname, './banking/static/js'),
