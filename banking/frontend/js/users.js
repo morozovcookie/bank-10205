@@ -67,36 +67,39 @@ var UserRow = React.createClass({
     },
     render: function(){
         var role = 'Пользователь';
-        if (this.props.data.is_superuser)
+        // default actions: update & delete
+        var content =
+            <td>
+                <UserModalAction ButtonClass="btn btn-warning"
+                    Icon="glyphicon glyphicon-edit"
+                    Target="#update-user-dlg"
+                    Click={this.handleUpdateUser} />
+                <UserAction      ButtonClass="btn btn-danger"
+                    Icon="glyphicon glyphicon-trash"
+                    Click={this.handleDeleteUser} />
+            </td>;
+        ;
+        // prevent self-deleting
+        if (this.props.data.is_superuser ||
+            this.props.data.username === JSON.parse(window.localStorage.getItem('user')).username)
         {
             role = 'Администратор';
-            if (this.props.data.username === JSON.parse(window.localStorage.getItem('user')).username)
-            {
-                return (
-                    <tr>
-                        <td>{this.props.data.id}</td>
-                        <td>{this.props.data.username}</td>
-                        <td>{this.props.data.last_name}</td>
-                        <td>{this.props.data.first_name}</td>
-                        <td>{role}</td>
-                        <td>
-                            <UserModalAction ButtonClass="btn btn-warning" Icon="glyphicon glyphicon-edit" Target="#update-user-dlg" Click={this.handleUpdateUser} />
-                        </td>
-                    </tr>
-                );
-            }
+            content =
+                <td>
+                    <UserModalAction ButtonClass="btn btn-warning"
+                        Icon="glyphicon glyphicon-edit"
+                        Target="#update-user-dlg"
+                        Click={this.handleUpdateUser} />
+                </td>;
         }
         return (
             <tr>
                 <td>{this.props.data.id}</td>
-                <td>{this.props.data.username}</td>
+                <td><a href={"/users/"+this.props.data.id}>{this.props.data.username}</a></td>
                 <td>{this.props.data.last_name}</td>
                 <td>{this.props.data.first_name}</td>
                 <td>{role}</td>
-                <td>
-                    <UserModalAction ButtonClass="btn btn-warning" Icon="glyphicon glyphicon-edit" Target="#update-user-dlg" Click={this.handleUpdateUser} />
-                    <UserAction ButtonClass="btn btn-danger" Icon="glyphicon glyphicon-trash" Click={this.handleDeleteUser} />
-                </td>
+                {content}
             </tr>
         );
     }
