@@ -23,7 +23,7 @@ output: {
     path: path.resolve(__dirname, './banking/static/js'),
     filename: '[name].js', // use entry field name.
     // for hot reload.
-    publicPath: '/static/js/',
+    publicPath: DEFS.dev ? 'http://localhost:3000/assets/bundles/' : '/static/js/',
     library: '$' // for inlined JS in HTML.
 },
 
@@ -32,7 +32,7 @@ plugins: [
     // no genereta empty output, if errors occur
     new webpack.NoErrorsPlugin(),
     // integration with django
-    new BundleTracker({filename: "./webpack-prod-stats.json"}),
+    new BundleTracker({filename: "./webpack-stats.json"}),
     // for bootstrap.js in node_modules
     new webpack.ProvidePlugin({ jQuery: 'jquery', }),
 ],
@@ -57,7 +57,6 @@ resolve: {
     extensions: ['', '.js', '.jsx']
 },
 
-//  devtool: 'eval',
 }
 
 var plugins = [];
@@ -65,9 +64,9 @@ var loaders = [];
 
 // diff between dev & prod.
 if (DEFS.dev) {
-    plugins.push(
-        new webpack.HotModuleReplacementPlugin()
-    );
+    // plugins.push(
+    //     new webpack.HotModuleReplacementPlugin()
+    // );
 
     // order is affects
     loaders.push(
@@ -77,7 +76,10 @@ if (DEFS.dev) {
             loader: 'react-hot'
         }
     );
+
+    config.devtools = 'eval';
 }
+
 else {
     plugins.push(
         new webpack.optimize.UglifyJsPlugin({

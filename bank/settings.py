@@ -17,12 +17,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ## Load setting from 'BANK' Environment variable.
 # ## Scheme:
-#   - {'db': str(), 'apps': array()}
+#   - {'dev': bool, 'apps': array()}
 # ## Variants:
-#   - 'db': ['sqlite', '']
 #   - 'apps': 'any valid apps, that can be added to INSTALLED_APPS
 
-BANK_SETTINGS = {'db': '', 'apps': [], 'statfile': './webpack-prod-stats.json'}
+BANK_SETTINGS = {'dev': False, 'apps': []}
 BANK_ENV = os.getenv("BANK")
 if BANK_ENV:
     BANK_ENV = BANK_ENV.replace("'", '"')  # json.loads expect " instead '
@@ -150,11 +149,16 @@ MIGRATION_MODULES = {
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
-statFile = BANK_SETTINGS['statfile'] or "./webpack-prod-stats.json"
+
+bundle_dir_name = 'banking/static/js'
+
+# if BANK_SETTINGS['dev']:
+#     bundle_dir_name = 'assets/bundles'
+
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'banking/static/js',
-        'STATS_FILE': os.path.join(BASE_DIR, statFile),
+        'BUNDLE_DIR_NAME': bundle_dir_name,
+        'STATS_FILE': os.path.join(BASE_DIR, "./webpack-stats.json"),
         'POLL_INTERVAL': 0.1,
     },
 }
