@@ -11,19 +11,18 @@ context: path.resolve(__dirname, './banking/'),
 
 entry: {
     //
-    index:  ['./frontend/js/index.js'],
-    summary:['./frontend/js/summary.js'], // index table. Events, participants...
-    events: ['./frontend/js/events.js'],
-    users:  ['./frontend/js/users.js'],
-    auth:   ['./frontend/js/auth.js'],
     jquery: ['../node_modules/jquery/dist/jquery.min.js'],
     bootstrap_js: ['../node_modules/bootstrap/dist/js/bootstrap.min.js'],
+    auth:   ['./frontend/js/auth.js'],
+    index:  ['./frontend/js/index.js'],
+    events: ['./frontend/js/events.js'],
+    users:  ['./frontend/js/users.js'],
 },
 output: {
     path: path.resolve(__dirname, './banking/static/js'),
     filename: '[name].js', // use entry field name.
     // for hot reload.
-    publicPath: '/static/js/',
+    publicPath: DEFS.dev ? 'http://localhost:3000/assets/bundles/' : '/static/js/',
     library: '$' // for inlined JS in HTML.
 },
 
@@ -32,7 +31,7 @@ plugins: [
     // no genereta empty output, if errors occur
     new webpack.NoErrorsPlugin(),
     // integration with django
-    new BundleTracker({filename: "./webpack-prod-stats.json"}),
+    new BundleTracker({filename: "./webpack-stats.json"}),
     // for bootstrap.js in node_modules
     new webpack.ProvidePlugin({ jQuery: 'jquery', }),
 ],
@@ -57,7 +56,6 @@ resolve: {
     extensions: ['', '.js', '.jsx']
 },
 
-//  devtool: 'eval',
 }
 
 var plugins = [];
@@ -76,7 +74,10 @@ if (DEFS.dev) {
             loader: 'react-hot'
         }
     );
+
+    config.devtools = 'eval';
 }
+
 else {
     plugins.push(
         new webpack.optimize.UglifyJsPlugin({
@@ -88,6 +89,7 @@ else {
 }
 
 config.plugins = config.plugins.concat(plugins);
-config.module.loaders = config.module.loaders.concat(loaders);
+// prepending, because order is affects
+config.module.loaders = loaders.concat(config.module.loaders);
 
 module.exports = config;

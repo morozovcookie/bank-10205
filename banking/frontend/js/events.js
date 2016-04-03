@@ -5,23 +5,7 @@ import $        from 'jquery';
 
 import EventTable        from './eventtable';
 import ParticipantsTable from './components/participantstable';
-
-/**
- * @param {string} url - path for get request
- * @param {func} succ - success handler. function(response)
- * @returns {undefined}
- */
-function _get(url, succ) {
-    return $.ajax({
-        type: 'get',
-        url: url,
-        headers: {
-            Authorization: 'Token ' + window.localStorage.getItem('token')
-        },
-        dataType: 'json',
-		success: succ
-    });
-}
+import {csrfSafeMethod, postCSRF} from './utils/csrf';
 
 var CreateEventDlg = React.createClass({
     getInitialState: function(){
@@ -219,7 +203,7 @@ var EventBuilder = React.createClass({
             POST
             /api/event
         */
-        $.ajax({
+        postCSRF({
             type: 'post',
             url: '/api/events/',
             headers: {

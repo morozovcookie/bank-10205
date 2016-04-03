@@ -48,7 +48,7 @@ def eventDetail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     context = dict()
     context['event'] = event
-    context['transactions'] = Transaction.objects.filter(participation__event=event)
+    context['transactions'] = Transaction.objects.filter(participation__event=event).order_by('id')
     context['participants'] = Participation.objects.filter(event=event)
     return render(request, 'banking/event.jade', context)
 

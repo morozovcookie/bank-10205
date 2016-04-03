@@ -6,47 +6,22 @@ class ParticipantRow extends React.Component {
         {
             return (
                 <tr>
-                    <td>
-                        <span className="glyphicon glyphicon-user"></span>
-                    </td>
-                    <td>
-                        <b>
-                            {this.props.data.username}
-                        </b>
-                    </td>
-                    <td>
-                        {this.props.data.fullname}
-                    </td>
-                    <td>
-                        <input type="text" className="form-control" id="part" defaultValue="0.0" />
-                    </td>
-                    <td>
-                        <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly />
-                    </td>
+                    <td> <span className="glyphicon glyphicon-user"></span> </td>
+                    <td> <b> {this.props.data.username} </b> </td>
+                    <td> {this.props.data.fullname} </td>
+                    <td> <input type="text" className="form-control" id="part" defaultValue="0.0" /> </td>
+                    <td> <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly /> </td>
                 </tr>
             );
         }
         return (
             <tr>
-                <td>
-                    <span className="glyphicon glyphicon-user"></span>
-                </td>
-                <td>
-                    <b>
-                        {this.props.data.username}
-                    </b>
-                </td>
-                <td>
-                    {this.props.data.fullname}
-                </td>
-                <td>
-                    <input type="text" className="form-control" id="part" defaultValue="0.0" />
-                </td>
-                <td>
-                    <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly />
-                </td>
-                <td>
-                    <a href="#" className="btn btn-danger" onClick={this.props.Click} >
+                <td> <span className="glyphicon glyphicon-user"></span> </td>
+                <td> <b> {this.props.data.username} </b> </td>
+                <td> {this.props.data.fullname} </td>
+                <td> <input type="text" className="form-control" id="part" defaultValue="0.0" /> </td>
+                <td> <input type="text" className="form-control" id="sum" defaultValue="0.0" readOnly /> </td>
+                <td> <a href="#" className="btn btn-danger" onClick={this.props.Click} >
                         <span className="glyphicon glyphicon-trash"></span>
                     </a>
                 </td>
@@ -58,7 +33,6 @@ class ParticipantRow extends React.Component {
 export default class ParticipantsTable extends React.Component {
     render(){
         var participants = this.props.Participants.map(function(p){
-            console.log(p);
             return (
                 <ParticipantRow key={p.id} data={p} Id={p.id} Click={this.props.Click} />
             );
