@@ -106,7 +106,7 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 
 # Database
 DATABASES = {'default': dj_database_url.config()}
-if BANK_SETTINGS.get('db') == 'sqlite':
+if BANK_SETTINGS.get('dev'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
