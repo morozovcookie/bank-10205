@@ -2,11 +2,41 @@ var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+function getCookie(name) {
+	var cookieValue = null;
+	if (document.cookie && document.cookie != '') {
+		var cookies = document.cookie.split(';');
+		for (var i = 0; i < cookies.length; i++) {
+			var cookie = jQuery.trim(cookies[i]);
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) == (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
+}
+function csrfSafeMethod(method) {
+	// these HTTP methods do not require CSRF protection
+	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+function postSCRF(settings){
+	var csrftoken = getCookie('csrftoken');
+	settings.beforeSend = function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		}
+	};
+	settings.method = "POST";
+	return $.ajax(settings);
+}
 var AuthForm = React.createClass({
     getInitialState: function(){
         return {
             username: '',
-            password: ''
+            password: '',
+            csrf: ''
         }
     },
     handleUsernameChange: function(event){
@@ -20,23 +50,21 @@ var AuthForm = React.createClass({
         });
     },
     handleAuth: function(){
-        $.post('/api/auth/', this.state)
+        var data = this.state;
+
+
+		postSCRF({
+			method:'POST',
+			url:'/api/auth/',
+			data:this.state})
         .success(function(response){
             var token = response.token;
             window.localStorage.setItem('token', token);
-            $.ajax({
-                type: 'get',
-                url: '/api/user/',
-                headers: {
-                    Authorization: 'Token ' + token
-                },
-                dataType: 'json',
-                success: function(response){
-                    window.localStorage.setItem('user', JSON.stringify(response));
-                    console.log(response.is_superuser);
-                    document.location.href = (response.is_superuser == true ? '/admin/' : '/client/');
-                }
-            });
+            window.localStorage.setItem('user', JSON.stringify(response.user));
+            console.log(response.is_superuser);
+            document.location.href = (
+                response.user.is_superuser ? '/admin/' : '/client/'
+            );
         });
     },
     render: function(){
@@ -44,7 +72,7 @@ var AuthForm = React.createClass({
             <form className="form-horizontal" name="auth-form" method="post">
                 <fieldset>
                     <legend>
-                        <h3></h3>
+                        <h3>Аутентификация</h3>
                     </legend>
                     <Edit label="Username" type="text" change={this.handleUsernameChange}/>
                     <Edit label="Password" type="password" change={this.handlePasswordChange} />
