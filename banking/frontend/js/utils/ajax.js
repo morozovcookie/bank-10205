@@ -1,4 +1,4 @@
-
+import $ from 'jquery';
 
 /**
  * @param {string} url - path for get request
