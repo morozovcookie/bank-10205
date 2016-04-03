@@ -26,7 +26,7 @@ var AuthForm = React.createClass({
         var data = this.state;
 
 
-		postSCRF({
+		postCSRF({
 			method:'POST',
 			url:'/api/auth/',
 			data:this.state})
