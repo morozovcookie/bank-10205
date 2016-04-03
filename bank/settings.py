@@ -105,7 +105,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bank.wsgi.application'
 
 # Database
-DATABASES = dj_database_url.config()
+DATABASES = {'default': dj_database_url.config()}
 if BANK_SETTINGS.get('db') == 'sqlite':
     DATABASES = {
         'default': {
