@@ -1,7 +1,10 @@
+
+- load render_bundle from webpack_loader
+
 .col-md-10
     h3 Транзакции
     table.table
-        tbody
+        thead
             tr
                 if event.id != t.event.id
                     th Пользователь
@@ -11,6 +14,7 @@
                 th Коэфициент
                 th Цена
                 th Тип
+        tbody#transactions
             for t in transactions
                 tr
                     td
@@ -23,3 +27,5 @@
                     td=t.participation.parts
                     td=t.summ
                     td=t.type_view
+
+// - render_bundle 'transactions'
