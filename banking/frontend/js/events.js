@@ -7,23 +7,6 @@ import EventTable        from './eventtable';
 import ParticipantsTable from './components/participantstable';
 import {csrfSafeMethod, postCSRF} from './utils/csrf';
 
-/**
- * @param {string} url - path for get request
- * @param {func} succ - success handler. function(response)
- * @returns {undefined}
- */
-function _get(url, succ) {
-    return $.ajax({
-        type: 'get',
-        url: url,
-        headers: {
-            Authorization: 'Token ' + window.localStorage.getItem('token')
-        },
-        dataType: 'json',
-		success: succ
-    });
-}
-
 var CreateEventDlg = React.createClass({
     getInitialState: function(){
         var date = new Date().toISOString().match('([0-9]{4}\-[0-9]{2}\-[0-9]{2})')[0];
