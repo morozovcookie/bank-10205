@@ -231,9 +231,9 @@ class UserList(generics.ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         user = User.objects.create(**aps.validated_data)
-        Account.objects.create(user=user)
+        result = Account.objects.create(user=user)
 
-        return super(UserList, self).post(request)
+        return Response(AccountSerializer(result).data)
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):

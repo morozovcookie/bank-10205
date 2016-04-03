@@ -5,6 +5,7 @@ import $        from 'jquery';
 
 import EventTable        from './eventtable';
 import ParticipantsTable from './components/participantstable';
+import {csrfSafeMethod, postCSRF} from './utils/csrf';
 
 /**
  * @param {string} url - path for get request
@@ -219,7 +220,7 @@ var EventBuilder = React.createClass({
             POST
             /api/event
         */
-        $.ajax({
+        postCSRF({
             type: 'post',
             url: '/api/events/',
             headers: {
