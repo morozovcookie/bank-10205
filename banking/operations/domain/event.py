@@ -94,7 +94,7 @@ def add_participants(event, newbies):
     # participate incomers
     for (acc, parts) in newbies.items():
         # if not already participated
-        participation = participants.filter(account=acc)
+        participation = Participation.objects.filter(account=acc, active=False)
         if len(participation) == 0:
             participation = Participation(account=acc, parts=parts,
                                           event=event)

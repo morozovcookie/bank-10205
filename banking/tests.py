@@ -308,19 +308,27 @@ class EventParticipationTest(TestCase):
         # Check that event in balance
         self.assertEqual(e.rest(), 0)
 
+        #########################################
         remove_participants(e, [users[0], users[1]])
+        #########################################
         print_list(Transaction.objects.all(), "REMOVE users 0, 1")
         self.assertEqual(e.rest(), 0)
 
+        #########################################
         add_participants(e, {users[0]: self.parts[0]})
+        #########################################
         print_list(Transaction.objects.all(), "RETURNED user 0")
         self.assertEqual(e.rest(), 0)
 
+        #########################################
         add_participants(e, {users[1]: self.parts[1]})
+        #########################################
         print_list(Transaction.objects.all(), "RETURNED user 1")
         self.assertEqual(e.rest(), 0)
 
+        #########################################
         remove_participants(e, [users[2]])
+        #########################################
         print_list(Transaction.objects.all(), "REMOVE users 2")
         self.assertEqual(e.rest(), 0)
         #########################################
@@ -336,3 +344,17 @@ class EventParticipationTest(TestCase):
                          self.ubalance - party_pay * self.parts[0])
         self.assertEqual(users[1].balance(),
                          self.ubalance - party_pay * self.parts[1])
+
+    def test_participation_uniquenest(self):
+        e, _, participation = generate_participation([0, 1, 2])
+        users = list(participation.keys())
+
+        remove_participants(e, [users[0]])
+
+        self.assertEqual(e.participation_set.filter(active=False)[0].account,
+                         users[0])
+
+        add_participants(e, {users[0]: 1.0})
+
+        # participation count == users in event count
+        self.assertEqual(len(e.participation_set.all()), 3)

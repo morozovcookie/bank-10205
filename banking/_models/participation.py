@@ -20,3 +20,6 @@ class Participation(models.Model):
         active = "+" if self.active else "-"
         return out.substitute(active=active, account=self.account,
                               event=self.event)
+
+    class Meta:
+        unique_together = ('account', 'event')
