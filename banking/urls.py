@@ -4,7 +4,7 @@ from banking import views
 from banking.api import user as api_user
 from banking.api.event import\
     EventListView, EventDetail, ParticipantListView, ParticipantDetail
-from banking.api.transaction import TransactionListView
+from banking.api.transaction.view import TransactionListView
 from banking.api.summary import Summary
 
 urlpatterns = [
