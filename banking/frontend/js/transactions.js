@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import TransactionsTable from './components/transactionstable'
+import Transactions from './components/transactions'
 
 ReactDOM.render(
-    <TransactionsTable/>,
+    <Transactions/>,
     document.getElementById('transactions')
 );

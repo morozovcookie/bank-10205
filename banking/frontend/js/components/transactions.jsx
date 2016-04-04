@@ -12,7 +12,7 @@ let eventId = () => $('#event').attr('data-id');
  * Work together with Section.
  * @param {String} title - title of accordion
  */
-export default class TransactionsTable extends React.Component {
+export default class Transactions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -48,6 +48,6 @@ export default class TransactionsTable extends React.Component {
     }
 
 }
-TransactionsTable.defaultProps = { items: [] };
+Transactions.defaultProps = { items: [] };
 
 
