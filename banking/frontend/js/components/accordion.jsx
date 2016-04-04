@@ -3,21 +3,24 @@ import React from 'react';
 /** Display single element. On click, this dropdown it's hidden content.
 * @param {Object} event - Event, that was displayed
 */
-export default class Section extends React.Component {
+export class Section extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
             classNames: "section"
         };
+
+        // es6 so funny.
+        this.handleClick = this.handleClick.bind(this);
     }
 
-	handleClick(){
+	handleClick() {
         if(this.state.open) {
-            this.setState({ open: false, class: "section" });
+            this.setState({ open: false, classNames: "section" });
         }
         else{
-            this.setState({ open: true,  class: "section open" });
+            this.setState({ open: true,  classNames: "section open" });
         }
 	}
 
