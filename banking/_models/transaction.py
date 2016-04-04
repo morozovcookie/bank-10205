@@ -36,6 +36,10 @@ class Transaction(models.Model):
             ret = "Перерасчет"
         elif self.type == 'IN':
             ret = 'Оплата'
+        elif self.type == 'NW':
+            ret = 'Участие'
+        elif self.type == 'OT':
+            ret = 'Уход'
         return ret
 
     def __str__(self):
