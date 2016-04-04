@@ -3,6 +3,8 @@ var ReactDOM = require('react-dom');
 
 var $ = require('jquery');
 
+import {postCSRF} from './utils/csrf.js';
+
 var UserTable = React.createClass({
     render: function(){
         var idx = 0;
@@ -163,7 +165,7 @@ var NewUserDlg = React.createClass({
     handleAddUser: function(){
         var token = window.localStorage.getItem('token');
         var dlg = this;
-        $.ajax({
+        postCSRF({
             type: 'post',
             url: '/api/users/',
             headers: {
