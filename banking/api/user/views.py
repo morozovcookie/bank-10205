@@ -4,16 +4,17 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-from rest_framework import status, generics
+from rest_framework import status, generics, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 
 from banking.models import Account
 from banking.views import has_permisions
-# TODO: refactor path: banking.user.api.serializer
+
 from .serializers import UserSerializer, AccountSerializer, \
     AccountPostSerializer
+from .filters import AccountFilter
 
 
 class user(APIView):
@@ -28,7 +29,7 @@ class user(APIView):
         key = request.META.get('HTTP_AUTHORIZATION')
         if key is None:
             return Response(
-                'Invalid HTTP request - {0}',
+                'Authorization failed - {0}',
                 status=status.HTTP_400_BAD_REQUEST
             )
         key = key.split()[1]
@@ -160,6 +161,8 @@ class UserList(generics.ListCreateAPIView):
     model = Account
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = AccountFilter
 
     def post(self, request):
         """ Create new Account. """

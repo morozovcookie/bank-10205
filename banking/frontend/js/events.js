@@ -145,7 +145,8 @@ var EventBuilder = React.createClass({
             var eventBuilder = this;
             $.ajax({
                 type: 'get',
-                url: '/api/users/' + pattern,
+                url: '/api/users/',
+                data: {'username': pattern},
                 headers: {
                     Authorization: 'Token ' + window.localStorage.getItem('token')
                 },
