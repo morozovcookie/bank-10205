@@ -7,7 +7,7 @@ class TransactionReadViewSerializer(serializers.Serializer):
         return {
             "id": obj.id,
             "type": obj.type_view(),
-            "date": obj.date,
+            "date": obj.date.date().isoformat(),
             "summ": float(obj.debit - obj.credit),
             "account": obj.participation.account.user.username,
             "event": obj.participation.event.name,
