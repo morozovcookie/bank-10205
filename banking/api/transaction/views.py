@@ -2,8 +2,8 @@ from rest_framework import generics, filters
 
 from banking.models import Transaction
 
-from .serializer import TransactionReadViewSerializer
-from .filter import TransactionFilter
+from .serializers import TransactionReadViewSerializer
+from .filters import TransactionFilter
 
 
 class TransactionListView(generics.ListAPIView):
