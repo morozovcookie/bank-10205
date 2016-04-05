@@ -1,21 +1,37 @@
 import React from 'react';
 
+import TransactionRow from './transactionrow.jsx'
+
 export default class DiffTransactions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            transactions: []
         }
-        this.update = this.update.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
-    update() {
-        $.get('/api/transactions/', {parent:id});
 
+    componentDidMount() {
+        $.get('/api/transactions/', {parent: this.props.id}, (res) => {
+            this.setState({transactions: res});
+        });
     }
+
     render() {
+        const offset = { paddingLeft: "20px"};
+
+        const transactions = this.state.transactions.map( (t) => {
+            return (
+                <div key={t.id}>
+                    <TransactionRow item={t}/>
+                </div>
+            );
+        });
 
         return (
-            <div>No data</div>
+            <div>
+                {transactions}
+            </div>
         );
     }
 

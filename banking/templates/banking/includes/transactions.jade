@@ -3,29 +3,6 @@
 
 .col-md-10
     h3 Транзакции
-    table.table
-        thead
-            tr
-                if event.id != t.event.id
-                    th Пользователь
-                else
-                    th Событие
-                th Дата
-                th Коэфициент
-                th Цена
-                th Тип
-        tbody#transactions
-            for t in transactions
-                tr
-                    td
-                        if event.id != t.event.id
-                            a(href="/users/{{t.participation.account.id}}")=t.participation.account
-                        else
-                            a(href="/events/{{t.participation.event.id}}")=t.participation.event
-
-                    td=t.date| date:"d.m.Y"
-                    td=t.participation.parts
-                    td=t.summ
-                    td=t.type_view
+    #transactions
 
 - render_bundle 'transactions'

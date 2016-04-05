@@ -1,8 +1,10 @@
-import React from 'react'
+import React from 'react';
 import $ from 'jquery';
 
-import Section from './accordion.jsx'
-import {get} from '../utils/ajax.js'
+import {Section} from './accordion.jsx';
+import {get} from '../utils/ajax.js';
+import DiffTransactions from './difftransactions.jsx'
+import TransactionRow from './transactionrow.jsx'
 
 // ^_^
 let eventId = () => $('#event').attr('data-id');
@@ -32,16 +34,16 @@ export default class Transactions extends React.Component {
 
 	render() {
         var sections = this.state.items.map(function(item) {
+            var colorClass = item.summ > 0 ?  "danger" : "success";
             return (
                 <Section key={item.id} >
-                    <div> {item.credit} </div>
-                    <div> {item.date} </div>
-
+                    <TransactionRow classNames="head" item={item}/>
+                    <DiffTransactions parent={item.id}/>
                 </Section>
             );
         });
         return (
-            <div className="main">
+            <div>
                 {sections}
             </div>
         );
@@ -49,5 +51,3 @@ export default class Transactions extends React.Component {
 
 }
 Transactions.defaultProps = { items: [] };
-
-
