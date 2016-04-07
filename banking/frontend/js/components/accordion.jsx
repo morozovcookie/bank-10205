@@ -3,7 +3,7 @@ import React from 'react';
 /** Display single element. On click, this dropdown it's hidden content.
 * @param {Object} event - Event, that was displayed
 */
-export class Section extends React.Component {
+export default class Section extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 
-import {Section} from './accordion.jsx';
+import Section from './accordion.jsx';
 import {get} from '../utils/ajax.js';
 import DiffTransactions from './difftransactions.jsx'
 import TransactionRow from './transactionrow.jsx'

@@ -1,6 +1,8 @@
-var React = require('react');
-var $ = require('jquery');
-var EventAccordion = require('./components/accordion');
+import React from 'react'
+
+import $ from 'jquery'
+
+import EventAccordion from './accordion.jsx'
 
 export default class EventTable extends React.Component{
     render() {
