@@ -77,7 +77,7 @@ if (DEFS.dev) {
         }
     );
 
-    config.devtools = 'eval';
+    config.devtool = 'inline-source-map';
 }
 
 else {
