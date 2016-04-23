@@ -161,8 +161,9 @@ class UserList(generics.ListCreateAPIView):
     model = Account
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
     filter_class = AccountFilter
+    search_fields = ("^user__username", )
 
     def post(self, request):
         """ Create new Account. """

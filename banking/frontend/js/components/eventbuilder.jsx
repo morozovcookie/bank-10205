@@ -7,14 +7,12 @@ import AccessCheckbox    from './accesscheckbox.jsx'
 import Button            from './button.jsx'
 import ParticipantsTable from './participantstable.jsx'
 import HintUserList      from './hintuserlist.jsx'
+import {postCSRF}        from '../utils/csrf.js'
+import EventTable        from './eventtable.jsx'
 
 module.exports = React.createClass({
     getInitialState: function(){
-        var user = JSON.parse(window.localStorage.getItem('user'));
-        user.fullname =
-            JSON.parse(window.localStorage.getItem('user')).last_name
-            + ' '
-            + JSON.parse(window.localStorage.getItem('user')).first_name;
+        var account = JSON.parse(window.localStorage.getItem('user'));
 
         return {
             title: this.props.BaseInformation.title,
@@ -23,7 +21,8 @@ module.exports = React.createClass({
             type: this.props.BaseInformation.type,
             template: this.props.BaseInformation.template,
             private: false,
-            participants: [user],
+            author: account,
+            participants: [],
             fd: new FormData()
         }
     },
@@ -47,16 +46,10 @@ module.exports = React.createClass({
             sum: parseFloat(event.target.value)
         });
     },
-    handleSelectParticipant: function(event){
-        var participants = this.state.participants;
-        participants.push({
-            username: $($($(event.currentTarget).children()[1]).children()[0]).html(),
-            fullname: $($(event.currentTarget).children()[2]).html()
+    handleSelectParticipant: function(participant){
+        this.setState({
+            participants: this.state.participants.concat(participant)
         });
-        ReactDOM.render(
-            <ParticipantsTable Participants={this.state.participants} Click={this.handleRemoveParticipant} />,
-            document.getElementById('participant-table')
-        );
         $('#event-participants-input').val('');
         $('#userauto').hide();
     },
@@ -68,33 +61,31 @@ module.exports = React.createClass({
             $.ajax({
                 type: 'get',
                 url: '/api/users/',
-                data: {'username': pattern},
+                data: {'search': pattern},
                 headers: {
                     Authorization: 'Token ' + window.localStorage.getItem('token')
                 },
                 dataType: 'json',
                 success: function(response){
-                    var users = [];
+                    var matched_users = [];
                     if (!Array.isArray(response))
                         response = [];
                     response.forEach(function(user){
-                        var result = false;
-                        var user_str = JSON.stringify({
-                            username: user.username,
-                            fullname: user.last_name + ' ' + user.first_name
-                        });
+                        var already_participated = false;
                         eventBuilder.state.participants.forEach(function(participant){
-                            if (JSON.stringify(participant)===user_str)
+                            if (participant.user.id === user.user.id)
                             {
-                                result = true;
+                                already_participated = true;
                                 return;
                             }
                         });
-                        if (!result)
-                            users.push(user);
+                        if (!already_participated) {
+                            matched_users.push(user);
+                        }
                     });
                     ReactDOM.render(
-                        <HintUserList Users={users} Click={eventBuilder.handleSelectParticipant} />,
+                        <HintUserList Users={matched_users}
+                            Click={eventBuilder.handleSelectParticipant} />,
                         document.getElementById('userautolist')
                     );
                     $('#userauto').show();
@@ -121,28 +112,32 @@ module.exports = React.createClass({
         document.location.href = '/events/';
     },
     hadnleCreateClick: function(){
-        console.log(this.state);
-        /*
-            POST
-            /api/event
-        */
+        var participants = [];
+        this.state.participants.forEach(function(p) {
+            participants.push({parts: p.rate, account: p.user.id});
+        });
+        console.log("before post:" + JSON.stringify(participants));
+
         postCSRF({
             type: 'post',
             url: '/api/events/',
             headers: {
                 Authorization: 'Token ' + window.localStorage.getItem('token')
             },
-            data: {
+            data: JSON.stringify({
                 name: this.state.title,
                 type: this.state.type,
                 date: this.state.date,
                 price: this.state.sum,
-                author: JSON.parse(window.localStorage.getItem('user')).id,
+                author: this.state.author.user.id,
                 private: this.state.private,
-            },
+                participants: participants,
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
             success: function(response){
                 console.log(response);
-                //document.location.href = '/events/';
+                document.location.href = '/events/';
             }
         });
     },
@@ -160,16 +155,8 @@ module.exports = React.createClass({
             ++idx;
         }, this);
         delete participants[idx];
-        ReactDOM.render(
-            <ParticipantsTable Participants={this.state.participants} Click={this.handleRemoveParticipant} />,
-            document.getElementById('participant-table')
-        );
     },
     componentDidMount: function(){
-        ReactDOM.render(
-            <ParticipantsTable Participants={this.state.participants} Click={this.handleRemoveParticipant} />,
-            document.getElementById('participant-table')
-        );
         $('#public').prop('checked', true);
         $('input[type=file]').prop('multiple', true);
     },
@@ -194,9 +181,7 @@ module.exports = React.createClass({
     },
     render: function(){
         var events = ['Перевод', 'Пополнение', 'Списание'];
-        var owner = JSON.parse(window.localStorage.getItem('user')).last_name +
-            ' ' +
-            JSON.parse(window.localStorage.getItem('user')).first_name;
+        var author = this.state.author.user;
         return (
             <div className="col-md-12">
                 <div className="row">
@@ -210,16 +195,47 @@ module.exports = React.createClass({
                     <div className="col-md-6">
                         <form className="form-horizontal" name="new-event-form" type="post" encType="multipart">
                             <fieldset style={{position:'relative'}}>
-                                <Edit Label="Название" Type="text" Value={this.state.title} LabelId="event-title-label" EditId="event-title-input" FormName="new-event-form" Change={this.handleTitleChange} />
-                                <Dropdown Id="event-type-btn" Value={this.state.type} Change={this.handleTypeChange} Caption="Тип" FormName="new-event-form" DropdownList={events}/>
-                                <Edit Label="Дата" Type="date" Value={this.state.date} LabelId="event-date-label" EditId="event-date-input" FormName="new-event-form" Change={this.handleDateChange} />
-                                <Edit Label="Сумма" Type="text" Value={this.state.sum} LabelId="event-sum-label" EditId="event-sum-input" FormName="new-event-form" Change={this.handleSumChange} />
+                                <Edit
+                                    Label="Название"
+                                    Type="text"
+                                    Value={this.state.title}
+                                    LabelId="event-title-label"
+                                    EditId="event-title-input"
+                                    FormName="new-event-form"
+                                    Change={this.handleTitleChange} />
+                                <Dropdown
+                                    Caption="Тип"
+                                    Id="event-type-btn"
+                                    Value={this.state.type}
+                                    Change={this.handleTypeChange}
+                                    FormName="new-event-form"
+                                    DropdownList={events}/>
+                                <Edit
+                                    Label="Дата"
+                                    Type="date"
+                                    Value={this.state.date}
+                                    LabelId="event-date-label"
+                                    EditId="event-date-input"
+                                    FormName="new-event-form"
+                                    Change={this.handleDateChange} />
+                                <Edit
+                                    Label="Сумма"
+                                    Type="text"
+                                    Value={this.state.sum}
+                                    LabelId="event-sum-label"
+                                    EditId="event-sum-input"
+                                    FormName="new-event-form"
+                                    Change={this.handleSumChange} />
 
                                 <div className="row">
                                     <div className="col-md-1"></div>
                                     <label className="col-md-3" form="new-event-form">Создатель</label>
                                     <div className="col-md-1"></div>
-                                    <div className="col-md-7" style={{padding:'10px'}}>{owner}</div>
+                                    <div className="col-md-7" style={{padding:'10px'}}>
+                                        <a href={"/users/" + author.id}>
+                                            {author.username}
+                                        </a>
+                                    </div>
                                 </div>
 
                                 <div className="row">
@@ -229,7 +245,15 @@ module.exports = React.createClass({
                                     </ul>
                                 </div>
 
-                                <Edit Label="Участники" Type="text" LabelId="event-participants-label" EditId="event-participants-input" FormName="new-event-form" Change={this.handleParticipantsChange} Blur={this.handleHideUsersHint} Focus={this.handleParticipantsChange} />
+                                <Edit
+                                    Label="Участники"
+                                    Type="text"
+                                    LabelId="event-participants-label"
+                                    EditId="event-participants-input"
+                                    FormName="new-event-form"
+                                    Change={this.handleParticipantsChange}
+                                    Blur={this.handleHideUsersHint}
+                                    Focus={this.handleParticipantsChange} />
 
                                 <div className="row" id="userauto">
                                     <div className="col-md-3"></div>
@@ -237,7 +261,9 @@ module.exports = React.createClass({
                                     <div className="col-md-1"></div>
                                 </div>
 
-                                <div id="participant-table"></div>
+                                <ParticipantsTable
+                                    Participants={this.state.participants}
+                                    Click={this.handleRemoveParticipant} />,
 
                                 <div className="row">
                                     <div className="col-md-12">

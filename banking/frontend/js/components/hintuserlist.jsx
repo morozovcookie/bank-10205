@@ -1,10 +1,21 @@
 import React from 'react'
 
 var HintUserRow = React.createClass({
+    handleClick: function(event) {
+        this.props.Click(this.props.data);
+    },
+
     render: function(){
-        var fullname = this.props.data.last_name + ' ' + this.props.data.first_name;
+        var user = this.props.data.user;
+        //console.log("HintUserROw:: " + JSON.stringify(this.props.data));
+        var fullname = (user.last_name + ' ' + user.first_name).trim();
+        var name = user.username;
+        if (fullname != "") {
+            name += "(" + fullname + ")";
+        }
+
         return (
-            <div className="row" onClick={this.props.Click}>
+            <div className="row" onClick={this.handleClick}>
                 <div className="col-md-2">
                     <span className="glyphicon glyphicon-user"></span>
                 </div>
@@ -14,7 +25,7 @@ var HintUserRow = React.createClass({
                     </b>
                 </div>
                 <div className="col-md-6">
-                    {fullname}
+                    {name}
                 </div>
             </div>
         );
