@@ -26,7 +26,7 @@ block body
         |     if (token!=undefined)
         |     {
         |         var user = window.localStorage.getItem('user');
-        |         if (!JSON.parse(user).is_superuser)
+        |         if (!JSON.parse(user).user.is_superuser)
         |             document.location.href = '/error/';
         |     }
         |     else

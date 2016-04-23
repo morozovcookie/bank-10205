@@ -31,7 +31,7 @@ var NavMenu = React.createClass({
 var MenuList = React.createClass({
     render: function(){
         var user = window.localStorage.getItem('user');
-        if (JSON.parse(user).is_superuser)
+        if (JSON.parse(user).user.is_superuser)
         {
             return (
                 <ul className="nav nav-pills nav-stacked" id="nav-menu">
