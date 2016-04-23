@@ -12,7 +12,7 @@ export default class DiffTransactions extends React.Component {
     }
 
     componentDidMount() {
-        $.get('/api/transactions/', {parent: this.props.id}, (res) => {
+        $.get('/api/transactions/', {parent: this.props.parent}, (res) => {
             this.setState({transactions: res});
         });
     }
