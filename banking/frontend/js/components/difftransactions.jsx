@@ -36,13 +36,3 @@ export default class DiffTransactions extends React.Component {
     }
 
 }
-
-export function StaticDiffTransactions(props) {
-    const trs = props.transactions;
-    const trs_view = trs.map((t) => { return (
-        <div key={t.id}>
-            <TransactionRow item={t}/>
-        </div>
-    )});
-    return ( <div>{trs_view}</div> );
-}

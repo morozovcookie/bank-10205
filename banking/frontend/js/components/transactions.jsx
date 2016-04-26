@@ -3,7 +3,6 @@ import $ from 'jquery';
 
 import Section from './accordion.jsx';
 import {get} from '../utils/ajax.js';
-import {StaticDiffTransactions} from './difftransactions.jsx'
 import TransactionRow from './transactionrow.jsx'
 
 // ^_^
@@ -58,10 +57,13 @@ export default class Transactions extends React.Component {
 	render() {
         var sections = this.groupByUser(this.state.items).map(function(item) {
             var colorClass = item.summ > 0 ?  "danger" : "success";
+            const childs = item.transactions.map((t) => {
+                return (<TransactionRow key={t.id} item={t}/>)
+            });
             return (
-                <Section key={item.id} >
+                <Section key={item.id}>
                     <TransactionRow classNames="head" item={item}/>
-                    <StaticDiffTransactions transactions={item.transactions}/>
+                    {childs}
                 </Section>
             );
         });
