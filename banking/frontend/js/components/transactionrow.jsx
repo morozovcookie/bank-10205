@@ -1,5 +1,5 @@
 import React from 'react';
-import MoneyCell from './moneycell.jsx';
+import {MoneyCell} from './moneycell.jsx';
 
 export default class TransactionRow extends React.Component {
     render() {
@@ -7,7 +7,7 @@ export default class TransactionRow extends React.Component {
         return (
         <div className={"row "+this.props.classNames}>
             <span className="col-md-3 col-sm-3 col-xs-3">
-                <a href={"/users/"+item.account.id}>
+                <a href={item.account.link}>
                     {item.account.name}
                 </a>
             </span>

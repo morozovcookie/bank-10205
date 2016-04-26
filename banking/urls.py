@@ -11,8 +11,8 @@ urlpatterns = [
 
     url(r'^events/$',                views.events,      name="events"),
     url(r'^events/(?P<pk>[0-9]+)/$', views.eventDetail, name="event-detail"),
-    url(r'^users/$',                 views.users,       name="users"),
-    url(r'^users/(?P<pk>[0-9]+)/$',  views.userDetail,  name="users-detail"),
+    url(r'^users/$',                 views.users,       name="accounts"),
+    url(r'^users/(?P<pk>[0-9]+)/$',  views.userDetail,  name="account-detail"),
 
     # api calls
     url(r'^api/events/',             include('banking.api.event.urls')),
