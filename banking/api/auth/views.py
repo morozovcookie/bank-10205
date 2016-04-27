@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 
-from banking.api.user.serializers import UserSerializer
+from banking.models import Account
+from banking.api.user.serializers import UserSerializer, AccountSerializer
 
 
 class auth(APIView):
@@ -36,9 +37,10 @@ class auth(APIView):
             )
 
         token = Token.objects.get_or_create(user=user)
+        acc = Account.objects.filter(user=user)[0]
         return Response({
             'token': token[0].key,
-            'user': UserSerializer(user).data
+            'user': AccountSerializer(acc).data
         })
 
     def delete(self, request, format=None):

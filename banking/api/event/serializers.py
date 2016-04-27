@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from banking.models import Event, Account
+from banking.operations.domain.event import add_participants
 
 
 class ParticipationPostSerializer(serializers.Serializer):
@@ -17,13 +18,17 @@ class EventPostSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create event from income data. """
         # pop firstly: Event constructor don't accept 'participants' arg
-        participants = validated_data.pop('participants', [])
+        raw_participants = validated_data.pop('participants', [])
 
         e = Event.objects.create(**validated_data)
 
-        if len(participants) > 0:
-            for p in participants:
-                e.add_participants({p.get('account'): p.get('parts')})
+        # convert to dict
+        participants = dict()
+        if len(raw_participants) > 0:
+            for p in raw_participants:
+                participants.update({p.get('account'): p.get('parts')})
+
+        add_participants(e, participants)
         return e
 
     class Meta:
