@@ -4,6 +4,8 @@ import $ from 'jquery';
 import Section from './accordion.jsx';
 import {get} from '../utils/ajax.js';
 import TransactionRow from './transactionrow.jsx'
+import DiffTransactionRow from './difftransactionrow.jsx'
+
 
 // ^_^
 let eventId = () => $('#event').attr('data-id');
@@ -43,7 +45,7 @@ export default class Transactions extends React.Component {
             //fix
             const username = t.account.name;
             if (!grouped[username])
-                grouped[username] = { transactions: [], summ: 0, account: t.account, id: idx };
+                grouped[username] = { transactions: [], summ: 0, account: t.account, id: idx};
             //work
             grouped[username].transactions.push(t);
             grouped[username].summ += Number(t.summ);
@@ -58,7 +60,7 @@ export default class Transactions extends React.Component {
         var sections = this.groupByUser(this.state.items).map(function(item) {
             var colorClass = item.summ > 0 ?  "danger" : "success";
             const childs = item.transactions.map((t) => {
-                return (<TransactionRow key={t.id} item={t}/>)
+                return (<DiffTransactionRow key={t.id} item={t}/>)
             });
             return (
                 <Section key={item.id}>
