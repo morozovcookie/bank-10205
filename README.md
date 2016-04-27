@@ -1,6 +1,7 @@
 Bank
 ---
 Python Django Framework, ReactJS, PostgreSQL
+https://circleci.com/gh/Intey/banking.png?style=shield&circle-token=94cea69c74a6d8d71725235910255c939317e42f
 
 # Requirements
 -   Python 2.7
