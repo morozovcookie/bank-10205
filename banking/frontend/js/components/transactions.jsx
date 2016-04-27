@@ -3,7 +3,6 @@ import $ from 'jquery';
 
 import Section from './accordion.jsx';
 import {get} from '../utils/ajax.js';
-import DiffTransactions from './difftransactions.jsx'
 import TransactionRow from './transactionrow.jsx'
 
 // ^_^
@@ -22,23 +21,49 @@ export default class Transactions extends React.Component {
         };
 
     }
+
     componentDidMount() {
         $.get(
             '/api/transactions/',
             { event: eventId() },
             (data) => {
-                console.log("gotten transactions:" + data);
                 this.setState({items: data })
             });
     }
 
+    /** Group transaction by account.
+     * @param {Array} transactions - transacitions, that will be grouped.
+     * Shape: account, debit, credit, account.
+     * @return {Array} Transaction groups. Shape: transactions, sum, account,
+     * date. Date is date of latest transaction in group.
+     */
+    groupByUser(transaction) {
+        var grouped = {};
+        transaction.forEach( (t, idx) => {
+            //fix
+            const username = t.account.name;
+            if (!grouped[username])
+                grouped[username] = { transactions: [], summ: 0, account: t.account, id: idx };
+            //work
+            grouped[username].transactions.push(t);
+            grouped[username].summ += Number(t.summ);
+        });
+        // convert to array
+        const fields = Object.getOwnPropertyNames(grouped);
+        var formated = [];
+        return formated.concat( fields.map((f) => grouped[f]) );
+    }
+
 	render() {
-        var sections = this.state.items.map(function(item) {
+        var sections = this.groupByUser(this.state.items).map(function(item) {
             var colorClass = item.summ > 0 ?  "danger" : "success";
+            const childs = item.transactions.map((t) => {
+                return (<TransactionRow key={t.id} item={t}/>)
+            });
             return (
-                <Section key={item.id} >
+                <Section key={item.id}>
                     <TransactionRow classNames="head" item={item}/>
-                    <DiffTransactions parent={item.id}/>
+                    {childs}
                 </Section>
             );
         });

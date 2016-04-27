@@ -36,4 +36,3 @@ export default class DiffTransactions extends React.Component {
     }
 
 }
-

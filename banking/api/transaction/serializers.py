@@ -7,11 +7,15 @@ class TransactionReadViewSerializer(serializers.Serializer):
     def to_representation(self, obj):
         event = obj.participation.event
         account = obj.participation.account
+        parent_id = None
+        if obj.parent:
+            parent_id = obj.parent.id
         return {
             "id": str(obj.id),
             "type": obj.type_view(),
             "date": obj.date.date().isoformat(),
             "summ": str(float(obj.debit - obj.credit)),
+            "parent": str(parent_id),
             "account": {
                 "id": str(account.id),
                 "name": account.user.username,
