@@ -1,25 +1,8 @@
+
+- load render_bundle from webpack_loader
+
 .col-md-10
     h3 Транзакции
-    table.table
-        tbody
-            tr
-                if event.id != t.event.id
-                    th Пользователь
-                else
-                    th Событие
-                th Дата
-                th Коэфициент
-                th Цена
-                th Тип
-            for t in transactions
-                tr
-                    td
-                        if event.id != t.event.id
-                            a(href="/users/{{t.participation.account.id}}")=t.participation.account
-                        else
-                            a(href="/events/{{t.participation.event.id}}")=t.participation.event
+    #transactions
 
-                    td=t.date| date:"d.m.Y"
-                    td=t.participation.parts
-                    td=t.summ
-                    td=t.type_view
+- render_bundle 'transactions'

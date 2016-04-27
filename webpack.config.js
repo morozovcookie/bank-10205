@@ -17,6 +17,7 @@ entry: {
     index:  ['./frontend/js/index.js'],
     events: ['./frontend/js/events.js'],
     users:  ['./frontend/js/users.js'],
+    transactions: ['./frontend/js/transactions.js'],
 },
 output: {
     path: path.resolve(__dirname, './banking/static/js'),
@@ -75,7 +76,7 @@ if (DEFS.dev) {
         }
     );
 
-    config.devtools = 'eval';
+    config.devtool = 'inline-source-map';
 }
 
 else {

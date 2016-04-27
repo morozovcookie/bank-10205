@@ -1,0 +1,55 @@
+.section {
+    position: relative;
+    width: 100%;
+}
+.section button {
+    position: absolute;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    height: 3em;
+    width: 3em;
+    outline: 0;
+    background: none;
+    text-indent: -9999%;
+    pointer-events: none;
+}
+
+.section.open button:before, .section.open button:after {
+    height: 14px;
+}
+.section.open button:before {
+    transform: translate(0%, -50%) rotate(-45deg);
+}
+.section.open button:after {
+    transform: translate(0%, -50%) rotate(45deg);
+}
+.section.open .articlewrap {
+    height: auto; /* calc height. for transition */
+}
+.section.open .articlewrap > div {
+    margin:0.2em;
+    padding: 0.5em;
+}
+
+.section > .head {
+    border: 1px solid #cacaca;
+    margin: 0.2em;
+    padding: 0.5em;
+    background-color: #fbfbfb;
+}
+
+.section > .head:hover {
+    background: #eee;
+}
+
+.section.open > .head {
+    background: #eee;
+    border-bottom: 2px solid #a0a0a0;
+}
+
+.articlewrap {
+    height: 0;
+    overflow: hidden;
+    transition: all .3s ease-in;
+}

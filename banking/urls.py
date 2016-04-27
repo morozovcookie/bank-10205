@@ -1,43 +1,29 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from banking import views
-from banking.api import user as api_user
-from banking.api.event import\
-    EventListView, EventDetail, ParticipantListView, ParticipantDetail
-from banking.api.transaction import TransactionListView
-from banking.api.summary import Summary
+from bank import settings
 
 urlpatterns = [
-    url(r'^auth/$', views.auth),
-    url(r'^client/$', views.client),
-    url(r'^admin/$', views.admin),
-    url(r'^error/$', views.error),
+    url(r'^$',                       views.default,     name="index"),
+    url(r'^auth/$',                  views.auth,        name="auth"),
+    url(r'^client/$',                views.client,      name="client"),
+    url(r'^admin/$',                 views.admin,       name="admin"),
+    url(r'^error/$',                 views.error,       name="error"),
 
-    url(r'^events/$', views.events),
-    url(r'^events/(?P<pk>[0-9]+)/$', views.eventDetail),
-    url(r'^users/$', views.users),
-    url(r'^users/(?P<pk>[0-9]+)/$', views.userDetail),
-    url(r'^$', views.default),
+    url(r'^events/$',                views.events,      name="events"),
+    url(r'^events/(?P<pk>[0-9]+)/$', views.eventDetail, name="event-detail"),
+    url(r'^users/$',                 views.users,       name="accounts"),
+    url(r'^users/(?P<pk>[0-9]+)/$',  views.userDetail,  name="account-detail"),
 
     # api calls
-    url(r'^api/events/$', EventListView.as_view()),
-    url(r'^api/events/(?P<pk>[0-9]+)/$', EventDetail.as_view()),
-    url(r'^api/events/(?P<event_pk>[0-9]+)/participants/$',
-        ParticipantListView.as_view()),
-    url(r'^api/events/(?P<event_pk>[0-9]+)/participants/(?P<pk>[0-9]+)/$',
-        ParticipantDetail.as_view()),
+    url(r'^api/events/',             include('banking.api.event.urls')),
+    url(r'^api/transactions/',       include('banking.api.transaction.urls')),
+    url(r'^api/users/',              include('banking.api.user.urls')),
+    url(r'^api/auth/',               include('banking.api.auth.urls')),
 
-    url(r'^api/auth/$', api_user.auth.as_view(), name='auth'),
-    url(r'^api/user/((?P<pk>\d*)|(?P<pattern>\w*))$', api_user.user.as_view(),
-        name='user'),
-    url(r'^api/users/$', api_user.UserList.as_view(), name='user-list'),
-    url(r'^api/users/(?P<pk>[0-9]+)/$', api_user.user.as_view(),
-        name='account-detail'),
-
-    url(r'^api/transactions/$', TransactionListView.as_view(),
-        name='transaction-list'),
-    url(r'^api/summary/$', Summary.as_view(), name='summary'),
-    # API docs. Uncomment 'django-rest-swagger' in apps, and install package.
-    # By the way, it's need more work, to become nice.
-    # url(r'^docs/', include('rest_framework_swagger.urls')),
 ]
+
+# API docs. Uncomment 'rest_framework_swagger' in apps, and install
+# package. By the way, it's need more work, to become nice.
+if 'rest_framework_swagger' in settings.INSTALLED_APPS:
+    urlpatterns += url(r'^docs/', include('rest_framework_swagger.urls')),

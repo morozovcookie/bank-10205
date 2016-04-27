@@ -1,5 +1,8 @@
 Bank
 ---
+
+[![](https://circleci.com/gh/Intey/banking.png?style=shield&circle-token=94cea69c74a6d8d71725235910255c939317e42f)]()
+
 Python Django Framework, ReactJS, PostgreSQL
 
 # Requirements

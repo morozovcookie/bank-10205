@@ -34,7 +34,7 @@ var AuthForm = React.createClass({
             var token = response.token;
             window.localStorage.setItem('token', token);
             window.localStorage.setItem('user', JSON.stringify(response.user));
-            console.log(response.is_superuser);
+            console.log(response.user.is_superuser);
             document.location.href = (
                 response.user.is_superuser ? '/admin/' : '/client/'
             );

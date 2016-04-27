@@ -7,7 +7,7 @@ script(type="text/javascript")
     |     if (token!=undefined)
     |     {
     |         var user = window.localStorage.getItem('user');
-    |         document.location.href = (JSON.parse(user).is_superuser ? '/admin/' : '/client/');
+    |         document.location.href = (JSON.parse(user).user.is_superuser ? '/admin/' : '/client/');
     |     }
     |     else
     |         document.location.href = '/auth/';

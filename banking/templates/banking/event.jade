@@ -1,5 +1,8 @@
 extends banking/admin/index.jade
+- load staticfiles
 
+block head
+    link(rel="stylesheet", href="{% static 'css/accordion.css' %}")
 
 block content
     .col-md-5#event(data-id="{{event.id}}")
@@ -43,4 +46,3 @@ block content
                         td=p.date| date:"d.m.Y"
 
     include banking/includes/transactions.jade
-

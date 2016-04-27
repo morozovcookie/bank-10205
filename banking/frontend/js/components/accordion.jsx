@@ -8,32 +8,36 @@ export default class Section extends React.Component {
         super(props);
         this.state = {
             open: false,
-            classNames: "section"
+            classNames: "col-md-12 col-sm-12 section",
+            hover: false,
         };
+
+        // es6 so funny.
+        this.handleClick = this.handleClick.bind(this);
     }
 
-	handleClick(){
+	handleClick() {
         if(this.state.open) {
-            this.setState({ open: false, class: "section" });
+            this.setState({ open: false, classNames: "col-md-12 col-sm-12 section" });
         }
         else{
-            this.setState({ open: true,  class: "section open" });
+            this.setState({ open: true,  classNames: "col-md-12 col-sm-12 section open" });
         }
 	}
 
+    // like binding in constructor
 	render() {
         var content = null;
-        if (this.state.open) { content = this.props.children[1] }
+
+        if (this.state.open) {
+            content = this.props.children[1]
+        }
         return (
-			<div className={this.state.classNames}>
-				<div className="sectionhead" onClick={this.handleClick}>
-                    {this.props.children[0]}
-				</div>
-				<div className="articlewrap">
-					<div className="article">
-                        {content}
-					</div>
-				</div>
+			<div className={this.state.classNames} onClick={this.handleClick}>
+                {this.props.children[0]}
+                <div className="articlewrap">
+                    {content}
+                </div>
 			</div>
 		);
 	}

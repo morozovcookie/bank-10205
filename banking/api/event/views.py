@@ -1,14 +1,17 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+
 import django_filters
 
 from rest_framework import views, status, generics, filters
 from rest_framework.response import Response
 
-from banking.models import Event
+from banking.models import Event, Account
 from banking.operations.domain.event import get_participants,\
     remove_participants, add_participants
-from banking.serializers.event import *
+
+from .serializers import EventFullSerializer, EventPostSerializer,\
+    ParticipationSerializer, ParticipationPostSerializer
 
 
 def get_event(pk):
@@ -61,6 +64,7 @@ class EventListView(generics.ListCreateAPIView):
     def post(self, request):
         """ Create new event. Accept event data and array of participation. """
         self.serializer_class = EventPostSerializer
+        print("EventListView::post:", request.data)
         return super(EventListView, self).post(request)
 
     def get_serializer_class(self, *args, **kwargs):

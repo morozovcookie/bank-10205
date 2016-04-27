@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
-from banking.serializers.user import UserSerializer
+
+from rest_framework.exceptions import ParseError
+
+from banking.api.user.serializers import UserSerializer
 from banking.models import Account, Transaction, Event, Participation
 
 
