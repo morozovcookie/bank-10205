@@ -263,7 +263,7 @@ module.exports = React.createClass({
 
                                 <ParticipantsTable
                                     Participants={this.state.participants}
-                                    Click={this.handleRemoveParticipant} />,
+                                    onRemove={this.handleRemoveParticipant}/>
 
                                 <div className="row">
                                     <div className="col-md-12">
