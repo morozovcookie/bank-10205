@@ -40,7 +40,7 @@ class auth(APIView):
         acc = Account.objects.filter(user=user)[0]
         return Response({
             'token': token[0].key,
-            'user': AccountSerializer(acc).data
+            'account': AccountSerializer(acc).data
         })
 
     def delete(self, request, format=None):
