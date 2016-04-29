@@ -141,21 +141,15 @@ module.exports = React.createClass({
             }
         });
     },
-    handleRemoveParticipant: function(event){
-        var row = $(event.currentTarget).parents()[1];
-        var participant = JSON.stringify({
-            username: $($($(row).children()[1]).children()[0]).text(),
-            fullname: $($(row).children()[2]).text()
-        });
-        var idx = 0;
-        var participants = this.state.participants;
-        participants.forEach(function(elem){
-            if (JSON.stringify(elem) === participant)
-                return;
-            ++idx;
-        }, this);
-        delete participants[idx];
+
+    handleRemoveParticipant: function(participant){
+      // leave participants, that not equal to given
+      const participants = this.state.participants.filter((e) => {
+        return e.user.id != participant.user.id;
+      });
+      this.setState({participants: participants});
     },
+
     componentDidMount: function(){
         $('#public').prop('checked', true);
         $('input[type=file]').prop('multiple', true);

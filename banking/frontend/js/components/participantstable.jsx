@@ -31,9 +31,17 @@ export default class ParticipantsTable extends React.Component {
 class ParticipantRow extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { parts: 1.0 };
+        this.state = {
+            parts: 1.0,
+            sum: 0.0,
+        };
+        this.handleRemoveClick = this.handleRemoveClick.bind(this);
     }
     handleChangeParts(e) { setState({ parts: e.target.value }); }
+    handleRemoveClick(e) {
+        const acc = this.props.account;
+        this.props.onRemove(acc);
+    }
 
     render() {
         var user = this.props.account.user;
@@ -43,20 +51,12 @@ class ParticipantRow extends React.Component {
                 <td> <span className="glyphicon glyphicon-user"></span> </td>
                 <td> <b> {user.username} </b> </td>
                 <td> {user.fullname} </td>
+                <td> <FloatInput id="parts" value={this.state.parts} onChange={this.handleChangeParts}/> </td>
+                <td> <FloatView id="sum" defaultValue="0.00" value={this.state.sum}/> </td>
                 <td>
-                    <FloatInput
-                        id="parts"
-                        value={this.state.value}
-                        onChange={this.handleChangeParts}/>
-                </td>
-                <td>
-                    <FloatView id="sum" defaultValue="0.00"
-                        value={this.state.sum}/>
-                </td>
-                <td>
-                    <a href="#" className="btn btn-danger" onClick={this.props.onRemove}>
+                    <button className="btn btn-danger" onClick={this.handleRemoveClick}>
                         <span className="glyphicon glyphicon-trash"></span>
-                    </a>
+                    </button>
                 </td>
             </tr>
         );
