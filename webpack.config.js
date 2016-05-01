@@ -4,7 +4,15 @@ var BundleTracker = require('webpack-bundle-tracker')
 
 // yo dawg i heard you like configs so we put a config in yo config so you can
 // config when you config.
-const DEFS = JSON.parse(process.env.BANK);
+var ENV_BANK = process.env.BANK;
+var DEFS = {};
+if (!ENV_BANK || ENV_BANK === "") {
+  DEFS.dev = false;
+}
+else {
+  DEFS = JSON.parse(ENV_BANK);
+  if (DEFS.dev == undefined) DEFS.dev = false;
+}
 
 var config = {
 context: path.resolve(__dirname, './banking/'),
