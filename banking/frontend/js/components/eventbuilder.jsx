@@ -1,12 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import Edit              from './edit'
 import Dropdown          from './dropdown.jsx'
 import AccessCheckbox    from './accesscheckbox.jsx'
 import Button            from './button.jsx'
 import ParticipantsTable from './participantstable.jsx'
-import HintUserList      from './hintuserlist.jsx'
 import {postCSRF}        from '../utils/csrf.js'
 import EventTable        from './eventtable.jsx'
 
@@ -46,59 +44,7 @@ module.exports = React.createClass({
             sum: parseFloat(event.target.value)
         });
     },
-    handleSelectParticipant: function(participant){
-        this.setState({
-            participants: this.state.participants.concat(participant)
-        });
-        $('#event-participants-input').val('');
-        $('#userauto').hide();
-    },
-    handleParticipantsChange: function(event){
-        var pattern = event.target.value;
-        if (pattern != '')
-        {
-            var eventBuilder = this;
-            $.ajax({
-                type: 'get',
-                url: '/api/users/',
-                data: {'search': pattern},
-                headers: {
-                    Authorization: 'Token ' + window.localStorage.getItem('token')
-                },
-                dataType: 'json',
-                success: function(response){
-                    var matched_users = [];
-                    if (!Array.isArray(response))
-                        response = [];
-                    response.forEach(function(user){
-                        var already_participated = false;
-                        eventBuilder.state.participants.forEach(function(participant){
-                            if (participant.user.id === user.user.id)
-                            {
-                                already_participated = true;
-                                return;
-                            }
-                        });
-                        if (!already_participated) {
-                            matched_users.push(user);
-                        }
-                    });
-                    ReactDOM.render(
-                        <HintUserList Users={matched_users}
-                            Click={eventBuilder.handleSelectParticipant} />,
-                        document.getElementById('userautolist')
-                    );
-                    $('#userauto').show();
-                }
-            });
-        }
-        else
-			$('#userauto').hide();
-    },
-    handleHideUsersHint: function(){
-        if (!$('#userautolist:hover').length)
-			$('#userauto').hide();
-    },
+
     handleChangeFile: function(event){
         console.log(event.target.files);
         var Files = event.target.files;
@@ -141,15 +87,6 @@ module.exports = React.createClass({
             }
         });
     },
-
-    handleRemoveParticipant: function(participant){
-      // leave participants, that not equal to given
-      const participants = this.state.participants.filter((e) => {
-        return e.user.id != participant.user.id;
-      });
-      this.setState({participants: participants});
-    },
-
     componentDidMount: function(){
         $('#public').prop('checked', true);
         $('input[type=file]').prop('multiple', true);
@@ -239,25 +176,7 @@ module.exports = React.createClass({
                                     </ul>
                                 </div>
 
-                                <Edit
-                                    Label="Участники"
-                                    Type="text"
-                                    LabelId="event-participants-label"
-                                    EditId="event-participants-input"
-                                    FormName="new-event-form"
-                                    Change={this.handleParticipantsChange}
-                                    Blur={this.handleHideUsersHint}
-                                    Focus={this.handleParticipantsChange} />
-
-                                <div className="row" id="userauto">
-                                    <div className="col-md-3"></div>
-                                    <div className="col-md-8" id="userautolist"></div>
-                                    <div className="col-md-1"></div>
-                                </div>
-
-                                <ParticipantsTable
-                                    Participants={this.state.participants}
-                                    onRemove={this.handleRemoveParticipant}/>
+                                <ParticipantsTable/>,
 
                                 <div className="row">
                                     <div className="col-md-12">
