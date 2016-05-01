@@ -25,11 +25,11 @@ export default class ParticipantsTable extends React.Component {
         this.handleSelectParticipant = this.handleSelectParticipant.bind(this);
     }
 
-    handleChangeParts(parts) {
+    handleChangeParts(participant) {
         var participants = this.state.participants;
         participants.find( (p) => {
-            return p.account.user.id === account.user.id;
-        }).parts = parts;
+            return p.account.user.id === participant.account.user.id;
+        }).parts = participant.parts;
 
         this.setState({ participants: participants });
     }
@@ -39,9 +39,10 @@ export default class ParticipantsTable extends React.Component {
             $('#userauto').hide();
     }
 
-    handleSelectParticipant(participant) {
+    handleSelectParticipant(account) {
         this.setState({
-            participants: this.state.participants.concat(participant)
+            participants: this.state.participants.concat({account: account,
+                                                          parts: 1.0})
         });
         $('#event-participants-input').val('');
         $('#userauto').hide();
@@ -67,7 +68,7 @@ export default class ParticipantsTable extends React.Component {
                     response.forEach(function(user){
                         var already_participated = false;
                         self.state.participants.forEach(function(participant){
-                            if (participant.user.id === user.user.id)
+                            if (participant.account.user.id === user.user.id)
                             {
                                 already_participated = true;
                                 return;
@@ -93,7 +94,7 @@ export default class ParticipantsTable extends React.Component {
     handleRemoveParticipant(participant) {
 		// leave participants, that not equal to given
 		const participants = this.state.participants.filter((e) => {
-			return e.user.id != participant.user.id;
+			return e.user.id != participant.account.user.id;
 		});
 		this.setState({participants: participants});
     }
@@ -101,8 +102,8 @@ export default class ParticipantsTable extends React.Component {
     render(){
         var participants = this.state.participants.map(function(p){
             return (
-                <ParticipantRow key={p.user.id} Id={p.user.id}
-                    account={p}
+                <ParticipantRow key={p.account.user.id} Id={p.account.user.id}
+                    account={p.account}
                     onRemove={this.handleRemoveParticipant}
                     onPartsChange={this.handleChangeParts} />
             );
@@ -150,6 +151,7 @@ class ParticipantRow extends React.Component {
     constructor(props) {
         super(props);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
+        this.handleChangeParts = this.handleChangeParts.bind(this);
     }
     handleChangeParts(e) {
         this.props.onPartsChange({

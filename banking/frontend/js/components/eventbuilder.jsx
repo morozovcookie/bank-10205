@@ -20,7 +20,6 @@ module.exports = React.createClass({
             template: this.props.BaseInformation.template,
             private: false,
             author: account,
-            participants: [],
             fd: new FormData()
         }
     },
@@ -58,11 +57,10 @@ module.exports = React.createClass({
         document.location.href = '/events/';
     },
     hadnleCreateClick: function(){
-        var participants = [];
-        this.state.participants.forEach(function(p) {
-            participants.push({parts: p.rate, account: p.user.id});
+		var participants = this.refs['ParticipantsTable'].state.participants;
+        participants = participants.map((p) => {
+            return {account: p.account.user.id, parts: p.parts}
         });
-        console.log("before post:" + JSON.stringify(participants));
 
         postCSRF({
             type: 'post',
@@ -176,7 +174,7 @@ module.exports = React.createClass({
                                     </ul>
                                 </div>
 
-                                <ParticipantsTable/>,
+                                <ParticipantsTable ref="ParticipantsTable"/>,
 
                                 <div className="row">
                                     <div className="col-md-12">
