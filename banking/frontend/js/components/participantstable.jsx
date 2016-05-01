@@ -91,10 +91,10 @@ export default class ParticipantsTable extends React.Component {
 			$('#userauto').hide();
     }
 
-    handleRemoveParticipant(participant) {
+    handleRemoveParticipant(account) {
 		// leave participants, that not equal to given
 		const participants = this.state.participants.filter((e) => {
-			return e.user.id != participant.account.user.id;
+			return e.account.user.id != account.user.id;
 		});
 		this.setState({participants: participants});
     }
