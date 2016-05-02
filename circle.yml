@@ -5,7 +5,7 @@ machine:
     BANK: '{"db":"sqlite"}' # use qlite for tests
 
 general:
-  articacts:
+  artifacts:
     - "webpack-stats.json"
     - "banking/static/js/"
 
