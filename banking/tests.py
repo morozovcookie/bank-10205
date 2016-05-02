@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -32,7 +33,7 @@ def print_borders(char, count):
     return funcer
 
 
-@print_borders('━', 80)
+@print_borders('-', 80)
 def print_list(l, header=None):
     """Show list with header + footer """
     if header:
