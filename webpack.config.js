@@ -84,7 +84,7 @@ else {
         new webpack.optimize.UglifyJsPlugin({
             compress: { warnings: false },
             // prevent renaming(mangling) this vars
-            mangle: { except: ['$super', '$', 'exports', 'require'] }
+            mangle: { except: ['$super', '$', 'exports', 'require', 'import', 'from'] }
         })
     );
 }
