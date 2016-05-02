@@ -21,7 +21,7 @@ class auth(APIView):
             )
         if 'username' not in data or 'password' not in data:
             return Response(
-                'Wrong credentials',
+                'does-not exist fields in request username or password',
                 status=status.HTTP_401_UNAUTHORIZED
             )
         try:
@@ -30,10 +30,10 @@ class auth(APIView):
             return Response("User not exists",
                             status=status.HTTP_404_NOT_FOUND)
 
-        if not user or not user.check_password(data['password']):
+        if not user.check_password(data['password']):
             return Response(
-                'No default user, please create one',
-                status=status.HTTP_404_NOT_FOUND
+                'Username or password is invalid',
+                status=status.HTTP_401_UNAUTHORIZED
             )
 
         token = Token.objects.get_or_create(user=user)
