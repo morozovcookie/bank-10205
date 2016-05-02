@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ## Variants:
 #   - 'apps': 'any valid apps, that can be added to INSTALLED_APPS
 
-BANK_SETTINGS = {'dev': False, 'apps': []}
+BANK_SETTINGS = {'dev': False, 'apps': [], 'db': ""}
 BANK_ENV = os.getenv("BANK")
 if BANK_ENV:
     BANK_ENV = BANK_ENV.replace("'", '"')  # json.loads expect " instead '
@@ -105,7 +105,7 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 
 # Database
 DATABASES = {'default': dj_database_url.config()}
-if BANK_SETTINGS.get('dev'):
+if BANK_SETTINGS.get('dev') or BANK_SETTINGS.get('db') == "sqlite":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

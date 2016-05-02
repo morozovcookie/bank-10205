@@ -2,16 +2,17 @@ machine:
   python:
     version: 3.5.1
   environment:
-    BANK: '{"dev":true}'
+    BANK: '{"db":"sqlite"}' # use qlite for tests
 
 dependencies:
   pre:
-  - pip install django_nose
+    - pip install django_nose
+  post: # create statics before tests. need to deploy and tests(selenium maybe)
+    - npm i --only=dev
+    - webpack
+
 deployment:
   staging:
     branch: dev
     heroku:
       appname: banking-stage
-    commands:
-      - npm i --only=dev
-      - BANK='{"dev":false}' webpack
