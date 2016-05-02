@@ -7,4 +7,8 @@ machine:
 dependencies:
   pre:
   - pip install django_nose
-
+deployment:
+  staging:
+    branch: dev
+    heroku:
+      appname: banking-stage
