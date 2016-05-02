@@ -12,3 +12,6 @@ deployment:
     branch: dev
     heroku:
       appname: banking-stage
+    commands:
+      - npm i --only=dev
+      - BANK='{"dev":false}' webpack
