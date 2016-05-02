@@ -92,7 +92,8 @@ else {
         new webpack.optimize.UglifyJsPlugin({
             compress: { warnings: false },
             // prevent renaming(mangling) this vars
-            mangle: { except: ['$super', '$', 'exports', 'require', 'import', 'from'] }
+            mangle: { except: ['$super', '$', 'exports', 'require'] },
+            sourceMap: false // on circleCI it's throw error from UglifyJsPlugin
         })
     );
 }
