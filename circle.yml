@@ -7,7 +7,6 @@ machine:
 dependencies:
   pre:
     - pip install django_nose
-  post: # create statics before tests. need to deploy and tests(selenium maybe)
     - npm i --only=dev
     - webpack
 
