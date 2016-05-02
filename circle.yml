@@ -1,0 +1,4 @@
+machine:
+  python:
+    version: pypy-3.5.1
+
