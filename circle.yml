@@ -7,8 +7,6 @@ machine:
 dependencies:
   pre:
     - pip install django_nose
-    - npm i --only=dev
-    - ./node_modules/.bin/webpack
 
 deployment:
   staging:
