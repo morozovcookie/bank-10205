@@ -4,6 +4,11 @@ machine:
   environment:
     BANK: '{"db":"sqlite"}' # use qlite for tests
 
+general:
+  articacts:
+    - "webpack-stats.json"
+    - "banking/static/js/"
+
 dependencies:
   pre:
     - pip install django_nose
