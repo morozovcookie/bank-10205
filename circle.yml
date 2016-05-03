@@ -11,8 +11,10 @@ dependencies:
 deployment:
     staging:
         branch: dev
-        heroku: appname: banking-stage
+        heroku:
+            appname: banking-stage
     staging:
         branch: master
-        heroku: appname: banking-master
+        heroku:
+            appname: banking-master
 
