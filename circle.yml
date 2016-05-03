@@ -1,15 +1,18 @@
 machine:
-  python:
-    version: 3.5.1
-  environment:
-    BANK: '{"db":"sqlite"}' # use qlite for tests
+    python:
+        version: 3.5.1
+    environment:
+        BANK: '{"db":"sqlite"}' # use qlite for tests
 
 dependencies:
-  pre:
-    - pip install django_nose
+    pre:
+        - pip install django_nose
 
 deployment:
-  staging:
-    branch: dev
-    heroku:
-      appname: banking-stage
+    staging:
+        branch: dev
+        heroku: appname: banking-stage
+    staging:
+        branch: master
+        heroku: appname: banking-master
+
