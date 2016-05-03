@@ -6,22 +6,17 @@ import {get} from '../utils/ajax.js';
 import TransactionRow from './transactionrow.jsx'
 import DiffTransactionRow from './difftransactionrow.jsx'
 
-
 // ^_^
 let eventId = () => $('#event').attr('data-id');
 
 /** Show elements with it's hiden dropdown content. On click expand or collapse
- * dropdown content.
- * Work together with Section.
- * @param {String} title - title of accordion
- */
+ * dropdown content. */
 export default class Transactions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: this.props.items,
+            items: [],
         };
-
     }
 
     componentDidMount() {
@@ -77,4 +72,3 @@ export default class Transactions extends React.Component {
     }
 
 }
-Transactions.defaultProps = { items: [] };
