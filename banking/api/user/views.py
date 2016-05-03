@@ -168,13 +168,14 @@ class UserList(generics.ListCreateAPIView):
     def post(self, request):
         """ Create new Account. """
         serializer_class = AccountPostSerializer
-        aps = AccountPostSerializer(data=request.data)
-        if not aps.is_valid():
+        serializer = AccountPostSerializer(data=request.data)
+        if not serializer.is_valid():
             return Response(
-                'Invalid JSON - {0}'.format(aps.errors),
+                'Invalid JSON - {0}'.format(serializer.errors),
                 status=status.HTTP_400_BAD_REQUEST
             )
-        user = User.objects.create(**aps.validated_data)
+        print("VALIDATED", serializer.validated_data)
+        user = User.objects.create_user(**serializer.validated_data)
         result = Account.objects.create(user=user)
 
         return Response(AccountSerializer(result).data)
