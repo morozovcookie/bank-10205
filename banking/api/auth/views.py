@@ -27,8 +27,8 @@ class auth(APIView):
         try:
             user = User.objects.get(username=data['username'])
         except User.DoesNotExist:
-            return Response("User not exists",
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response("Wrong credentials",
+                            status=status.HTTP_400_BAD_REQUEST)
 
         if not user.check_password(data['password']):
             return Response(
