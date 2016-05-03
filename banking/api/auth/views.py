@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 
 from banking.models import Account
-from banking.api.user.serializers import UserSerializer, AccountSerializer
+from banking.api.user.serializers import AccountSerializer
 
 
 class auth(APIView):

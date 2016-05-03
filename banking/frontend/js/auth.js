@@ -9,7 +9,6 @@ var AuthForm = React.createClass({
         return {
             username: '',
             password: '',
-            csrf: ''
         }
     },
     handleUsernameChange: function(event){

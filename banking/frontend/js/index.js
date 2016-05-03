@@ -2,6 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require('jquery');
 
+var postCSRF = require('./utils/csrf.js');
+
 var NavMenu = React.createClass({
     getInitialState: function(){
         return {
