@@ -174,7 +174,6 @@ class UserList(generics.ListCreateAPIView):
                 'Invalid JSON - {0}'.format(serializer.errors),
                 status=status.HTTP_400_BAD_REQUEST
             )
-        print("VALIDATED", serializer.validated_data)
         user = User.objects.create_user(**serializer.validated_data)
         result = Account.objects.create(user=user)
 
