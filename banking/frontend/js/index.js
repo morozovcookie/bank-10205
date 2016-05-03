@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require('jquery');
 
-var postCSRF = require('./utils/csrf.js');
+var csrfSafe = require('./utils/csrf.js').csrfSafe;
 
 var NavMenu = React.createClass({
     getInitialState: function(){
@@ -86,7 +86,7 @@ var Navbar = React.createClass({
 var NavbarMenuList = React.createClass({
     logout: function(){
         var token = window.localStorage.getItem('token');
-        $.ajax({
+        csrfSafe({
             type: 'delete',
             url: '/api/auth/',
             headers: {

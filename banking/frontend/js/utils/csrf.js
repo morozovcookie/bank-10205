@@ -25,12 +25,17 @@ export function csrfSafeMethod(method) {
 
 // send post with
 export function postCSRF(settings){
+    settings.method="POST";
+    return csrfSafe(settings);
+}
+
+export function csrfSafe(settings) {
 	var csrftoken = getCookie('csrftoken');
 	settings.beforeSend = function(xhr, settings) {
 		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
 		}
 	};
-	settings.method = "POST";
 	return $.ajax(settings);
+
 }
