@@ -72,10 +72,6 @@ var loaders = [];
 
 // diff between dev & prod.
 if (DEFS.dev) {
-    plugins.push(
-        new webpack.HotModuleReplacementPlugin()
-    );
-
     loaders.push(
         { // hope that order not does not affect
             test: [/\.js?$/, /\.jsx?$/],
