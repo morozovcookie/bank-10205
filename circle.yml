@@ -13,7 +13,7 @@ deployment:
         branch: dev
         heroku:
             appname: banking-stage
-    staging:
+    master:
         branch: master
         heroku:
             appname: banking-master
