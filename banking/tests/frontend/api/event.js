@@ -10,21 +10,24 @@ var should = require('chai').should(); // actually call the function
 describe('When we call from API ', function() {
     let $;
     jsdom();
+    before(function() {
+       this.eventListPath = require(modules.endpoints).EndPoint.EventList();
+    });
+    beforeEach(function() {
+        $ = require('jquery'); // include jquery
+        sinon.stub($, 'ajax');
+        this.API = require(modules.api).EventAPI;
+    });
 
     describe('create Event', function() {
-        beforeEach(function() {
-            $ = require('jquery'); // include jquery
-            sinon.stub($, 'ajax');
-            this.API = require(modules.api).EventAPI;
-        });
 
-        it("should POST to /api/events/ correct data", function() {
+        it(`should POST to ${this.eventListPath} correct data`, function() {
             var eventdata = {name:"event", price: 3000.0};
             this.API.createEvent(eventdata);
 
             var p = $.ajax.getCall(0).args[0];
             p.data.should.deep.equal(eventdata);
-            assert.equal(p.url, "/api/events/");
+            assert.equal(p.url, this.eventListPath);
 
             $.ajax.reset();
 
@@ -33,10 +36,11 @@ describe('When we call from API ', function() {
 
             var p = $.ajax.getCall(0).args[0];
             p.data.should.deep.equal(eventdata);
-            assert.equal(p.url, "/api/events/");
+            assert.equal(p.url, this.eventListPath);
         });
 
-        afterEach(function() { $.ajax.restore(); });
     });
+    afterEach(function() { $.ajax.restore(); });
 });
+
 

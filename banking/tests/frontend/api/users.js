@@ -9,6 +9,9 @@ describe("When call API", function() {
     var $;
     jsdom();
 
+    before(function() {
+       this.userListPath = require(modules.endpoints).EndPoint.UserList();
+    });
 
     describe("create user", function() {
         beforeEach(function() {
@@ -17,13 +20,13 @@ describe("When call API", function() {
             this.API = require(modules.api).AccountAPI;
         });
 
-        it("should POST to /api/users/", function() {
+        it(`should POST to ${this.userListPath}`, function() {
             var userdata = {username: "test", password: "test"};
             this.API.createAccount(userdata);
 
             var p = $.ajax.getCall(0).args[0];
             assert.equal(p.data, userdata);
-            assert.equal(p.url, "/api/users/");
+            assert.equal(p.url, this.userListPath);
 
             userdata = {username: "Bobby", password: "123"};
 
@@ -33,7 +36,7 @@ describe("When call API", function() {
 
             var p = $.ajax.getCall(0).args[0];
             assert.equal(p.data, userdata);
-            assert.equal(p.url, "/api/users/");
+            assert.equal(p.url, this.userListPath);
         });
 
         afterEach(function() { $.ajax.restore(); });
