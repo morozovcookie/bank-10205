@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --port 3000",
-    "test": "$(npm bin)/mocha --compilers js:babel-core/register banking/tests/frontend/tests.js"
+    "test": "$(npm bin)/mocha --recursive --compilers js:babel-core/register banking/tests/frontend/"
   },
   "repository": {
     "type": "git",
