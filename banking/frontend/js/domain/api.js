@@ -5,7 +5,7 @@ import $ from 'jquery'
 /** CRUD actions for Account entity. */
 export class AccountAPI {
     static createAccount(userdata) {
-        return $.ajax({
+        return csrfSafe({
             method: "POST",
             url: EndPoint.UserList(),
             data: userdata,
@@ -16,9 +16,21 @@ export class AccountAPI {
      * @param {Integer} id account id to be closed
      */
     deactivateAccount(id) {
-        // return csrfSafe({
-        //     method: "DELETE",
-        //     url: EndPoint.userDetails(id)
-        // });
+        return csrfSafe({
+            method: "DELETE",
+            url: EndPoint.userDetails(id)
+        });
     }
+
+}
+
+export class EventAPI {
+  static createEvent(data){
+    return csrfSafe({
+      method: "POST",
+      url: EndPoint.EventList(),
+      data: data
+    });
+  }
+
 }
