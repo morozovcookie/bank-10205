@@ -41,22 +41,23 @@ describe('When we call from API ', function() {
         })
     })
     describe('get event list', function() {
-        it(`should send GET to ${eventListPath}`, function() {
+        it(`should send GET to ${eventListPath} and return data`, function() {
             var callback = sinon.spy()
 
             this.API.getEvents(callback)
-            $.ajax.yieldTo('success', [this.eventdata, this.eventdata])
-
-            expect(callback.called).to.be.true
-
-            expect(callback.args[0][0])
-                .to.exist
-                .and.to.have.length(2)
-
             var p = $.ajax.getCall(0).args[0]
 
             assert.equal(p.method, "GET")
             assert.equal(p.url, eventListPath)
+
+            $.ajax.yieldTo('success', [this.eventdata, this.eventdata])
+
+            expect(callback.called)
+                .to.be.true
+            expect(callback.args[0][0])
+                .to.exist
+                .and.to.have.length(2)
+
         })
     })
     afterEach(function() { $.ajax.restore() })
