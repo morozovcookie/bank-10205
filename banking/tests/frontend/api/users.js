@@ -20,7 +20,7 @@ describe("When call API", function() {
             this.API = require(modules.api).AccountAPI;
         });
 
-        it(`should POST to ${this.userListPath}`, function() {
+        it('should POST to '+this.userListPath, function() {
             var userdata = {username: "test", password: "test"};
             this.API.createAccount(userdata);
 

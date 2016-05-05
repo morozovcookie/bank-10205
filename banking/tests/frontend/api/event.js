@@ -21,7 +21,7 @@ describe('When we call from API ', function() {
 
     describe('create Event', function() {
 
-        it(`should POST to ${this.eventListPath} correct data`, function() {
+        it('should POST to '+this.eventListPath, function() {
             var eventdata = {name:"event", price: 3000.0};
             this.API.createEvent(eventdata);
 
