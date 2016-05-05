@@ -33,4 +33,12 @@ export class EventAPI {
     });
   }
 
+  static getEvents(successFn) {
+    return $.ajax({
+      method: "GET",
+      url: EndPoint.EventList(),
+      success: successFn
+    });
+  }
+
 }
