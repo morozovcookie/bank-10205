@@ -5,13 +5,11 @@ var should = require('chai').should(); // actually call the function
 
 import modules from './defines.js';
 
+const userListPath = require(modules.endpoints).EndPoint.UserList();
+
 describe("When call API", function() {
     var $;
     jsdom();
-
-    before(function() {
-       this.userListPath = require(modules.endpoints).EndPoint.UserList();
-    });
 
     describe("create user", function() {
         beforeEach(function() {
@@ -20,13 +18,13 @@ describe("When call API", function() {
             this.API = require(modules.api).AccountAPI;
         });
 
-        it('should POST to '+this.userListPath, function() {
+        it(`should POST to ${userListPath}`, function() {
             var userdata = {username: "test", password: "test"};
             this.API.createAccount(userdata);
 
             var p = $.ajax.getCall(0).args[0];
             assert.equal(p.data, userdata);
-            assert.equal(p.url, this.userListPath);
+            assert.equal(p.url, userListPath);
 
             userdata = {username: "Bobby", password: "123"};
 
@@ -36,7 +34,7 @@ describe("When call API", function() {
 
             var p = $.ajax.getCall(0).args[0];
             assert.equal(p.data, userdata);
-            assert.equal(p.url, this.userListPath);
+            assert.equal(p.url, userListPath);
         });
 
         afterEach(function() { $.ajax.restore(); });
