@@ -28,35 +28,46 @@ describe('When we call from API ', function() {
 
             var p = $.ajax.getCall(0).args[0]
             p.data.should.deep.equal(this.eventdata)
+            assert.equal(p.method, 'POST')
             assert.equal(p.url, eventListPath)
 
             $.ajax.reset()
 
-            this.API.createEvent(this.eventdata)
+            const new_data = {name: "test", price: 3000.0}
+            this.API.createEvent(new_data)
 
             var p = $.ajax.getCall(0).args[0]
-            p.data.should.deep.equal(this.eventdata)
+            p.data.should.deep.equal(new_data)
             assert.equal(p.method, 'POST')
             assert.equal(p.url, eventListPath)
         })
+
+        it("shound return error, when POST incomplete data", function() {
+            throw Error("not implemented");
+        });
     })
     describe('get event list', function() {
         it(`should send GET to ${eventListPath} and return data`, function() {
+            // success checker
             var callback = sinon.spy()
 
             this.API.getEvents(callback)
+
             var p = $.ajax.getCall(0).args[0]
 
-            assert.equal(p.method, "GET")
-            assert.equal(p.url, eventListPath)
+            p.method
+                .should.equal("GET")
+            p.url
+                .should.equal(eventListPath)
 
+            // Simulate response. We testing frontend, remember?
             $.ajax.yieldTo('success', [this.eventdata, this.eventdata])
 
-            expect(callback.called)
-                .to.be.true
+            expect(callback.called).to.be.true
+
             expect(callback.args[0][0])
                 .to.exist
-                .and.to.have.length(2)
+                .and.have.length(2)
 
         })
     })
