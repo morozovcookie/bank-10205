@@ -11,12 +11,23 @@ let eventId = () => $('#event').attr('data-id');
 
 /** Show elements with it's hiden dropdown content. On click expand or collapse
  * dropdown content. */
-export default class Transactions extends React.Component {
+export default class ParticipantsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
+            items: []
         };
+
+        this.handleRemoveClick = this.handleRemoveClick.bind(this);
+    }
+
+    handleRemoveClick(event, item) {
+        event.stopPropagation();
+        console.log(`Transactions::handleRemove(${item})`);
+		const items = this.state.items.filter((e) => {
+			return e.id != item.id;
+		});
+		this.setState({items: items});
     }
 
     componentDidMount() {
@@ -24,23 +35,23 @@ export default class Transactions extends React.Component {
             '/api/transactions/',
             { event: eventId() },
             (data) => {
-                this.setState({items: data })
+                this.setState({items: this.groupByUser(data) })
             });
     }
 
     /** Group transaction by account.
      * @param {Array} transactions - transacitions, that will be grouped.
-     * Shape: account, debit, credit, account.
-     * @return {Array} Transaction groups. Shape: transactions, sum, account,
-     * date. Date is date of latest transaction in group.
+     * Shape: account, aditional data.
+     * @return {Array} Transaction groups -
+     * Shape: transactions, summ, account, id.
      */
     groupByUser(transaction) {
         var grouped = {};
-        transaction.forEach( (t, idx) => {
+        transaction.forEach( (t) => {
             //fix
             const username = t.account.name;
             if (!grouped[username])
-                grouped[username] = { transactions: [], summ: 0, account: t.account, id: idx};
+                grouped[username] = { transactions: [], summ: 0, account: t.account, id: t.account.id};
             //work
             grouped[username].transactions.push(t);
             grouped[username].summ += Number(t.summ);
@@ -52,18 +63,29 @@ export default class Transactions extends React.Component {
     }
 
 	render() {
-        var sections = this.groupByUser(this.state.items).map(function(item) {
+        var self = this;
+
+        var sections = this.state.items.map(function(item) {
+            var RemoveHandler = (event) => self.handleRemoveClick(event, item);
+
             var colorClass = item.summ > 0 ?  "danger" : "success";
+
             const childs = item.transactions.map((t) => {
                 return (<DiffTransactionRow key={t.id} item={t}/>)
             });
+
             return (
                 <AccordSection key={item.id}>
-                    <TransactionRow classNames="head" item={item}/>
+                    <TransactionRow classNames="head" item={item}>
+                        <span className="btn btn-danger glyphicon glyphicon-remove"
+                              onClick={RemoveHandler}>
+                        </span>
+                    </TransactionRow>
                     {childs}
                 </AccordSection>
             );
         });
+        // append EditField
         return (
             <div>
                 {sections}
