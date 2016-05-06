@@ -3,7 +3,7 @@
 import jsdom, {rerequire} from 'mocha-jsdom'
 import sinon from 'sinon'
 import {expect, assert} from 'chai'
-import modules from './defines.js'
+import modules from '../helpers/defines.js'
 
 var should = require('chai').should() // actually call the function
 
@@ -11,20 +11,25 @@ var EndPoint = require(modules.endpoints).EndPoint
 
 const eventListPath = EndPoint.EventList()
 
-describe('When we call from API ', function() {
+describe('When call API ', function() {
     let $
     jsdom()
 
     beforeEach(function() {
         $ = require('jquery') // include jquery
         sinon.stub($, 'ajax')
-        this.API = require(modules.api).EventAPI
+        const EventAPI = require(modules.api).EventAPI
+        this.API = new EventAPI("AuthToken")
         this.eventdata = {name:"event", price: 3000.0}
     })
 
     describe('create event', function() {
-        it(`should send POST to ${eventListPath}`, function() {
-            this.API.createEvent(this.eventdata)
+        it(`should send POST to ${eventListPath} and call success on success`,
+           function() {
+            let successFn = sinon.spy()
+            this.API.createEvent(this.eventdata, successFn, sinon.spy())
+            $.ajax.yieldTo('success', this.eventdata);
+            expect(successFn.called).to.be.true
 
             var p = $.ajax.getCall(0).args[0]
             p.data.should.deep.equal(this.eventdata)
@@ -34,42 +39,52 @@ describe('When we call from API ', function() {
             $.ajax.reset()
 
             const new_data = {name: "test", price: 3000.0}
-            this.API.createEvent(new_data)
+            let successFn2 = sinon.spy()
+
+            this.API.createEvent(new_data, successFn2, sinon.spy())
+            $.ajax.yieldTo('success', this.eventdata);
 
             var p = $.ajax.getCall(0).args[0]
             p.data.should.deep.equal(new_data)
             assert.equal(p.method, 'POST')
             assert.equal(p.url, eventListPath)
+
+            expect(successFn2.called).to.be.true
         })
 
-        it("shound return error, when POST incomplete data", function() {
-            throw Error("not implemented");
-        });
+        it("when POST incomplete data shound call error function", function() {
+            const error_data = { }
+            let errorFn = sinon.spy()
+
+            this.API.createEvent(error_data, sinon.spy(), errorFn)
+
+            $.ajax.yieldTo('error', { author:'required', name:'required',
+                                      price:'required' })
+
+            expect(errorFn.called).to.be.true
+        })
     })
+
     describe('get event list', function() {
-        it(`should send GET to ${eventListPath} and return data`, function() {
-            // success checker
-            var callback = sinon.spy()
+        it(`should send GET to ${eventListPath} and call success on response.`,
+           function() {
+               // success checker
+               let errorFn = sinon.spy()
+               let successFn = sinon.spy()
 
-            this.API.getEvents(callback)
+               this.API.getEvents(successFn, errorFn)
+               // Simulate response. We testing frontend, remember?
+               $.ajax.yieldTo('success', [this.eventdata, this.eventdata])
 
-            var p = $.ajax.getCall(0).args[0]
+               var p = $.ajax.getCall(0).args[0]
+               p.method.should.equal("GET")
+               p.url.should.equal(eventListPath)
 
-            p.method
-                .should.equal("GET")
-            p.url
-                .should.equal(eventListPath)
-
-            // Simulate response. We testing frontend, remember?
-            $.ajax.yieldTo('success', [this.eventdata, this.eventdata])
-
-            expect(callback.called).to.be.true
-
-            expect(callback.args[0][0])
-                .to.exist
-                .and.have.length(2)
-
-        })
+               expect(successFn.called).to.be.true
+               expect(successFn.args[0][0])
+                   .to.exist
+                   .and.have.length(2)
+           })
     })
     afterEach(function() { $.ajax.restore() })
 })
