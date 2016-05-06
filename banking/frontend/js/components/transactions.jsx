@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 
-import Section from './accordion.jsx';
+import AccordSection from './accordsection.jsx';
 import {get} from '../utils/ajax.js';
 import TransactionRow from './transactionrow.jsx'
 import DiffTransactionRow from './difftransactionrow.jsx'
@@ -58,10 +58,10 @@ export default class Transactions extends React.Component {
                 return (<DiffTransactionRow key={t.id} item={t}/>)
             });
             return (
-                <Section key={item.id}>
+                <AccordSection key={item.id}>
                     <TransactionRow classNames="head" item={item}/>
                     {childs}
-                </Section>
+                </AccordSection>
             );
         });
         return (

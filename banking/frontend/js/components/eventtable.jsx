@@ -2,8 +2,6 @@ import React from 'react'
 
 import $ from 'jquery'
 
-import EventAccordion from './accordion.jsx'
-
 export default class EventTable extends React.Component{
     render() {
         var idx = 0;
