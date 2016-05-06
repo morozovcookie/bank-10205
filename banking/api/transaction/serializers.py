@@ -36,7 +36,7 @@ class TransactionReadViewSerializer(serializers.Serializer):
                 "link": reverse('accounts') + str(account.id),
             },
             "event": {
-                "id": event.name,
+                "id": event.id,
                 "name": event.name,
                 "link": reverse('events') + str(event.id),
             },
