@@ -24,7 +24,7 @@ describe('When call API ', function() {
     })
 
     describe('create event', function() {
-        it(`should send POST to ${eventListPath} and call success on success`,
+        it(`should send POST to events list and call success function`,
            function() {
             let successFn = sinon.spy()
             this.API.createEvent(this.eventdata, successFn, sinon.spy())
@@ -52,21 +52,24 @@ describe('When call API ', function() {
             expect(successFn2.called).to.be.true
         })
 
-        it("when POST incomplete data shound call error function", function() {
-            const error_data = { }
-            let errorFn = sinon.spy()
+        describe(' with incomplete data ', function() {
+            it("should send POST to event list path and call error function",
+               function() {
+                const error_data = { }
+                let errorFn = sinon.spy()
 
-            this.API.createEvent(error_data, sinon.spy(), errorFn)
+                this.API.createEvent(error_data, sinon.spy(), errorFn)
 
-            $.ajax.yieldTo('error', { author:'required', name:'required',
-                                      price:'required' })
+                $.ajax.yieldTo('error', { author:'required', name:'required',
+                               price:'required' })
 
-            expect(errorFn.called).to.be.true
-        })
+                expect(errorFn.called).to.be.true
+            })
+        });
     })
 
     describe('get event list', function() {
-        it(`should send GET to ${eventListPath} and call success on response.`,
+        it(`should send GET to event list path and call success on response.`,
            function() {
                // success checker
                let errorFn = sinon.spy()
