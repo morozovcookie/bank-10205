@@ -2,43 +2,91 @@ import {csrfSafe} from '../utils/csrf.js'
 import {EndPoint} from './endpoint.js'
 import $ from 'jquery'
 
+class API {
+    constructor(token) {
+        this.token = token
+    }
+
+    request(settings) {
+        let headers = settings.headers || {}
+        headers.Authorization = 'Token ' + this.token
+        settings.headers = headers
+        return csrfSafe(settings);
+    }
+}
+
 /** CRUD actions for Account entity. */
-export class AccountAPI {
-    static createAccount(userdata) {
-        return csrfSafe({
+export class AccountAPI extends API {
+    createAccount(userdata, successFn, errorFn) {
+        return this.request({
             method: "POST",
             url: EndPoint.UserList(),
             data: userdata,
+            success: successFn,
+            error: errorFn
         });
     }
 
-    /** Deactivate account, so it's can't login, create events, etc.
-     * @param {Integer} id account id to be closed
-     */
-    deactivateAccount(id) {
-        return csrfSafe({
-            method: "DELETE",
-            url: EndPoint.userDetails(id)
+    getUsers(successFn, errorFn) {
+        return this.request({
+            method: "GET",
+            url: EndPoint.UserList(),
+            success: successFn,
+            error: errorFn
         });
     }
 
+    updateUser(userdata, successFn, errorFn) {
+        var id = userdata.id
+        delete userdata.id
+        this.request({
+            method: "PATCH",
+            url: EndPoint.UserDetail(id),
+            success: successFn,
+            error: errorFn
+        });
+    }
 }
 
-export class EventAPI {
-  static createEvent(data){
-    return csrfSafe({
-      method: "POST",
-      url: EndPoint.EventList(),
-      data: data
-    });
-  }
+/** CRUD actions for Event entity */
+export class EventAPI  extends API{
+    createEvent(data, successFn, errorFn){
+        return this.request({
+            method: "POST",
+            url: EndPoint.EventList(),
+            data: data,
+            success: successFn,
+            error: errorFn
+        });
+    }
 
-  static getEvents(successFn) {
-    return $.ajax({
-      method: "GET",
-      url: EndPoint.EventList(),
-      success: successFn
-    });
-  }
+    getEvents(successFn, errorFn) {
+        return this.request({
+            method: "GET",
+            url: EndPoint.EventList(),
+            success: successFn,
+            error: errorFn
+        });
+    }
+
+    updateEvent(data, successFn, errorFn) {
+        return this.request({
+            method: "PATCH",
+            url: EndPoint.EventDetail(data.id),
+            data: data,
+            success: successFn,
+            error: errorFn
+        });
+    }
+
+    deleteEvent(id, successFn, errorFn) {
+        return this.request({
+            method: "DELETE",
+            url: EndPoint.EventDetail(id),
+            success: successFn,
+            error: errorFn
+        });
+
+    }
 
 }
