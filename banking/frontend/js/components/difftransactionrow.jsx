@@ -33,13 +33,13 @@ function Diff(props) {
     const item = props.item;
     const icon = (
         item.type == "IN" ?
-            <span className="col-md-1 glyphicon glyphicon-log-in"></span>:
-            <span className="col-md-1 glyphicon glyphicon-log-out"></span>
+            <span className="col-md-1 col-sm-1 col-xs-1 glyphicon glyphicon-log-in"></span>:
+            <span className="col-md-1 col-sm-1 col-xs-1 glyphicon glyphicon-log-out"></span>
     );
     return (
         <span className={props.className}>
             {icon}
-            <span className="col-md-10">{item.account.name}</span>
+            <span className="col-md-9 col-sm-9 col-xs-9">{item.account.name}</span>
         </span>
     );
 }

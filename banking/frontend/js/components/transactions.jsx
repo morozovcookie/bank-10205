@@ -1,8 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-
+import {csrfSafe} from '../utils/csrf.js';
 import AccordSection from './accordsection.jsx';
-import {get} from '../utils/ajax.js';
 import TransactionRow from './transactionrow.jsx'
 import DiffTransactionRow from './difftransactionrow.jsx'
 
@@ -23,11 +22,20 @@ export default class ParticipantsList extends React.Component {
 
     handleRemoveClick(event, item) {
         event.stopPropagation();
-        console.log(`Transactions::handleRemove(${item})`);
-		const items = this.state.items.filter((e) => {
-			return e.id != item.id;
-		});
-		this.setState({items: items});
+
+        csrfSafe({
+            method: "DELETE",
+            url: `/api/events/${eventId()}/participants/${item.id}`,
+            success: (data) => {
+                $.get(
+                    '/api/transactions/',
+                    { event: eventId() },
+                    (data) => {
+                        this.setState({items: this.groupByUser(data) })
+                    });
+            },
+            error: (message) => { console.log(message); }
+        });
     }
 
     componentDidMount() {
