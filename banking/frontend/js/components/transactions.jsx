@@ -27,24 +27,45 @@ export default class ParticipantsList extends React.Component {
             method: "DELETE",
             url: `/api/events/${eventId()}/participants/${item.id}`,
             success: (data) => {
-                $.get(
-                    '/api/transactions/',
-                    { event: eventId() },
-                    (data) => {
-                        this.setState({items: this.groupByUser(data) })
-                    });
-            },
-            error: (message) => { console.log(message); }
+                csrfSafe({
+                    method: "GET",
+                    url: `/api/events/${eventId()}/participants/`,
+                    success: (data) => {
+                        var participants_query = data.reduce((acc, v) => { return acc+=`participants=${v.id}&`}, '')
+                        console.log(participants_query);
+                        csrfSafe({
+                            url: '/api/transactions/' + '?'+participants_query,
+                            data: {
+                                event: eventId()
+                            },
+                            success: (data) => {
+                                this.setState({items: this.groupByUser(data) })
+                            }
+                        });
+                    }
+                });
+            }
         });
     }
 
     componentDidMount() {
-        $.get(
-            '/api/transactions/',
-            { event: eventId() },
-            (data) => {
-                this.setState({items: this.groupByUser(data) })
-            });
+        csrfSafe({
+            method: "GET",
+            url: `/api/events/${eventId()}/participants/`,
+            success: (data) => {
+                var participants_query = data.reduce((acc, v) => { return acc+=`participants=${v.id}&`}, '')
+                console.log(participants_query);
+                csrfSafe({
+                    url: '/api/transactions/' + '?'+participants_query,
+                    data: {
+                        event: eventId()
+                    },
+                    success: (data) => {
+                        this.setState({items: this.groupByUser(data) })
+                    }
+                });
+            }
+        });
     }
 
     /** Group transaction by account.
