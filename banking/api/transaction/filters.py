@@ -12,9 +12,17 @@ class TransactionFilter(filters.FilterSet):
                                              queryset=Event.objects.all())
     parts = django_filters.NumberFilter(name='participation__parts')
     type = django_filters.MultipleChoiceFilter(name='TYPES')
+    active = django_filters.MethodFilter(action='isActive')
+
+    def isActive(self, queryset, value):
+        f = True
+        if value.lower() == "false" or value == 0:
+            f = False
+        return queryset.filter(participation__active=f)
 
     class Meta:
         model = Transaction
         queryset = Transaction.objects.all()
         fields = ['date', 'credit', 'debit', 'type', 'participants', 'event',
-                  'parts', 'parent']
+                  'parts', 'parent', 'active']
+

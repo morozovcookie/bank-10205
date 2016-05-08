@@ -30,7 +30,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
 @admin.register(Participation)
 class ParticipationAdmin(admin.ModelAdmin):
-    list_display = ('date', 'event', 'account', 'parts')
+    list_display = ('date', 'event', 'account', 'parts', 'active')
 
 admin.site.register(EventTemplate)
 admin.site.register(Transfer)
