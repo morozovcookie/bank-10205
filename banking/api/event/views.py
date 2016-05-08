@@ -132,10 +132,11 @@ class ParticipantListView(views.APIView):
             newbies = {}
             for p in ser.validated_data:
                 newbies.update({p['account']: p['parts']})
-            print(newbies)
             e = get_event(event_pk)
             add_participants(e, newbies)
-            return Response(ParticipationSerializer(get_participants(e)).data)
+            return Response(ParticipationSerializer(get_participants(e),
+                                                    context={'request': req},
+                                                    many=True).data)
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

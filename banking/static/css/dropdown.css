@@ -1,0 +1,20 @@
+.dropdown {
+    margin-top: 5px;
+    position: absolute;
+    x: 0;
+    y: 0;
+    background-color: #f9f9f9;
+    padding: 5px 0px 5px 0px;
+    list-style-type: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid #999;
+    border-radius: 5%;
+}
+
+.dropdown .item {
+    padding: 3px 10px 3px 10px;
+    border-bottom: 1px solid #ddd;
+}
+.dropdown :last-child { border: none; }
+
+.dropdown .item:hover { background-color: #e0e0e0; }
