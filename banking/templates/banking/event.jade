@@ -30,20 +30,5 @@ block content
                 label.control-label.col-md-4(for="private") Приватность
                 .col-md-8
                     input#private(type="checkbox", value="{{event.private}}")
-    .col-md-2
-        // spacer
-    .col-md-5
-        center: h3 Участники
-        table.participants.table
-            thead
-                th Имя
-                th Доля
-                th Дата участия
-            tbody
-                for p in participants
-                    tr
-                        td: a(href="/users/{{p.account.id}}")=p.account.user.username
-                        td=p.parts
-                        td=p.date| date:"d.m.Y"
 
-    include banking/includes/transactions.jade
+    include banking/includes/participantsEditList.jade
