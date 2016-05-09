@@ -93,12 +93,16 @@ def add_participants(event, newbies):
     parent_transactions = []
     # participate incomers
     for (acc, parts) in newbies.items():
+        print("ADDING", acc)
         # if not already participated
-        participation = Participation.objects.filter(account=acc, active=False)
+        participation = Participation.objects.filter(account=acc, event=event,
+                                                     active=False)
         if len(participation) == 0:
+            print("NOT participated yet")
             participation = Participation(account=acc, parts=parts,
                                           event=event)
         else:
+            print("ALREADY participated", participation)
             participation = participation[0]
 
         participation.active = True
@@ -108,6 +112,7 @@ def add_participants(event, newbies):
                          type=Transaction.PARTICIPATE)
         tr.credit = party_pay * parts
         parent_transactions.append(tr)
+        print("CREATE TRANSACTION", tr)
         tr.save()
 
     # create diffs for old participants
