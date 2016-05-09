@@ -43,6 +43,7 @@
     "font-awesome": "^4.5.0",
     "jquery": "^2.2.1",
     "react": "^0.14.7",
-    "react-dom": "^0.14.7"
+    "react-dom": "^0.14.7",
+    "react-link-state": "^0.1.2"
   }
 }
