@@ -1,0 +1,16 @@
+extends banking/index.jade
+- load staticfiles
+
+block head
+    link(rel="stylesheet", href="{% static 'css/client/index.css' %}")
+
+block body
+    .center-cont
+        .centered
+            p.
+                На данном этапе развития мы не реализовали многопользовательский
+                доступ.
+            p. Пока что только через администратора.
+            p Если вы админ, и "оно само", тогда возвращайтесь
+            p: a(href="/admin") во свояси
+
