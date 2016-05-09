@@ -3,8 +3,6 @@ import React    from 'react'
 import ReactDOM from 'react-dom'
 import $        from 'jquery'
 
-import {csrfSafeMethod, postCSRF} from './utils/csrf'
-
 import EventTable     from './components/eventtable.jsx'
 import CreateEventDlg from './components/createeventdlg.jsx'
 

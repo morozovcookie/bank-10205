@@ -171,7 +171,7 @@ var NewUserDlg = React.createClass({
             headers: {
                 Authorization: 'Token ' + token
             },
-            data: this.state,
+            data: JSON.stringify(this.state),
             success: function(response){
                 dlg.replaceState(dlg.getInitialState());
                 $('form[name="create-user-form"] #is-superuser-checkbox').prop('checked', false);

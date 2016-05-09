@@ -77,8 +77,6 @@ module.exports = React.createClass({
                 private: this.state.private,
                 participants: participants,
             }),
-            contentType: "application/json; charset=utf-8",
-            dataType: 'json',
             success: function(response){
                 console.log(response);
                 document.location.href = '/events/';

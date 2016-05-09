@@ -28,7 +28,8 @@ var AuthForm = React.createClass({
 		postCSRF({
 			method:'POST',
 			url:'/api/auth/',
-			data:this.state})
+			data: JSON.stringify(this.state)
+        })
         .success(function(response){
             var token = response.token;
             window.localStorage.setItem('token', token);
