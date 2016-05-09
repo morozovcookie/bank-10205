@@ -35,12 +35,11 @@ var MenuList = React.createClass({
         var user = window.localStorage.getItem('user');
         if (JSON.parse(user).user.is_superuser)
         {
+            // <MenuListItem IconClass="glyphicon glyphicon-duplicate" Caption="Шаблоны событий" Link="/templates/" />
             return (
                 <ul className="nav nav-pills nav-stacked" id="nav-menu">
-                    <MenuListItem IconClass="glyphicon glyphicon-home" Caption="Главная" Link="/admin/" />
-                    <MenuListItem IconClass="glyphicon glyphicon-user" Caption="Сотрудники" Link="/users/" />
                     <MenuListItem IconClass="glyphicon glyphicon-list-alt" Caption="События" Link="/events/" />
-                    <MenuListItem IconClass="glyphicon glyphicon-duplicate" Caption="Шаблоны событий" Link="/templates/" />
+                    <MenuListItem IconClass="glyphicon glyphicon-user" Caption="Сотрудники" Link="/users/" />
                 </ul>
             );
         }
