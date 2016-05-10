@@ -27,8 +27,7 @@ class EventPostSerializer(serializers.ModelSerializer):
         if len(raw_participants) > 0:
             for p in raw_participants:
                 participants.update({p.get('account'): p.get('parts')})
-
-        add_participants(e, participants)
+            add_participants(e, participants)
         return e
 
     class Meta:

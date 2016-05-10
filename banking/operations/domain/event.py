@@ -81,6 +81,8 @@ def add_participants(event, newbies):
     """Add participants in event. Takes dict, where keys - is account
     models and values is participation part(int)."""
 
+    if len(newbies) == 0:
+        return
     # calc party-pay,
     participants = Participation.objects.filter(event=event, active=True)
 
