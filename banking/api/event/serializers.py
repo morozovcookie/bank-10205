@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from banking.models import Event, Account
 from banking.operations.domain.event import add_participants
+from banking.operations.domain.account import push_money
 
 
 class ParticipationPostSerializer(serializers.Serializer):
@@ -21,7 +22,10 @@ class EventPostSerializer(serializers.ModelSerializer):
         raw_participants = validated_data.pop('participants', [])
 
         e = Event.objects.create(**validated_data)
+        author = e.author
+        push_money(author, e.price)
 
+        print("raw_participants", raw_participants)
         # convert to dict
         participants = dict()
         if len(raw_participants) > 0:

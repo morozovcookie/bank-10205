@@ -62,3 +62,16 @@ class EventAPITest(TestCase):
 
         p_count = len(Participation.objects.filter(event=created_event))
         self.assertEqual(p_count, 2)
+
+    def test_author_get_money_for_event(self):
+        response = self.factory.post('/api/events/',
+                                     {
+                                         'name': 'Event Particpants',
+                                         'date': '2016-01-22',
+                                         'price': 3000,
+                                         'author': self.author.id
+                                     }, format='json')
+        created_event = Event.objects.get(id=response.data['id'])
+
+        author = created_event.author
+        self.assertEqual(author.balance(), 3000)

@@ -65,6 +65,7 @@ class EventListView(generics.ListCreateAPIView):
         """ Create new event. Accept event data and array of participation. """
         self.serializer_class = EventPostSerializer
         print("EventListView::post:", request.data)
+
         return super(EventListView, self).post(request)
 
     def get_serializer_class(self, *args, **kwargs):
@@ -95,12 +96,6 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
         """ Update single event field. Good for single field changes. """
         self.serializer_class = EventPostSerializer
         return super(EventDetail, self).patch(request, pk)
-
-    # just for docs
-    def delete(self, req, pk):
-        """ [UTESTED] Remove event.
-        Delete all it's participations and transactions. """
-        return super(EventDetail, self).delete(req, pk)
 
     def get_serializer_class(self, *args, **kwargs):
         """ Correctly show Serializer for different requests. """
