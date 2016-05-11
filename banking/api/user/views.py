@@ -3,6 +3,7 @@ import urllib
 from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 from rest_framework import status, generics, filters
 from rest_framework.views import APIView
@@ -11,9 +12,10 @@ from rest_framework.exceptions import ParseError
 
 from banking.models import Account
 from banking.views import has_permisions
+from banking.operations.domain.account import push_money, out_money
 
 from .serializers import UserSerializer, AccountSerializer, \
-    AccountPostSerializer
+    AccountPostSerializer, PaymentSerializer
 from .filters import AccountFilter
 
 
@@ -184,3 +186,22 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Account
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
+
+
+class Payment(APIView):
+    """Manage transfers to account balance."""
+    def post(self, request, pk):
+        acc = get_object_or_404(Account, id=pk)
+
+        ser = PaymentSerializer(data=request.data)
+        if ser.is_valid():
+            data = ser.validated_data
+            if data['income']:
+                push_money(acc, data['count'])
+            else:
+                out_money(acc, data['count'])
+
+            return Response({'balance': acc.balance()},
+                            status.HTTP_201_CREATED)
+
+        return Response(ser.errors, status.HTTP_400_BAD_REQUEST)

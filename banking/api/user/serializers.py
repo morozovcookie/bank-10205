@@ -40,3 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'is_superuser',
                   'account')
+
+class PaymentSerializer(serializers.Serializer):
+    income = serializers.BooleanField()
+    count = serializers.FloatField()
