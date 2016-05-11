@@ -11,5 +11,5 @@ def push_money(account, count):
 def out_money(account, count):
     """account call to get money from the bank. Make every effort that he did
     not do this(joke)."""
-    if account.balance() > count:
+    if account.balance() >= count:
         Transfer.objects.create(account=account, credit=count)
