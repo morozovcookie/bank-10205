@@ -41,6 +41,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'is_superuser',
                   'account')
 
+
 class PaymentSerializer(serializers.Serializer):
     income = serializers.BooleanField()
     count = serializers.FloatField()
+
+    def validate_count(self, count):
+        if count <= 0:
+            raise serializers.ValidationError("Blog post is not about Django")
+        return count

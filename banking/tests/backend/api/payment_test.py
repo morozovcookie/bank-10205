@@ -30,3 +30,13 @@ class PaymentTest(TestCase):
         self.assertEqual(res.data, {"balance": 0})
 
         self.assertEqual(self.account.balance(), 0)
+
+    def negative_count_test(self):
+        data = {'count': -200, 'income': True}
+        res = self.factory.post(self.url, data, format='json')
+        self.assertEqual(res.status_code, 400)
+
+    def zero_count_test(self):
+        data = {'count': 0, 'income': True}
+        res = self.factory.post(self.url, data, format='json')
+        self.assertEqual(res.status_code, 400)
