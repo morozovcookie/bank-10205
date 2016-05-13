@@ -2,10 +2,10 @@ from banking.models import Transfer
 
 
 def push_money(account, count):
-    """Account push money to bank. Distribute count on debted events (older
-    event filled firstly."""
+    """Account push money to bank."""
     t = Transfer(account=account, debit=count)
     t.save()
+    return True
 
 
 def out_money(account, count):
@@ -13,3 +13,5 @@ def out_money(account, count):
     not do this(joke)."""
     if account.balance() >= count:
         Transfer.objects.create(account=account, credit=count)
+        return True
+    return False

@@ -199,9 +199,9 @@ class Payment(APIView):
             if data['income']:
                 push_money(acc, data['count'])
             else:
-                out_money(acc, data['count'])
-
+                if not out_money(acc, data['count']):
+                    return Response("User don't have so much money",
+                                    status.HTTP_400_BAD_REQUEST)
             return Response({'balance': acc.balance()},
                             status.HTTP_201_CREATED)
-
         return Response(ser.errors, status.HTTP_400_BAD_REQUEST)

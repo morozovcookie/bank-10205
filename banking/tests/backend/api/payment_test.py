@@ -31,6 +31,15 @@ class PaymentTest(TestCase):
 
         self.assertEqual(self.account.balance(), 0)
 
+    def fetch_when_no_money_test(self):
+        import json
+        data = {'count': 3000, 'income': False}
+        res = self.factory.post(self.url, data, format='json')
+        self.assertEqual(res.status_code, 400)
+        cnt = json.loads(res.content.decode('utf-8'))
+        self.assertEqual(cnt,
+                         "User don't have so much money")
+
     def negative_count_test(self):
         data = {'count': -200, 'income': True}
         res = self.factory.post(self.url, data, format='json')
@@ -40,3 +49,4 @@ class PaymentTest(TestCase):
         data = {'count': 0, 'income': True}
         res = self.factory.post(self.url, data, format='json')
         self.assertEqual(res.status_code, 400)
+
